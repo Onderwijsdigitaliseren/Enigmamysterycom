@@ -16,18 +16,18 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-ARCHIEF = {"nl": "Archief I", "en": "Archive I"}
+ARCHIEF = {"nl": "Archief III", "en": "Archive III"}
 PRO_PAGINA = {"nl": "../nl/pro/", "en": "../en/pro/"}
 
 T = {
- "nl": dict(status="ARCHIEF I · PRO", rij="Dit dossier hoort bij Archief I. Open het met je Pro-pas.",
-            knop="ontgrendel", titel="Archief I openen", uitleg="Dossier I is gratis. Met de Pro-pas van Archief I gaan dossier II tot en met V open, en alle andere Pro-spellen van Enigma Mystery.",
+ "nl": dict(status="ARCHIEF I · PRO", rij="Dit dossier hoort bij Archief II. Open het met je Pro-pas.",
+            knop="ontgrendel", titel="Archief II openen", uitleg="Dossier I is gratis. Met de Pro-pas van Archief II gaan dossier II tot en met V open, en alle andere Pro-spellen van Enigma Mystery.",
             label="Pascode", open="Open", koop="Haal de Pro-pas", sluit="Sluiten",
-            fout="Die code opent Archief I niet. Controleer op typfouten.", bezig="Bezig…", geen="Deze browser kan verzegelde dossiers niet openen."),
- "en": dict(status="ARCHIVE I · PRO", rij="This file belongs to Archive I. Open it with your Pro pass.",
-            knop="unlock", titel="Open Archive I", uitleg="File I is free. The Archive I Pro pass opens files II to V, and every other Enigma Mystery Pro game.",
+            fout="Die code opent Archief II niet. Controleer op typfouten.", bezig="Bezig…", geen="Deze browser kan verzegelde dossiers niet openen."),
+ "en": dict(status="ARCHIVE I · PRO", rij="This file belongs to Archive II. Open it with your Pro pass.",
+            knop="unlock", titel="Open Archive II", uitleg="File I is free. The Archive II Pro pass opens files II to V, and every other Enigma Mystery Pro game.",
             label="Pass code", open="Open", koop="Get the Pro pass", sluit="Close",
-            fout="That code does not open Archive I. Check for typos.", bezig="Checking…", geen="This browser cannot open sealed files."),
+            fout="That code does not open Archive II. Check for typos.", bezig="Checking…", geen="This browser cannot open sealed files."),
 }
 
 def b64(b): return base64.b64encode(b).decode()
@@ -81,7 +81,7 @@ def maak(path, code, gratis):
 
     ui = {k: t[k] for k in ("titel", "uitleg", "label", "open", "koop", "sluit", "fout", "bezig", "geen")}
     js = """
-/* ---- Archief I: Pro-dossiers openen met de bestaande pascode ---- */
+/* ---- Archief II: Pro-dossiers openen met de bestaande pascode ---- */
 const PRO_T = %s;
 const PRO_KEY = "gf_pro_code";
 function proNorm(c){ return String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }

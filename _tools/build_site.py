@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://www.enigmamystery.com"
 MINI = "https://www.minimystery.nl"  # kinderserie, eigen site
-PRO_ARCHIEF = {"nl": "Archief I", "en": "Archive I"}
+PRO_ARCHIEF = {"nl": "Archief II", "en": "Archive II"}
 PRO_PRIJS = "€3,99"
 KOFI_PRO = "https://ko-fi.com/s/67649bac70"
 WANDEL = {"nl": "https://www.moordwandeling.nl", "en": "https://www.moordwandeling.nl"}  # één site met keuze NL/EN; murderwalk.com verdwijnt
@@ -103,8 +103,8 @@ PLANKEN = [
 ]
 
 for _s in SPELLEN:
-    _s.setdefault("archief", 1)
     _s["status"] = "proef" if _s.get("proef") else ("pro" if _s["pro"] else "gratis")
+    _s["archief"] = 1 if _s["status"] == "gratis" else 2   # I = open dossiers, II = verzegeld (pas)
 PROEF_TEKST = {"dossier I": {"nl": "Dossier I gratis", "en": "File I free"}}
 
 NIEUW = sorted(range(len(SPELLEN)), key=lambda i: SPELLEN[i]["added"], reverse=True)[:3]
@@ -349,39 +349,42 @@ def spellenpagina(lang):
     kop = held(here, lang, f'<span class="label">{"Online" if lang == "nl" else "Online"}</span><h1>{"Mystery Spellen" if lang == "nl" else "Mystery Games"}</h1><p class="zin">{intro}</p>', klein=True,
                smal="assets/dossiers/telefoon.jpg")
     nl = lang == "nl"
-    n = {k: sum(1 for x in SPELLEN if x["archief"] == 1 and x["status"] == k) for k in ("gratis", "proef", "pro")}
-    legenda = (f'<div class="legenda">'
-        f'<div><span class="stempel gratis">{t["gratis"]}</span><p>{"Helemaal te spelen, zonder pas." if nl else "Play it all, no pass needed."}</p></div>'
-        f'<div><span class="stempel proef">{t["proef"]}</span><p>{"Eerste hoofdstuk gratis. De rest gaat open met de pas." if nl else "First chapter free. The rest opens with the pass."}</p></div>'
-        f'<div><span class="stempel pro">{t["pro"]}</span><p>{(f"Met de pas van {PRO_ARCHIEF[lang]}: eenmalig {PRO_PRIJS}, opent alles in dit archief.") if nl else (f"With the {PRO_ARCHIEF[lang]} pass: {PRO_PRIJS.replace(',', '.')} once, opens everything in this archive.")}</p></div>'
-        f'</div>')
-    filt = (f'<div class="filters" role="group" aria-label="Filter"><button type="button" data-filter="alles" aria-pressed="true">{t["alles"]}</button>'
-            f'<button type="button" data-filter="gratis" aria-pressed="false">{t["alleengratis"]}</button>'
-            f'<button type="button" data-filter="pro" aria-pressed="false">{t["alleenpro"]}</button></div>')
-    planken = ""
+    prijs = PRO_PRIJS if nl else PRO_PRIJS.replace(",", ".")
     volg = {"gratis": 0, "proef": 1, "pro": 2}
-    for key, namen in PLANKEN:
-        idx = [i for i, x in enumerate(SPELLEN) if x["plank"] == key and x["archief"] == 1]
-        idx.sort(key=lambda i: (volg[SPELLEN[i]["status"]], -int(SPELLEN[i]["added"].replace("-", ""))))
-        naam, zin = namen[lang]
-        planken += (f'<section class="plank" id="{key}"><div class="sectiekop"><span class="label">{len(idx)} {"zaken" if nl else "cases"}</span><h3 class="plankkop">{escape(naam)}</h3><p class="zacht">{escape(zin)}</p></div>'
+    def soorten(archief):
+        out = ""
+        for key, namen in PLANKEN:
+            idx = [i for i, x in enumerate(SPELLEN) if x["plank"] == key and x["archief"] == archief]
+            if not idx: continue
+            idx.sort(key=lambda i: (volg[SPELLEN[i]["status"]], -int(SPELLEN[i]["added"].replace("-", ""))))
+            naam, zin = namen[lang]
+            out += (f'<section class="plank" id="a{archief}-{key}"><div class="sectiekop"><span class="label">{len(idx)} {("zaak" if len(idx) == 1 else "zaken") if nl else ("case" if len(idx) == 1 else "cases")}</span><h3 class="plankkop">{escape(naam)}</h3><p class="zacht">{escape(zin)}</p></div>'
                     f'<div class="rij">{"".join(kaart(i, lang, here) for i in idx)}</div></section>')
-    totaal = sum(1 for x in SPELLEN if x["archief"] == 1)
-    ng, npf, npr = n["gratis"], n["proef"], n["pro"]
-    prijs_en = PRO_PRIJS.replace(",", ".")
-    archief1 = (f'<section class="archief" id="archief-1"><div class="archiefkop">'
-        f'<div class="etiket"><span class="nummer">I</span><div><span class="label">{"Archief" if nl else "Archive"} I</span>'
-        f'<h2>{"De eerste dossierkast" if nl else "The first file cabinet"}</h2>'
-        f'<p class="zacht">{(f"{totaal} zaken in vier soorten · {ng} gratis · {npf} met proefhoofdstuk · {npr} met de pas") if nl else (f"{totaal} cases in four kinds · {ng} free · {npf} with a free first chapter · {npr} with the pass")}</p></div></div>'
-        f'<a class="knop lak" href="{rel(here, pad("pro", lang))}">{(f"Pas {PRO_ARCHIEF[lang]} · {PRO_PRIJS}") if nl else (f"{PRO_ARCHIEF[lang]} pass · {prijs_en}")}</a></div>'
-        f'{legenda}{filt}{planken}</section>')
+        return out
+    n1 = sum(1 for x in SPELLEN if x["archief"] == 1); n2 = sum(1 for x in SPELLEN if x["archief"] == 2)
+    npf = sum(1 for x in SPELLEN if x["status"] == "proef")
+    def la(nr, rom, kop, sub, status_html, inhoud, open_=False, dicht=False):
+        return (f'<section class="la{" open" if open_ else ""}{" dicht" if dicht else ""}" id="archief-{nr}">'
+                f'<button class="lafront" type="button" aria-expanded="{"true" if open_ else "false"}" aria-controls="la{nr}-inhoud"{" disabled" if dicht else ""}>'
+                f'<span class="greep" aria-hidden="true"></span><span class="lalabel"><span class="nummer">{rom}</span><span class="latekst"><b>{kop}</b><small>{sub}</small></span></span>{status_html}</button>'
+                f'<div class="lainhoud" id="la{nr}-inhoud"{"" if open_ else " hidden"}><div class="labinnen">{inhoud}</div></div></section>')
+    la1 = la(1, "I", f'{"Archief" if nl else "Archive"} I · {"Open dossiers" if nl else "Open files"}',
+             (f"{n1} zaken, helemaal gratis te spelen" if nl else f"{n1} cases, free to play in full"),
+             f'<span class="lastatus gratis">{t["gratis"]}</span>',
+             f'<p class="lauitleg">{"Deze lade staat voor iedereen open. Kies een soort en begin." if nl else "This drawer is open to everyone. Pick a kind and begin."}</p>' + soorten(1), open_=True)
+    uitleg2 = (f'<div class="lauitleg twee"><div><p>{(f"Verzegelde dossiers. Eén pas opent alle {n2} zaken in deze lade, eenmalig {prijs}, geen abonnement.") if nl else (f"Sealed files. One pass opens all {n2} cases in this drawer, {prijs} once, no subscription.")}</p>'
+               f'<p class="zacht">{(f"{npf} zaak heeft een proefhoofdstuk: het eerste dossier speel je gratis, de rest gaat open met de pas.") if nl else (f"{npf} case has a trial chapter: the first file is free, the rest opens with the pass.")}</p></div>'
+               f'<div class="laknoppen"><a class="knop lak" href="{rel(here, pad("pro", lang))}">{(f"Pas {PRO_ARCHIEF[lang]} · {prijs}") if nl else (f"{PRO_ARCHIEF[lang]} pass · {prijs}")}</a><a class="knop lijn" href="{rel(here, pad("pro", lang))}#proCode">{"Ik heb al een code" if nl else "I already have a code"}</a></div></div>')
+    la2 = la(2, "II", f'{"Archief" if nl else "Archive"} II · {"Verzegelde dossiers" if nl else "Sealed files"}',
+             (f"{n2} zaken, met de pas · {prijs}" if nl else f"{n2} cases, with the pass · {prijs}"),
+             f'<span class="zegel" aria-hidden="true"><span>PRO</span><small>{prijs}</small></span><span class="lastatus pro open-tekst">{"Ontgrendeld" if nl else "Unlocked"}</span>',
+             uitleg2 + soorten(2))
     slots = "".join(f'<div class="leegvak"><span class="label">{escape(nm[lang][0])}</span><p>{"Nieuwe zaken" if nl else "New cases"}</p></div>' for _, nm in PLANKEN)
-    archief2 = (f'<section class="archief toekomst" id="archief-2"><div class="archiefkop"><div class="etiket"><span class="nummer">II</span><div>'
-        f'<span class="label">{"Archief" if nl else "Archive"} II · {"in voorbereiding" if nl else "in preparation"}</span>'
-        f'<h2>{"De tweede dossierkast" if nl else "The second file cabinet"}</h2>'
-        f'<p class="zacht">{"Dezelfde vier soorten, nieuwe zaken, met een eigen pas. Je pas voor Archief I blijft altijd geldig voor Archief I." if nl else "The same four kinds, new cases, with a pass of its own. Your Archive I pass stays valid for Archive I for good."}</p></div></div></div>'
-        f'<div class="leegvakken">{slots}</div></section>')
-    body = kop + f'<section class="sectie"><div class="binnen">{archief1}{archief2}</div></section>\n'
+    la3 = la(3, "III", f'{"Archief" if nl else "Archive"} III · {"In voorbereiding" if nl else "In preparation"}',
+             ("Dezelfde vier soorten, nieuwe zaken, een eigen pas" if nl else "The same four kinds, new cases, a pass of its own"),
+             f'<span class="lastatus dicht">{"Op slot" if nl else "Locked"}</span>',
+             f'<div class="leegvakken">{slots}</div>', dicht=True)
+    body = kop + f'<section class="sectie"><div class="binnen"><div class="kastkop"><span class="label">{"De dossierkast" if nl else "The file cabinet"}</span><h2>{"Trek een lade open." if nl else "Pull open a drawer."}</h2><p class="zacht">{"Lade I is gratis. Lade II gaat open met één pas. Lade III komt eraan." if nl else "Drawer I is free. Drawer II opens with one pass. Drawer III is on its way."}</p></div><div class="kast">{la1}{la2}{la3}</div></div></section>\n'
     schrijf(here + "index.html", head(lang, "spellen", title, desc, here) + kopbalk(lang, "spellen", here) + body + voet(lang, here))
 
 def wandelpagina(lang):

@@ -3,6 +3,7 @@
   "use strict";
   function bewaar(k, v) { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} }
   function lees(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } }
+  var PRO_KEY = "gf_pro_code";
 
   /* taal: de pagina die je bekijkt is je keuze */
   var taal = document.body.getAttribute("data-lang");
@@ -23,6 +24,25 @@
     setTimeout(tik, 500);
   } else if (typ) { typ.classList.remove("typ"); }
 
+  /* de dossierkast: laden opentrekken */
+  var laden = document.querySelectorAll(".la .lafront");
+  if (laden.length) {
+    var zet = function (la, open) {
+      la.classList.toggle("open", open);
+      var b = la.querySelector(".lafront"), inh = la.querySelector(".lainhoud");
+      b.setAttribute("aria-expanded", String(open)); inh.hidden = !open;
+    };
+    laden.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var la = b.closest(".la"); if (la.classList.contains("dicht")) return;
+        zet(la, !la.classList.contains("open"));
+      });
+    });
+    var doel = location.hash && document.querySelector(location.hash + ".la");
+    if (doel && !doel.classList.contains("dicht")) { zet(doel, true); doel.scrollIntoView({ block: "start" }); }
+    else if (lees(PRO_KEY)) { var la2 = document.getElementById("archief-2"); if (la2) zet(la2, true); }
+  }
+
   /* filters op de spellenpagina */
   var knoppen = document.querySelectorAll(".filters button");
   if (knoppen.length) {
@@ -42,7 +62,6 @@
   }
 
   /* Pro: stempels weg als de pas actief is */
-  var PRO_KEY = "gf_pro_code";
   function norm(c) { return String(c || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
   if (lees(PRO_KEY)) document.documentElement.classList.add("pro-actief");
 
