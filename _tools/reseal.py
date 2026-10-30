@@ -18,13 +18,14 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # Geluid standaard uit; de speler zet het aan met de knop in het spel.
 SOUND_OFF = {
-    "grondplan.html": [("geluid:true", "geluid:false")],
-    "the-floor-plan.html": [("geluid:true", "geluid:false")],
     "schakelkamer.html": [('fase:"omslag", geluid:true,', 'fase:"omslag", geluid:false,')],
     "the-switch-room.html": [('fase:"omslag", geluid:true,', 'fase:"omslag", geluid:false,')],
     "nachtfrequentie.html": [("talked:{}, muted:false,", "talked:{}, muted:true,")],
     "night-frequency.html": [("talked:{}, muted:false,", "talked:{}, muted:true,")],
     "the-homicide-desk.html": [("mute: 0", "mute: 1")],
+    # Het Grondplan valt in Archief II (de oude lade-naam eruit)
+    "grondplan.html": [("geluid:true", "geluid:false"), ("LADE II", "ARCHIEF II"), ("Lade II", "Archief II")],
+    "the-floor-plan.html": [("geluid:true", "geluid:false"), ("DRAWER II", "ARCHIVE II"), ("Drawer II", "Archive II")],
     "the-empty-barrel.html": [
         ("let snd=localStorage.getItem('lr_snd')!=='0'", "let snd=localStorage.getItem('lr_snd')==='1'"),
         ('<button id="bSnd" class="on">', '<button id="bSnd">'),

@@ -73,7 +73,7 @@ SPELLEN = [
  dict(plank="logica", art="krant", pro=False, added="2026-10-07",
       nl=("De Zwarte Kolom", "Drie nachten, drie doden, één rooster.", "the-black-column.html#nl"),
       en=("The Black Column", "Three nights, three deaths, one grid.", "the-black-column.html#en")),
- dict(plank="logica", art="plan", pro=False, proef="dossier I", added="2026-09-10",
+ dict(plank="logica", art="plan", pro=True, added="2026-09-10",
       nl=("Het Grondplan", "Wie waar stond bepaalt wie het deed.", "grondplan.html"),
       en=("The Floor Plan", "Where everyone stood decides who did it.", "the-floor-plan.html")),
  # Cozy & bouwen
@@ -373,7 +373,7 @@ def spellenpagina(lang):
              f'<span class="lastatus gratis">{t["gratis"]}</span>',
              f'<p class="lauitleg">{"Deze lade staat voor iedereen open. Kies een soort en begin." if nl else "This drawer is open to everyone. Pick a kind and begin."}</p>' + soorten(1), open_=True)
     uitleg2 = (f'<div class="lauitleg twee"><div><p>{(f"Verzegelde dossiers. Eén pas opent alle {n2} zaken in deze lade, eenmalig {prijs}, geen abonnement.") if nl else (f"Sealed files. One pass opens all {n2} cases in this drawer, {prijs} once, no subscription.")}</p>'
-               f'<p class="zacht">{(f"{npf} zaak heeft een proefhoofdstuk: het eerste dossier speel je gratis, de rest gaat open met de pas.") if nl else (f"{npf} case has a trial chapter: the first file is free, the rest opens with the pass.")}</p></div>'
+               + ((f'<p class="zacht">{(f"{npf} zaak heeft een proefhoofdstuk: het eerste dossier speel je gratis, de rest gaat open met de pas.") if nl else (f"{npf} case has a trial chapter: the first file is free, the rest opens with the pass.")}</p>') if npf else "") + '</div>'
                f'<div class="laknoppen"><a class="knop lak" href="{rel(here, pad("pro", lang))}">{(f"Pas {PRO_ARCHIEF[lang]} · {prijs}") if nl else (f"{PRO_ARCHIEF[lang]} pass · {prijs}")}</a><a class="knop lijn" href="{rel(here, pad("pro", lang))}#proCode">{"Ik heb al een code" if nl else "I already have a code"}</a></div></div>')
     la2 = la(2, "II", f'{"Archief" if nl else "Archive"} II · {"Verzegelde dossiers" if nl else "Sealed files"}',
              (f"{n2} zaken, met de pas · {prijs}" if nl else f"{n2} cases, with the pass · {prijs}"),
