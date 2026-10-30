@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Enigma Mystery — De Nachtportier</title>
+<link rel="canonical" href="https://www.enigmamystery.com/spel/nachtportier.html">
+<link rel="alternate" hreflang="nl" href="https://www.enigmamystery.com/spel/nachtportier.html">
+<link rel="alternate" hreflang="en" href="https://www.enigmamystery.com/spel/the-night-porter.html">
+<link rel="alternate" hreflang="x-default" href="https://www.enigmamystery.com/spel/the-night-porter.html">
+<style>
+:root{
+  --nacht:#0a0d12; --nacht2:#131923; --paneel:#171d28; --rand:#2a3345;
+  --papier:#e9dfc9; --papier2:#dfd3b8; --inkt:#2b2620; --inktzwak:#5a5044;
+  --rood:#a83a2b; --roodd:#7e2b20; --goud:#c9a45c; --groen:#7d8f66;
+  --tekst:#d8d2c4; --tekstzwak:#9a94886;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  position:fixed; inset:0; overflow:hidden;
+  background:radial-gradient(120% 90% at 50% -10%, #1b2433 0%, #10151f 45%, #07090d 100%);
+  color:var(--tekst);
+  font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px; line-height:1.55;
+}
+#app{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);
+}
+/* ---------- kop ---------- */
+#kop{
+  flex:0 0 auto; display:flex; align-items:center; gap:10px;
+  padding:10px 14px 8px 14px; border-bottom:1px solid #232c3c;
+  background:linear-gradient(180deg, rgba(20,26,37,.92), rgba(13,17,25,.85));
+  backdrop-filter:blur(3px); z-index:5;
+}
+#kop .reeks{font-family:Georgia,"Times New Roman",serif; letter-spacing:.22em; font-size:11px; color:var(--goud); text-transform:uppercase; opacity:.9}
+#kop .titel{font-family:Georgia,serif; font-size:17px; letter-spacing:.04em; color:#efe9da; margin-top:1px}
+#kop .vullen{flex:1}
+.kopknop{
+  flex:0 0 auto; min-width:42px; height:42px; padding:0 12px;
+  border:1px solid #38445c; border-radius:9px; background:#1a2231; color:#cfd6e4;
+  font-size:15px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+}
+.kopknop:active{background:#232d40}
+/* ---------- schermen ---------- */
+#inhoud{flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative}
+.scherm{display:none; max-width:760px; margin:0 auto; padding:22px 16px 60px 16px; animation:opdoemen .5s ease}
+.scherm.actief{display:block}
+@keyframes opdoemen{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+h1.groot{font-family:Georgia,serif; font-weight:normal; font-size:34px; letter-spacing:.06em; color:#f0ead9; margin:10px 0 4px 0; text-align:center}
+.ondertitel{text-align:center; color:var(--goud); font-family:Georgia,serif; letter-spacing:.28em; font-size:12px; text-transform:uppercase; margin-bottom:26px}
+.proza{color:#cfc9bb; font-size:16.5px}
+.proza p{margin:0 0 14px 0}
+.proza .aanhef{font-family:Georgia,serif; font-style:italic; color:#e6dfcd}
+.centrum{text-align:center}
+/* typemachine-notitie */
+.notitie{
+  background:linear-gradient(180deg,#efe6d0,#e5d9bf); color:var(--inkt);
+  border-radius:3px; padding:18px 20px; margin:20px 0;
+  font-family:"Courier New",Courier,monospace; font-size:14.5px; line-height:1.6;
+  box-shadow:0 10px 26px rgba(0,0,0,.5), inset 0 0 60px rgba(120,90,40,.12);
+  position:relative; transform:rotate(-.4deg);
+}
+.notitie:before{content:""; position:absolute; left:0; right:0; top:0; height:5px;
+  background:repeating-linear-gradient(90deg, rgba(60,40,20,.15) 0 14px, transparent 14px 28px)}
+.notitie .kopje{letter-spacing:.14em; font-weight:bold; border-bottom:1px dashed rgba(43,38,32,.5); padding-bottom:6px; margin-bottom:10px}
+/* knoppen */
+.knop{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:48px; padding:12px 22px; border-radius:10px; cursor:pointer;
+  border:1px solid #3a4660; background:linear-gradient(180deg,#232d42,#1a2233);
+  color:#e8e2d2; font-size:16px; font-family:inherit; letter-spacing:.02em;
+}
+.knop:active{transform:translateY(1px)}
+.knop.goud{border-color:#8a6f3a; background:linear-gradient(180deg,#4a3d22,#2e2715); color:#ecd9a8}
+.knop.rood{border-color:#7e3a2e; background:linear-gradient(180deg,#4a231b,#2e1611); color:#eec2b4}
+.knop.klein{min-height:40px; padding:8px 14px; font-size:14px; border-radius:8px}
+.knoprij{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px}
+/* ---------- overzicht ---------- */
+.kastlabel{font-family:"Courier New",monospace; color:#9aa4b8; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; margin:6px 2px 12px 2px; text-align:center}
+.dossierlijst{display:flex; flex-direction:column; gap:14px}
+.dossier{
+  position:relative; border:1px solid #33405a; border-radius:12px; overflow:hidden;
+  background:linear-gradient(160deg,#1b2334 0%,#141a27 70%);
+  padding:16px 16px 14px 16px; cursor:pointer; transition:border-color .2s;
+}
+.dossier:active{border-color:#5a6c94}
+.dossier .dnr{font-family:"Courier New",monospace; font-size:11.5px; color:#8fa0bf; letter-spacing:.22em}
+.dossier .dtitel{font-family:Georgia,serif; font-size:20px; color:#efe8d6; margin:3px 0 2px 0}
+.dossier .dmeta{font-size:13px; color:#9aa3b5}
+.dossier.dicht{opacity:.55; cursor:default}
+.dossier.dicht .slot{position:absolute; right:14px; top:14px; font-size:18px; color:#7d8698}
+.stempel{
+  position:absolute; right:10px; top:10px; transform:rotate(8deg);
+  border:2.5px solid var(--rood); color:var(--rood); border-radius:6px;
+  font-family:"Courier New",monospace; font-weight:bold; font-size:12px; letter-spacing:.18em;
+  padding:3px 8px; opacity:.9; background:rgba(168,58,43,.07);
+}
+.voortgang{margin:18px auto 0 auto; text-align:center; font-family:"Courier New",monospace; font-size:12.5px; color:#8b94a8; letter-spacing:.14em}
+/* ---------- zaakscherm ---------- */
+.zaakkop{margin-bottom:10px}
+.zaakkop .znr{font-family:"Courier New",monospace; color:#8fa0bf; font-size:11.5px; letter-spacing:.22em}
+.zaakkop h2{font-family:Georgia,serif; font-weight:normal; font-size:26px; color:#f0e9d8; margin:2px 0 2px 0}
+.zaakkop .zmeta{font-size:13.5px; color:#a7b0c2}
+.vondst{
+  margin:12px 0; padding:10px 14px; border-left:3px solid var(--rood);
+  background:rgba(168,58,43,.08); color:#d8cfc0; font-size:14px; border-radius:0 8px 8px 0;
+  font-family:"Courier New",monospace;
+}
+.zaaktekst{color:#c9c3b5; font-size:15.5px; margin:10px 0 16px 0}
+/* portretten */
+.portretstrook{display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px 2px; -webkit-overflow-scrolling:touch}
+.portret{
+  flex:0 0 auto; width:106px; border-radius:10px; padding:9px 8px 8px 8px; cursor:pointer;
+  background:linear-gradient(180deg,#ece2cc,#ddd0b2); color:var(--inkt);
+  border:2px solid transparent; box-shadow:0 6px 14px rgba(0,0,0,.45);
+  text-align:center; transition:transform .15s, border-color .15s; position:relative;
+}
+.portret.gekozen{border-color:var(--goud); transform:translateY(-3px)}
+.portret.geplaatst .gezicht{opacity:.45}
+.portret.geplaatst:after{content:"op de kaart"; position:absolute; left:0; right:0; bottom:44px;
+  font-family:"Courier New",monospace; font-size:9.5px; letter-spacing:.06em; color:#6b5f4c}
+.portret .gezicht{width:64px; height:64px; margin:0 auto 6px auto; border-radius:6px; display:block}
+.portret .pnaam{font-family:Georgia,serif; font-size:13.5px; line-height:1.2}
+.portret .prol{font-family:"Courier New",monospace; font-size:9.5px; color:#6b5f4c; letter-spacing:.04em; margin-top:2px; min-height:22px}
+.portret.slachtoffer{background:linear-gradient(180deg,#e4cfc4,#d3b8a9)}
+.portret.slachtoffer .pnaam{color:#5c221a}
+/* clues */
+.cluelijst{margin:2px 0 14px 0; display:flex; flex-direction:column; gap:6px}
+.clue{
+  display:flex; gap:10px; align-items:baseline; padding:8px 12px; border-radius:8px;
+  background:rgba(233,223,201,.07); border:1px solid rgba(233,223,201,.12);
+  font-size:14.5px; color:#d5cfc0;
+}
+.clue.actief{background:rgba(201,164,92,.14); border-color:rgba(201,164,92,.5)}
+.clue b{color:#efe6ce; font-family:Georgia,serif; font-weight:normal; white-space:nowrap}
+.clue.v b{color:#e0a08f}
+/* bord */
+#bordhoes{
+  background:
+    radial-gradient(140% 120% at 50% 0%, rgba(201,164,92,.10), transparent 55%),
+    linear-gradient(180deg,#11161f,#0c1017);
+  border:1px solid #2b3549; border-radius:14px; padding:12px 10px 8px 10px; margin:4px 0 12px 0;
+  box-shadow:inset 0 0 44px rgba(0,0,0,.55);
+}
+#bord{display:block; width:100%; height:auto; touch-action:manipulation}
+.bordtools{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:2px 0 20px 0}
+.tool{
+  min-height:44px; padding:9px 14px; border-radius:9px; cursor:pointer; font-size:14.5px;
+  border:1px solid #3a4660; background:#1a2231; color:#d6dcea; font-family:inherit;
+}
+.tool.aan{border-color:var(--goud); color:#ecd9a8; background:#2c2716}
+.tool.hoofd{border-color:#8a6f3a; background:linear-gradient(180deg,#4a3d22,#2e2715); color:#ecd9a8; font-size:15.5px; padding:10px 18px}
+#oordeel{font-family:"Courier New",monospace; font-size:13px; color:#c9a45c; min-height:20px; margin:-8px 0 14px 2px; letter-spacing:.04em}
+#oordeel.fout{color:#d98a7a}
+@keyframes schud{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.schud{animation:schud .4s ease}
+/* overlays */
+.overlay{
+  position:fixed; inset:0; z-index:40; display:none; align-items:flex-end; justify-content:center;
+  background:rgba(4,6,10,.72); backdrop-filter:blur(2px);
+  padding:0; overscroll-behavior:contain;
+}
+.overlay.open{display:flex}
+.ovpaneel{
+  width:100%; max-width:680px; max-height:88%; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  background:linear-gradient(180deg,#1b2333,#131926); border:1px solid #36435e; border-bottom:none;
+  border-radius:18px 18px 0 0; padding:20px 18px calc(24px + env(safe-area-inset-bottom)) 18px;
+  animation:omhoog .3s ease;
+}
+@keyframes omhoog{from{transform:translateY(40px); opacity:0}to{transform:none; opacity:1}}
+.ovpaneel h3{font-family:Georgia,serif; font-weight:normal; font-size:21px; color:#efe8d6; margin:0 0 10px 0}
+.ovsluit{float:right; margin:-4px -4px 0 10px}
+.hulp h4{font-family:Georgia,serif; font-weight:normal; color:var(--goud); font-size:16px; margin:18px 0 6px 0; letter-spacing:.06em}
+.hulp p, .hulp li{font-size:14.5px; color:#c9c3b5}
+.hulp ul{margin:6px 0; padding-left:20px}
+.trefw{display:grid; grid-template-columns:1fr; gap:8px; margin-top:8px}
+.trefw .tw{background:rgba(233,223,201,.06); border:1px solid rgba(233,223,201,.12); border-radius:8px; padding:8px 12px; font-size:13.5px; color:#c9c3b5}
+.trefw .tw b{color:#e9dfc9; font-family:Georgia,serif; font-weight:normal}
+/* moordenaar-picker */
+.kieslijst{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:14px}
+/* bekentenis */
+.bekentenis{background:linear-gradient(180deg,#efe6d0,#e2d5b8); color:var(--inkt); border-radius:4px;
+  padding:18px 20px; font-family:"Courier New",monospace; font-size:14px; line-height:1.65;
+  box-shadow:0 12px 30px rgba(0,0,0,.5); transform:rotate(.35deg); margin:14px 0}
+.bekentenis .bk{letter-spacing:.14em; font-weight:bold; margin-bottom:8px; border-bottom:1px dashed rgba(43,38,32,.45); padding-bottom:6px}
+.groteStempel{
+  display:inline-block; border:3px solid var(--rood); color:var(--rood); border-radius:8px;
+  font-family:"Courier New",monospace; font-weight:bold; letter-spacing:.22em; font-size:15px;
+  padding:6px 16px; transform:rotate(-6deg); margin:6px 0 2px 0; background:rgba(168,58,43,.06);
+  animation:stempelval .45s cubic-bezier(.2,1.6,.4,1);
+}
+@keyframes stempelval{from{transform:rotate(-6deg) scale(2.2); opacity:0}to{transform:rotate(-6deg) scale(1); opacity:1}}
+/* conclusie */
+.vraagblok{border:1px solid #33405a; border-radius:12px; padding:14px 16px; margin:14px 0; background:#161d2b}
+.vraagblok .vk{font-family:Georgia,serif; color:#efe8d6; font-size:16.5px; margin-bottom:10px}
+.optie{display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:9px; cursor:pointer;
+  border:1px solid #2c374d; margin:7px 0; font-size:14.5px; color:#cfc9bb; background:#131a27}
+.optie.gekozen{border-color:var(--goud); background:#241f12; color:#eee4c9}
+.optie .bol{flex:0 0 16px; width:16px; height:16px; border-radius:50%; border:2px solid #5b6b8c; margin-top:2px}
+.optie.gekozen .bol{border-color:var(--goud); background:radial-gradient(circle at center, var(--goud) 0 45%, transparent 50%)}
+.optie.goedmark{border-color:#6f8f5c}
+.optie.foutmark{border-color:#a35142}
+/* footer klein */
+.voetnoot{margin-top:34px; text-align:center; font-size:11.5px; color:#6d7686; font-family:"Courier New",monospace; letter-spacing:.08em}
+/* grote plattegronden: horizontaal scrollen + zoom */
+#bordhoes{overflow-x:auto}
+#bord{min-width:100%}
+/* verklaringen als verhoorcitaten */
+.clue{display:block; padding:10px 14px; font-size:14px; line-height:1.5}
+.clue b{display:block; margin-bottom:3px; font-size:14.5px}
+.clue span b{display:inline; font-size:inherit; color:#ecd9a8; font-weight:normal; border-bottom:1px dotted rgba(201,164,92,.55)}
+.clue span{font-style:italic; color:#c9c3b5}
+.clue.v span{color:#d8b3a8}
+.clue.v span b{color:#e0a08f; border-bottom-color:rgba(224,160,143,.5)}
+/* bewijsmap */
+.bewijsstrook{display:flex; gap:10px; overflow-x:auto; padding:4px 2px 12px 2px; -webkit-overflow-scrolling:touch}
+.bewijskaart{flex:0 0 auto; width:132px; border-radius:10px; background:linear-gradient(180deg,#141b29,#101623);
+  border:1px solid #2c374d; padding:8px 8px 7px 8px; cursor:pointer; text-align:center; transition:border-color .15s}
+.bewijskaart:active{border-color:#5a6c94}
+.bewijskaart svg{width:100%; height:auto; display:block; border-radius:6px}
+.bewijskaart .bt{font-family:"Courier New",monospace; font-size:9.5px; color:#c9a45c; letter-spacing:.08em; margin-top:6px; min-height:24px; text-transform:uppercase}
+.bewijskaart.leeg{opacity:.45; cursor:default; min-height:128px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:"Courier New",monospace; font-size:10.5px; color:#7d8698; letter-spacing:.1em; border-style:dashed}
+.bewijskaart.leeg .vraagteken{font-size:26px; color:#4a5570; margin-bottom:8px; font-family:Georgia,serif}
+.bewijshoes{background:radial-gradient(120% 100% at 50% 0%, rgba(201,164,92,.08), transparent 60%), #0e131d;
+  border:1px solid #2b3549; border-radius:12px; padding:12px; margin:12px 0 8px 0; box-shadow:inset 0 0 34px rgba(0,0,0,.55)}
+.bewijshoes svg{width:100%; height:auto; display:block}
+.bewijsvondst{font-family:"Courier New",monospace; font-size:12px; color:#8b94a8; text-align:center; letter-spacing:.04em; margin:0 0 12px 0}
+#bewijsmuur{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0 4px 0}
+#bewijsmuur .bewijskaart{width:auto}
+@media (min-width:620px){
+  .overlay{align-items:center; padding:20px}
+  .ovpaneel{border-radius:16px; border-bottom:1px solid #36435e; max-height:86%}
+  .trefw{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="kop">
+    <div>
+      <div class="reeks">Enigma Mystery</div>
+      <div class="titel">De Nachtportier</div>
+    </div>
+    <div class="vullen"></div>
+    <button class="kopknop" id="k-hulp" title="Regels &amp; trefwoorden">?</button>
+    <button class="kopknop" id="k-geluid" title="Geluid">♪</button>
+    <button class="kopknop" id="k-reset" title="Opnieuw beginnen">↺</button>
+  </div>
+  <div id="inhoud">
+
+    <!-- INTRO -->
+    <section class="scherm" id="s-intro">
+      <h1 class="groot">De Nachtportier</h1>
+      <div class="ondertitel">Lade II · Plattegronden</div>
+      <div class="proza">
+        <p class="aanhef">Archief van de nachtdienst — heropening, najaar 1958.</p>
+        <p>Pension <b>De Lindeboom</b>, aan de rand van de stad. Vijf sterfgevallen in vijf jaar.
+        Vijf keer een volle gastenlijst, vijf keer een lichaam, vijf keer géén veroordeling.
+        De dossiers werden dichtgeklapt, het pension bleef open, de lamp boven de receptie bleef branden.</p>
+        <p>Vanavond liggen de vijf mappen op jouw bureau. In elke map: een plattegrond van de plaats delict
+        en de verklaringen van de aanwezigen. Wie ergens <i>was</i>, staat vast — wie ergens <i>zei</i> te zijn ook.
+        Jouw werk: teken op elke plattegrond uit waar iedereen zich bevond. Het laatste vrije vak
+        is de plek van het slachtoffer. Wie met het slachtoffer in hetzelfde gebied was, is de dader.</p>
+        <p>Vijf plattegronden. Vijf daders. En één naam die telkens terugkeert, in de kantlijn van elk dossier.
+        Let daarop. Schrijf het op. Je zult het nodig hebben.</p>
+      </div>
+      <div class="notitie">
+        <div class="kopje">MEMO — HOOFDINSPECTEUR WILLEMS</div>
+        Vijf zaken, één adres. Dat is geen pech, dat is een patroon.<br>
+        Werk de mappen op volgorde af en leg een <b>bewijsmap</b> aan:
+        elk dossier dat je sluit, levert een stuk op. Vijf stukken, één verhaal.<br>
+        En collega — kijk óók naar wat er <u>niet</u> in de verklaringen staat.
+      </div>
+      <div class="knoprij">
+        <button class="knop goud" id="kn-start">Open de archiefkast</button>
+        <button class="knop" id="kn-regels-intro">Regels &amp; trefwoorden</button>
+      </div>
+    </section>
+
+    <!-- OVERZICHT -->
+    <section class="scherm" id="s-overzicht">
+      <h1 class="groot" style="font-size:26px">Pension De Lindeboom</h1>
+      <div class="kastlabel">Vijf dossiers · 1949 – 1954</div>
+      <div class="dossierlijst" id="dossierlijst"></div>
+      <div class="voortgang" id="voortgang"></div>
+      <div class="kastlabel" style="margin-top:26px">Bewijsmap</div>
+      <div class="bewijsstrook" id="bewijsstrook"></div>
+      <div class="knoprij" id="conclusieknoprij" style="display:none">
+        <button class="knop rood" id="kn-conclusie">Naar de slotconclusie</button>
+      </div>
+    </section>
+
+    <!-- ZAAK -->
+    <section class="scherm" id="s-zaak">
+      <div class="zaakkop">
+        <div class="znr" id="z-nr"></div>
+        <h2 id="z-titel"></h2>
+        <div class="zmeta" id="z-meta"></div>
+      </div>
+      <div class="vondst" id="z-vondst"></div>
+      <div class="zaaktekst" id="z-tekst"></div>
+      <div class="portretstrook" id="z-portretten"></div>
+      <div class="cluelijst" id="z-clues"></div>
+      <div id="bordhoes"><svg id="bord" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div id="oordeel"></div>
+      <div class="bordtools">
+        <button class="tool hoofd" id="t-controleer">Controleer de plattegrond</button>
+        <button class="tool" id="t-xmodus">✕-modus</button>
+        <button class="tool" id="t-zoom">Vergroot</button>
+        <button class="tool" id="t-wis">Veeg schoon</button>
+        <button class="tool" id="t-bekentenis" style="display:none">Lees de bekentenis terug</button>
+        <button class="tool" id="t-terug">← Archiefkast</button>
+      </div>
+    </section>
+
+    <!-- CONCLUSIE -->
+    <section class="scherm" id="s-conclusie">
+      <h1 class="groot" style="font-size:26px">Slotconclusie</h1>
+      <div class="kastlabel">Rapport aan hoofdinspecteur Willems</div>
+      <div class="proza">
+        <p>Vijf plattegronden, vijf daders — allemaal gasten, allemaal veroordeeld op jouw werk.
+        Maar vijf verschillende daders plannen niet vijf keer dezelfde nacht. Iemand gaf hun de sleutels,
+        de tijden, de namen. Je bewijsmap ligt open op tafel: vijf stukken, één klein en keurig handschrift.
+        Leg ze naast elkaar en vul het rapport in.</p>
+      </div>
+      <div class="kastlabel" style="margin-top:22px">De bewijsmuur</div>
+      <div id="bewijsmuur"></div>
+      <div id="vragenhouder"></div>
+      <div class="knoprij">
+        <button class="knop goud" id="kn-rapport">Dien het rapport in</button>
+      </div>
+      <div id="concl-oordeel" style="text-align:center; font-family:'Courier New',monospace; font-size:13px; color:#d98a7a; min-height:22px; margin-top:10px"></div>
+    </section>
+
+    <!-- EPILOOG -->
+    <section class="scherm" id="s-epiloog">
+      <div class="centrum" style="margin-top:10px"><span class="groteStempel">ZAAK GESLOTEN</span></div>
+      <h1 class="groot" style="font-size:26px">Epiloog</h1>
+      <div class="proza" id="epiloogtekst"></div>
+      <div class="knoprij">
+        <button class="knop" id="kn-epi-terug">Terug naar de archiefkast</button>
+      </div>
+      <div class="voetnoot">HET NACHTDOSSIER · DE NACHTPORTIER · EINDE</div>
+    </section>
+
+  </div>
+</div>
+
+<!-- OVERLAY: HULP -->
+<div class="overlay" id="ov-hulp">
+  <div class="ovpaneel hulp">
+    <button class="knop klein ovsluit" data-sluit="ov-hulp">Sluit</button>
+    <h3>Zo werkt een plattegrond-dossier</h3>
+    <h4>Je doel</h4>
+    <p>Vind de dader door uit te pluizen wie in hetzelfde <b>gebied</b> was als het slachtoffer.</p>
+    <h4>De regels</h4>
+    <ul>
+      <li>Elke persoon bevindt zich in een <b>andere rij en een andere kolom</b>.</li>
+      <li><b>Bedden, stoelen en tapijten</b> kunnen bezet worden; andere objecten (bomen, struiken, tafels, kasten, kisten, tonnen, keien) niet.</li>
+      <li>Het <b>slachtoffer</b> bevindt zich in het laatste vrije vak dat overblijft. De persoon in hetzelfde gebied is de moordenaar.</li>
+    </ul>
+    <h4>Bediening</h4>
+    <ul>
+      <li>Tik een <b>portret</b> aan en daarna een vak om die persoon te plaatsen. Tik een geplaatste persoon aan om hem weg te halen.</li>
+      <li>Zet <b>✕-modus</b> aan om potloodkruisjes te zetten in vakken die afvallen.</li>
+      <li>Rij- en kolomnummers staan langs de rand van de plattegrond.</li>
+    </ul>
+    <h4>Trefwoorden in verklaringen</h4>
+    <div class="trefw">
+      <div class="tw"><b>alleen</b> — er was niemand anders in het gebied (ook het slachtoffer niet).</div>
+      <div class="tw"><b>samen met</b> — deze personen waren in hetzelfde gebied (eventueel met anderen).</div>
+      <div class="tw"><b>alleen met</b> — alléén deze twee personen waren in het gebied.</div>
+      <div class="tw"><b>naast</b> — vlak boven, onder, links of rechts, <b>én</b> in hetzelfde gebied.</div>
+      <div class="tw" style="opacity:.75"><b>deuropeningen</b> — de boogjes in de muren tonen alleen hoe de kamers op elkaar aansluiten. Ze spelen in de verklaringen geen rol.</div>
+      <div class="tw"><b>hoek</b> — een vak waar twee grenzen van een gebied samenkomen.</div>
+      <div class="tw"><b>rij / kolom</b> — rijen tellen van boven naar beneden, kolommen van links naar rechts (zie de nummers langs de rand).</div>
+      <div class="tw"><b>links van / boven</b> — ergens in een kolom verder naar links, of een rij hoger; het gebied maakt niet uit.</div>
+      <div class="tw"><b>de enige persoon op een stoel</b> — niemand anders zat op een stoel, ook het slachtoffer niet. (Zelfde idee bij tapijt of bed.)</div>
+      <div class="tw"><b>precies N kolommen/rijen van</b> — exact die afstand, in die richting, gemeten over het hele raster (zie R- en K-nummers langs de rand).</div>
+      <div class="tw"><b>in de [zaal]</b> — ergens binnen dat benoemde gebied.</div>
+      <div class="tw"><b>gebied</b> — elke benoemde zone met een dikke rand eromheen.</div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY: MOORDENAAR -->
+<div class="overlay" id="ov-moord">
+  <div class="ovpaneel">
+    <h3 id="moordvraag">De plattegrond klopt.</h3>
+    <p style="color:#c9c3b5; font-size:14.5px" id="moordsub"></p>
+    <div class="kieslijst" id="moordkeuzes"></div>
+    <div id="moordoordeel" style="text-align:center; font-family:'Courier New',monospace; font-size:13px; color:#d98a7a; min-height:20px; margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- OVERLAY: BEKENTENIS -->
+<div class="overlay" id="ov-bekentenis">
+  <div class="ovpaneel">
+    <div class="centrum"><span class="groteStempel">OPGELOST</span></div>
+    <h3 id="bek-kop"></h3>
+    <div class="bekentenis"><div class="bk">UIT HET VERHOOR</div><div id="bek-tekst"></div></div>
+    <div class="kastlabel" style="margin:16px 0 4px 0" id="bek-bewijskop"></div>
+    <div class="bewijshoes" id="bek-bewijs"></div>
+    <div class="bewijsvondst" id="bek-vondstregel"></div>
+    <div class="vondst" id="bek-draad"></div>
+    <div class="knoprij"><button class="knop goud" id="kn-bek-verder">Berg het dossier op</button></div>
+  </div>
+</div>
+
+<!-- OVERLAY: BEWIJSSTUK -->
+<div class="overlay" id="ov-bewijs">
+  <div class="ovpaneel">
+    <button class="knop klein ovsluit" data-sluit="ov-bewijs">Sluit</button>
+    <h3 id="bw-titel"></h3>
+    <div class="bewijshoes" id="bw-svg"></div>
+    <div class="bewijsvondst" id="bw-vondst"></div>
+    <div class="vondst" id="bw-duiding"></div>
+    <p style="font-size:13px; color:#9aa3b5; font-family:'Courier New',monospace; margin:12px 2px 0 2px" id="bw-kantlijn"></p>
+  </div>
+</div>
+
+<!-- OVERLAY: RESET -->
+<div class="overlay" id="ov-reset">
+  <div class="ovpaneel">
+    <h3>Alles opnieuw?</h3>
+    <p style="color:#c9c3b5; font-size:14.5px">Dit wist je volledige voortgang: alle plattegronden, opgeloste dossiers en het slotrapport.</p>
+    <div class="knoprij">
+      <button class="knop rood" id="kn-reset-ja">Ja, wis alles</button>
+      <button class="knop" data-sluit="ov-reset">Nee, terug</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================= GEGEVENS ================= */
+const CEL=84, MARGE=30;
+const BEZETBAAR={stoel:1,tapijt:1,bed:1};
+
+const ZDATA=[
+{"id":"z1","nr":"DOSSIER 49-XI","titel":"De handelsreiziger","datum":"12 november 1949","locatie":"westvleugel — vijf bij vijf","vondst":"Lichaam aangetroffen om 02:40 door L. Mertens, nachtportier.","tekst":"De eerste map. Herman Kuiper, handelsreiziger in fournituren, meldde zich op 11 november voor één nacht. De ochtend erna stond zijn koffer nog gepakt bij de deur — en lag hijzelf tussen de kisten van de opslag. Vier mensen waren die nacht in de westvleugel. Vier verklaringen, één plattegrond. Teken uit waar iedereen stond; het laatste vrije vak is van Kuiper.","N":5,"gebieden":{"SLAAPKAMER":[[0,0],[0,1],[1,0],[1,1]],"GANG":[[0,2],[0,3],[0,4],[1,2],[1,3],[1,4]],"SALON":[[2,0],[2,1],[3,0],[3,1],[4,0]],"HAL":[[2,2],[3,2],[4,1],[4,2]],"OPSLAG":[[2,3],[2,4],[3,3],[3,4],[4,3],[4,4]]},"labels":{"SLAAPKAMER":[1,0],"GANG":[1,3],"SALON":[4,0],"HAL":[4,2],"OPSLAG":[4,4]},"buiten":[],"objecten":[{"t":"bed","r":0,"c":0,"v":"L"},{"t":"bed","r":0,"c":1,"v":"R"},{"t":"tapijt","r":1,"c":2},{"t":"kast","r":0,"c":3},{"t":"stoel","r":3,"c":1},{"t":"tafel","r":2,"c":0},{"t":"kist","r":2,"c":4},{"t":"ton","r":3,"c":3}],"deuren":[],"personen":[{"k":"marie","naam":"Marie Voss","rol":"gaste, kamer 2","clue":"Ik ben om tien uur gaan zitten en niet meer opgestaan. Vraag wie u wilt: ik was de <b>enige</b> die op een <b>stoel</b> zat — de anderen bleven op de been, meneer Kuiper ook."},{"k":"douwe","naam":"Douwe Terpstra","rol":"gast, kamer 5","clue":"Marie zat onder mij te breien; dat getik hoor je door de vloer. Ik stond <b>precies twee rijen boven Marie</b>, geen tree verder."},{"k":"rudolf","naam":"Rudolf Zwart","rol":"gast, kamer 1","clue":"Ik zocht mijn monsterkoffer tussen de stellingen, in een <b>hoek</b> van de <b>opslag</b> — waar de wanden samenkomen. Stoffig daar; mijn zakdoek kan het bevestigen."},{"k":"lena","naam":"Lena de Bruin","rol":"pensionhulp","clue":"Ik liep mijn laatste ronde met de lampen. Toen de klok sloeg stond ik <b>precies twee kolommen links van Rudolf</b>; ik zag zijn schouder nog net om de stelling."},{"k":"herman","naam":"Herman Kuiper","rol":"handelsreiziger","clue":"Lijkschouwersnotitie: sporen van één worsteling, geen braak. Kuiper <b>was alleen met zijn moordenaar</b>.","slachtoffer":true}],"sol":{"marie":[3,1],"douwe":[1,0],"rudolf":[4,4],"lena":[0,2],"herman":[2,3]},"moordenaar":"rudolf","bekentenis":"“Ik heb Kuiper nooit gemogen, maar ik had het nooit gedúrfd — tot er een briefje onder mijn deur door werd geschoven. De loper zat erbij. Wanneer de gang leeg zou zijn stond erop, tot op de minuut. Ondertekend met één letter: L.”<br><span style=\"opacity:.75\">— R. Zwart, 14 november 1949</span>","draad":"Kantlijn van het dossier: het briefje is nooit gevonden. De loper hing de volgende ochtend gewoon weer aan het sleutelbord achter de balie."},
+{"id":"z2","nr":"DOSSIER 50-IV","titel":"De serre","datum":"3 april 1950","locatie":"serrezijde en hal — zes bij zes","vondst":"Lichaam aangetroffen om 01:55 door L. Mertens, nachtportier.","tekst":"Agnes Roelofs, weduwe uit kamer 6, dronk elke avond om elf uur een glas port. Op 3 april bleef het glas vol. De tuindeuren stonden open, de eerste lentelucht trok door de hal — en vijf mensen wisten opeens verdacht precies waar ze geweest waren.","N":6,"gebieden":{"TUIN":[[0,0],[0,1],[0,2],[1,0],[1,1],[2,0]],"SERRE":[[0,3],[0,4],[0,5],[1,2],[1,3]],"SALON":[[1,4],[1,5],[2,4],[2,5],[3,4],[3,5]],"KEUKEN":[[2,1],[2,2],[3,0],[3,1]],"HAL":[[2,3],[3,2],[3,3],[4,2]],"VERANDA":[[4,0],[4,1],[5,0],[5,1]],"EETKAMER":[[4,3],[4,4],[4,5],[5,2],[5,3],[5,4],[5,5]]},"labels":{"TUIN":[1,0],"SERRE":[1,3],"SALON":[3,5],"KEUKEN":[3,0],"HAL":[4,2],"VERANDA":[5,0],"EETKAMER":[5,4]},"buiten":["TUIN"],"objecten":[{"t":"boom","r":0,"c":0},{"t":"boom","r":1,"c":1},{"t":"tapijt","r":1,"c":3},{"t":"tapijt","r":4,"c":0},{"t":"stoel","r":2,"c":5},{"t":"stoel","r":1,"c":4},{"t":"stoel","r":4,"c":4},{"t":"stoel","r":5,"c":5},{"t":"kast","r":3,"c":1},{"t":"kast","r":2,"c":1},{"t":"plant","r":0,"c":4},{"t":"tafel","r":3,"c":5}],"deuren":[],"personen":[{"k":"sofie","naam":"Sofie Aalders","rol":"gaste, kamer 2","clue":"Ik wachtte op post die niet kwam, in een <b>hoek</b> van de <b>hal</b>, tegen de lambrisering — waar de twee wanden samenkomen. Mijn afdruk staat nog in het stof."},{"k":"pieter","naam":"Pieter de Waal","rol":"tuinman","clue":"Mijn klompen stonden buiten, dus ja: ik zat op een <b>stoel</b>. Op kousenvoeten, de rug naar de tuin. Meer rust heb ik in jaren niet gehad."},{"k":"gerrit","naam":"Gerrit Vos","rol":"kelner","clue":"Het dienblad stond nog vol toen het gebeurde. Ik was in de <b>eetkamer</b> — servetten vouwen zichzelf niet."},{"k":"mina","naam":"Mina Roest","rol":"kamermeisje","clue":"Ik poetste het zilver, vlak <b>naast</b> een <b>tafel</b> — zelfde kamer, er pal naast, anders krijg je strepen op het blad."},{"k":"klaas","naam":"Klaas Vermeer","rol":"gast, kamer 4","clue":"Ik keek alleen maar, dat zweer ik. Vanaf mijn plek zag ik ze allebei: <b>precies twee kolommen links van Sofie</b>, en <b>precies vier kolommen links van Pieter</b>. Reken het maar na."},{"k":"agnes","naam":"Agnes Roelofs","rol":"weduwe, kamer 6","clue":"Het glas port onaangeroerd, de tuindeur in het slot. Zij <b>was alleen met haar moordenaar</b>.","slachtoffer":true}],"sol":{"sofie":[3,2],"pieter":[4,4],"gerrit":[5,3],"mina":[2,5],"klaas":[1,0],"agnes":[0,1]},"moordenaar":"klaas","bekentenis":"“Iemand die ’s nachts door de gangen loopt wist precies wanneer de salon leeg zou zijn. Ik hoefde alleen te doen wat er op het briefje stond — en het daarna te verbranden in de haard.”<br><span style=\"opacity:.75\">— K. Vermeer, 6 april 1950</span>","draad":"Kantlijn: de sleutel van de serredeur ontbrak die nacht aan de bos. Alleen het personeel kan bij het sleutelkastje. De nachtportier “had niets gemerkt”."},
+{"id":"z3","nr":"DOSSIER 51-IX","titel":"De benedenverdieping","datum":"21 september 1951","locatie":"benedenverdieping — acht bij acht","vondst":"Lichaam aangetroffen om 03:15 door L. Mertens, nachtportier.","tekst":"Theodoor Nagel, notarisklerk, kwam elke derde donderdag van de maand de boeken doen. Die septembernacht vond de nachtportier hem in de salon, de vulpen nog achter het oor. De zijdeur stond op een kier; de bel die daar hangt heeft niemand horen gaan. Zeven aanwezigen, een benedenverdieping van acht bij acht — en zeven verklaringen die nét te goed op elkaar aansluiten.","N":8,"gebieden":{"TUIN":[[0,0],[0,1],[0,2],[0,3],[1,0],[1,1],[1,2],[2,0]],"VERANDA":[[0,4],[0,5],[1,3],[1,4],[2,3]],"BIBLIOTHEEK":[[0,6],[0,7],[1,7],[2,7]],"EETZAAL":[[1,5],[1,6],[2,4],[2,5],[2,6],[3,5],[3,6]],"KEUKEN":[[2,1],[2,2],[3,0],[3,1],[3,2]],"HAL":[[3,3],[3,4],[4,2],[4,3],[4,4],[5,3],[6,3],[7,2],[7,3]],"SALON":[[3,7],[4,5],[4,6],[4,7],[5,6],[5,7],[6,7]],"BIJKEUKEN":[[4,0],[4,1],[5,0]],"KANTOOR":[[5,1],[5,2],[6,0],[6,1],[6,2],[7,0],[7,1]],"LOGEERKAMER":[[5,4],[5,5],[6,4],[6,5],[6,6],[7,4],[7,5],[7,6],[7,7]]},"labels":{"TUIN":[1,1],"VERANDA":[2,3],"BIBLIOTHEEK":[2,7],"KEUKEN":[3,1],"EETZAAL":[3,5],"HAL":[7,3],"BIJKEUKEN":[4,0],"KANTOOR":[7,0],"LOGEERKAMER":[7,5],"SALON":[5,7]},"buiten":["TUIN"],"objecten":[{"t":"boom","r":0,"c":0},{"t":"boom","r":1,"c":0},{"t":"boom","r":0,"c":2},{"t":"kast","r":0,"c":7},{"t":"kast","r":5,"c":1},{"t":"kast","r":6,"c":4},{"t":"stoel","r":2,"c":4},{"t":"stoel","r":3,"c":7},{"t":"stoel","r":1,"c":5},{"t":"stoel","r":6,"c":6},{"t":"tapijt","r":4,"c":2},{"t":"tapijt","r":6,"c":0},{"t":"tapijt","r":2,"c":5},{"t":"bed","r":6,"c":5},{"t":"bed","r":7,"c":5},{"t":"bed","r":5,"c":4},{"t":"bed","r":7,"c":6},{"t":"tafel","r":2,"c":1},{"t":"ton","r":3,"c":2},{"t":"plant","r":4,"c":6},{"t":"piano","r":5,"c":7},{"t":"plant","r":0,"c":4},{"t":"kist","r":7,"c":0}],"deuren":[],"personen":[{"k":"jan","naam":"Jan Roos","rol":"postbode","clue":"Ik had één brief te veel en één uur te weinig. Ik stond <b>naast</b> een <b>kast</b> — zelfde kamer, schouder ertegen — te vloeken op een onleesbaar adres."},{"k":"willem","naam":"Willem Drost","rol":"gast, kamer 3","clue":"Jan zag me nog staan, ver aan zijn linkerhand: <b>precies vijf kolommen links van Jan</b>. De rechercheur heeft het naderhand opgemeten."},{"k":"els","naam":"Els van Dam","rol":"kokkin","clue":"De soep stond laag en ik had even niets omhanden. Ik stond <b>naast</b> een <b>tapijt</b>, tenen op de rand — eróp durfde ik niet met dit vette schort."},{"k":"nora","naam":"Nora Visser","rol":"kamermeisje","clue":"Mijn voeten, meneer. Ik heb heel even op een <b>stoel</b> gezeten. Dat mag toch, na veertien uur dienst?"},{"k":"corrie","naam":"Corrie Smit","rol":"gaste, kamer 7","clue":"Ik stond op een <b>tapijt</b> — en voor zover ik kon zien als <b>enige</b> in het hele huis. Iedereen deed die avond zo geheimzinnig over de vloerkleden."},{"k":"henk","naam":"Henk Mulder","rol":"chauffeur","clue":"Ik rookte waar mevrouw het niet ziet: in een <b>hoek</b> van de <b>bijkeuken</b>. De peuk ligt er waarschijnlijk nog."},{"k":"leendert","naam":"Leendert Bos","rol":"gast, kamer 9","clue":"De dokter schrijft me rust voor: ik lag als <b>enige</b> op een <b>bed</b>, en dat bed staat <b>naast</b> een <b>kast</b> — ik hoorde de deurtjes piepen in de tocht."},{"k":"theodoor","naam":"Theodoor Nagel","rol":"notarisklerk","clue":"Eén kop koffie gedronken, twee kopjes klaargezet. Hij <b>was alleen met zijn moordenaar</b>.","slachtoffer":true}],"sol":{"jan":[0,6],"willem":[1,1],"els":[2,4],"nora":[3,7],"corrie":[4,2],"henk":[5,0],"leendert":[6,5],"theodoor":[7,3]},"moordenaar":"corrie","bekentenis":"“De bel van de zijdeur was afgekoppeld. Hij schreef dat niemand me zou horen. Hij had gelijk. Ik heb hem nooit gezien — alleen zijn handschrift, klein en keurig, als van een boekhouder.”<br><span style=\"opacity:.75\">— C. Smit, 25 september 1951</span>","draad":"Kantlijn: de nachtportier verklaarde dat de bel “al weken defect” was. De monteur vond geen slijtage, maar doorgeknipt draad."},
+{"id":"z4","nr":"DOSSIER 53-II","titel":"De oostvleugel","datum":"14 februari 1953","locatie":"oostvleugel — tien bij tien","vondst":"Lichaam aangetroffen om 02:05 door L. Mertens, nachtportier.","tekst":"Valentijnsavond 1953. Isabelle Croon speelde tot kwart over elf; om vijf over twee vond de nachtportier haar in de gang van de oostvleugel, de partituur nog onder de arm. Negen mensen \"hoorden de piano vallen\", zegt het dossier. Een piano valt niet. Tien bij tien vakken; neem er de tijd voor.","N":10,"gebieden":{"BIBLIOTHEEK":[[0,0],[0,1],[0,2],[1,0],[1,1],[2,0],[2,1]],"LEESKAMER":[[0,3],[0,4],[1,2],[1,3],[1,4],[2,2]],"STUDEERKAMER":[[0,5],[0,6],[0,7],[1,5],[1,6],[2,5],[2,6]],"TERRAS":[[0,8],[0,9],[1,7],[1,8],[1,9],[2,7],[2,8],[2,9],[3,8],[3,9],[4,8],[4,9]],"GANG":[[2,3],[2,4],[3,2],[3,3],[3,4],[3,5],[4,3],[4,4],[5,2],[5,3],[5,4],[5,5],[6,3],[7,3],[8,2],[8,3],[8,4],[9,1],[9,2],[9,3],[9,4]],"SLAAPKAMER":[[3,0],[3,1],[4,0],[4,1],[4,2],[5,0],[5,1]],"BADKAMER":[[3,6],[3,7],[4,5],[4,6],[4,7]],"LINNENKAMER":[[5,6],[5,7],[6,4],[6,5],[6,6],[7,4],[7,5],[8,5],[9,5],[9,6]],"ATELIER":[[5,8],[5,9],[6,7],[6,8],[6,9],[7,6],[7,7],[7,8],[7,9],[8,6],[8,7],[8,8],[8,9],[9,7],[9,8],[9,9]],"MUZIEKKAMER":[[6,0],[6,1],[6,2],[7,0],[7,1],[7,2],[8,0],[8,1],[9,0]]},"labels":{"BIBLIOTHEEK":[2,0],"LEESKAMER":[2,2],"STUDEERKAMER":[2,5],"TERRAS":[4,9],"SLAAPKAMER":[5,0],"GANG":[9,3],"BADKAMER":[4,6],"LINNENKAMER":[9,5],"ATELIER":[9,8],"MUZIEKKAMER":[9,0]},"buiten":["TERRAS"],"objecten":[{"t":"stoel","r":0,"c":2},{"t":"stoel","r":1,"c":4},{"t":"stoel","r":3,"c":6},{"t":"stoel","r":6,"c":8},{"t":"stoel","r":8,"c":6},{"t":"stoel","r":9,"c":7},{"t":"bed","r":2,"c":0},{"t":"bed","r":2,"c":1},{"t":"bed","r":4,"c":0},{"t":"bed","r":5,"c":0},{"t":"tapijt","r":3,"c":5},{"t":"tapijt","r":7,"c":1},{"t":"tapijt","r":6,"c":4},{"t":"tapijt","r":8,"c":3},{"t":"plant","r":0,"c":7},{"t":"plant","r":2,"c":8},{"t":"plant","r":4,"c":8},{"t":"plant","r":6,"c":7},{"t":"kast","r":0,"c":0},{"t":"kast","r":5,"c":6},{"t":"kast","r":8,"c":7},{"t":"kast","r":9,"c":5},{"t":"piano","r":7,"c":0},{"t":"haard","r":9,"c":3},{"t":"lamp","r":2,"c":3},{"t":"tafel","r":4,"c":6},{"t":"beeld","r":5,"c":9},{"t":"tafel","r":0,"c":5}],"deuren":[[[2,6],[2,7]],[[4,7],[4,8]]],"personen":[{"k":"ada","naam":"Ada Berkhout","rol":"gaste, kamer 1","clue":"Mijn enkel, weet u nog. Ik zat op een <b>stoel</b> — en ik was de <b>enige</b> die zat. De rest ijsbeerde alsof het nieuws al bekend was."},{"k":"frederik","naam":"Frederik Lange","rol":"gast, kamer 5","clue":"De huismeester liep zijn ronde, ik zag zijn lantaarn schommelen. Ik stond <b>precies vijf kolommen rechts van Gerard</b>. Meer weet ik niet."},{"k":"otto","naam":"Otto Vink","rol":"gast, kamer 2","clue":"Ik lag als <b>enige</b> op een <b>bed</b>. Vraag de muziekleraar maar: <b>precies drie rijen boven Simon</b> — hij hoorde mij hoesten door het plafond."},{"k":"nel","naam":"Nel Jansma","rol":"wasvrouw","clue":"Het loopkleed moest recht, in die hoek krult het altijd. Ik stond op het <b>tapijt</b>, in de <b>hoek</b> van de <b>gang</b>, toen de piano viel."},{"k":"gerard","naam":"Gerard Meijer","rol":"huismeester","clue":"Mijn ronde, zoals elke avond om die tijd. Ik was in de <b>gang</b> — waar anders? Dat is mijn werk."},{"k":"mies","naam":"Mies Koster","rol":"schilderes","clue":"Ik bestudeerde hoe het lamplicht over het marmer valt. Ik stond <b>naast</b> het <b>beeld</b>, zelfde zaal, mijn neus er bijna tegenaan."},{"k":"simon","naam":"Simon de Wit","rol":"muziekleraar","clue":"Ik stond op een <b>tapijt</b> te luisteren of Isabelle het andante zou halen. Ze haalde het niet."},{"k":"roos","naam":"Roos Leeflang","rol":"gaste, kamer 8","clue":"Vanuit mijn plek zag ik Ada\\u2019s stoel nog net: ik stond <b>precies vier kolommen rechts van Ada</b>."},{"k":"bram","naam":"Bram Keijzer","rol":"journalist","clue":"Beroepsdeformatie: ik stond <b>naast</b> het <b>tapijt</b> — ernaast, niet erop. Ik wilde geen sporen vertrappen. Achteraf nogal ironisch."},{"k":"isabelle","naam":"Isabelle Croon","rol":"pianiste","clue":"Geen kreet, geen getuigen, de partituur nog onder haar arm. Zij <b>was alleen met haar moordenaar</b>.","slachtoffer":true}],"sol":{"ada":[0,2],"frederik":[1,8],"isabelle":[2,7],"nel":[3,5],"otto":[4,0],"gerard":[5,3],"mies":[6,9],"simon":[7,1],"bram":[8,4],"roos":[9,6]},"moordenaar":"frederik","bekentenis":"“De deur was al van het slot toen ik kwam. Er is er in dat pension maar één die álle sleutels draagt. Vraag hem waar hij die nacht was — al weet ik het antwoord al: overal en nergens.”<br><span style=\"opacity:.75\">— F. Lange, 19 februari 1953</span>","draad":"Kantlijn: het dienstrooster van die week ontbreekt uit de map. Alleen de paraaf van de nachtdienst is bewaard: L.M."},
+{"id":"z5","nr":"DOSSIER 54-X","titel":"Het hoofdgebouw","datum":"31 oktober 1954","locatie":"hoofdgebouw — twaalf bij twaalf","vondst":"Lichaam aangetroffen om 04:20 door L. Mertens, nachtportier.","tekst":"31 oktober 1954 — de laatste nacht van De Lindeboom. Eduard Meerman, de eigenaar zelf, gevonden in zijn eigen slaapkamer. De volste gastenlijst, het grootste grondplan uit het archief: twaalf bij twaalf. Elf getuigen, elf verklaringen — en ergens in dit huis stond iemand die wist dat de pensionhouder de volgende ochtend naar de politie zou gaan.","N":12,"gebieden":{"TUIN":[[0,0],[0,1],[0,2],[0,3],[1,0],[1,1],[1,2],[2,0],[2,1],[3,0]],"SERRE":[[0,4],[0,5],[0,6],[1,3],[1,4],[1,5],[2,4]],"VESTIBULE":[[0,7],[0,8],[0,9],[0,10],[0,11],[1,7],[1,8],[1,9],[1,10],[2,8]],"SALON":[[1,6],[2,5],[2,6],[2,7],[3,5],[3,6],[3,7],[4,6]],"EETZAAL":[[1,11],[2,9],[2,10],[2,11],[3,9],[3,10],[3,11],[4,9],[4,10],[5,8],[5,9]],"BIBLIOTHEEK":[[2,2],[2,3],[3,1],[3,2],[3,3],[3,4],[4,0],[4,1],[4,2],[4,3],[5,2]],"HAL":[[3,8],[4,4],[4,5],[4,7],[4,8],[5,3],[5,4],[5,5],[5,6],[5,7],[6,3],[6,4],[6,7],[7,3],[8,3],[9,3],[9,4],[10,4],[11,4],[11,5]],"SLAAPKAMER":[[4,11],[5,10],[5,11],[6,8],[6,9],[6,10],[6,11],[7,8],[7,9]],"KEUKEN":[[5,0],[5,1],[6,0],[6,1],[6,2],[7,0],[7,1],[7,2],[8,2]],"RECEPTIE":[[6,5],[6,6],[7,4],[7,5],[7,6],[7,7],[8,4],[8,5],[8,6],[9,5],[10,5],[10,6],[11,6],[11,7]],"BADKAMER":[[7,10],[7,11],[8,9],[8,10],[8,11],[9,10],[9,11]],"WERKKAMER":[[8,0],[8,1],[9,0],[9,1],[9,2],[10,0],[10,1],[10,2],[10,3],[11,0],[11,1],[11,2],[11,3]],"WINTERTUIN":[[8,7],[8,8],[9,6],[9,7],[9,8],[9,9],[10,7],[10,8],[10,9],[10,10],[10,11],[11,8],[11,9],[11,10],[11,11]]},"labels":{"TUIN":[3,0],"SERRE":[2,4],"VESTIBULE":[2,8],"BIBLIOTHEEK":[5,2],"SALON":[4,6],"EETZAAL":[5,8],"KEUKEN":[8,0],"HAL":[11,4],"RECEPTIE":[11,6],"SLAAPKAMER":[7,8],"BADKAMER":[9,10],"WERKKAMER":[11,1],"WINTERTUIN":[11,9]},"buiten":["TUIN"],"objecten":[{"t":"stoel","r":1,"c":9},{"t":"stoel","r":3,"c":6},{"t":"stoel","r":4,"c":7},{"t":"stoel","r":8,"c":9},{"t":"stoel","r":10,"c":10},{"t":"stoel","r":6,"c":5},{"t":"bed","r":4,"c":11},{"t":"bed","r":5,"c":10},{"t":"bed","r":6,"c":10},{"t":"bed","r":7,"c":9},{"t":"tapijt","r":0,"c":5},{"t":"tapijt","r":6,"c":6},{"t":"tapijt","r":9,"c":3},{"t":"tapijt","r":10,"c":8},{"t":"tapijt","r":2,"c":5},{"t":"boom","r":1,"c":1},{"t":"boom","r":2,"c":0},{"t":"boom","r":0,"c":2},{"t":"boom","r":3,"c":0},{"t":"plant","r":0,"c":3},{"t":"plant","r":1,"c":4},{"t":"plant","r":9,"c":8},{"t":"plant","r":10,"c":9},{"t":"plant","r":11,"c":10},{"t":"kast","r":5,"c":1},{"t":"kast","r":5,"c":3},{"t":"kast","r":8,"c":0},{"t":"kast","r":10,"c":3},{"t":"kast","r":7,"c":4},{"t":"piano","r":3,"c":5},{"t":"balie","r":6,"c":7},{"t":"fornuis","r":7,"c":1},{"t":"bad","r":8,"c":11},{"t":"haard","r":9,"c":4},{"t":"fontein","r":10,"c":7},{"t":"lamp","r":1,"c":7},{"t":"tafel","r":2,"c":10},{"t":"tafel","r":4,"c":9},{"t":"beeld","r":5,"c":8},{"t":"tafel","r":11,"c":7}],"deuren":[[[5,6],[6,6]],[[7,7],[8,7]],[[10,4],[10,5]]],"personen":[{"k":"truus","naam":"Truus Hendriks","rol":"gaste, kamer 3","clue":"Ik durfde niet stil te staan, die nacht. Toen de klok half vier sloeg stond ik <b>naast</b> een <b>tapijt</b> — er vlak naast, in dezelfde kamer. Ik zie de franje nog voor mijn schoenen."},{"k":"bram","naam":"Bram Okkema","rol":"gast, kamer 6","clue":"Iedereen bleef maar staan, dus ik nam de stoel. Ik zat op een <b>stoel</b> — als <b>enige</b> in het hele huis. Zegt dat iets over mij, of over hen?"},{"k":"dora","naam":"Dora Fennema","rol":"kamermeisje","clue":"Binnen was het niet om te harden. Ik haalde adem in de tuin, <b>naast</b> een <b>boom</b>, mijn arm tegen de natte bast."},{"k":"sjoerd","naam":"Sjoerd Balk","rol":"conciërge","clue":"Zenuwachtige gasten houd ik in het oog; dat is mijn vak. Ik stond <b>precies drie kolommen rechts van Truus</b>."},{"k":"lotte","naam":"Lotte van Rijn","rol":"gaste, kamer 10","clue":"De dokter had me een slaappoeder gegeven. Ik lag als <b>enige</b> op een <b>bed</b> — de rest van het huis was klaarwakker, dat hoorde ik zelfs door het poeder heen."},{"k":"izaak","naam":"Izaak Meurs","rol":"antiquair","clue":"Ik taxeerde de banden bij kaarslicht, in de <b>hoek</b> van de <b>bibliotheek</b> waar de kasten samenkomen. Daar staat het achttiende-eeuwse werk."},{"k":"mees","naam":"Mees van Dijk","rol":"receptieklerk","clue":"Een klerk hoort achter de balie, dus daar stond ik: op het <b>tapijt</b>, <b>naast</b> een <b>stoel</b> die ik de hele nacht niet heb aangeraakt."},{"k":"greet","naam":"Greet Lammers","rol":"kokkin","clue":"Om vier uur zet ik het brooddeeg, oorlog of moord. Ik stond <b>naast</b> het <b>fornuis</b> — waar zou een kokkin anders staan?"},{"k":"paul","naam":"Paul de Winter","rol":"arts, kamer 4","clue":"Beroepsgewoonte: ik waste mijn handen. Ik stond <b>naast</b> het <b>bad</b> toen ik de eerste deur hoorde slaan."},{"k":"hugo","naam":"Hugo Lindt","rol":"gast, kamer 2","clue":"Koud, die nacht. Ik zocht de warmte op en stond <b>naast</b> de <b>haard</b>. Het vuur was bijna uit. Net als ik."},{"k":"cato","naam":"Cato Vermeer","rol":"zangeres, kamer 11","clue":"Ik oefende zacht, voor de spiegel van de nacht. Ik stond op een <b>tapijt</b> — een zangeres spaart haar voeten."},{"k":"eduard","naam":"Eduard Meerman","rol":"pensionhouder","clue":"De eigenaar zelf, in zijn eigen huis. De sleutels nog aan zijn riem. Hij <b>was alleen met zijn moordenaar</b>.","slachtoffer":true}],"sol":{"truus":[0,4],"bram":[1,9],"dora":[2,1],"sjoerd":[3,7],"lotte":[4,11],"izaak":[5,2],"mees":[6,6],"greet":[7,0],"paul":[8,10],"hugo":[9,3],"cato":[10,8],"eduard":[11,5]},"moordenaar":"hugo","bekentenis":"“Meerman had het door, al maanden. Hij zou maandag naar de politie gaan. Ik kreeg de loper en een reden — mijn schulden, zwart op wit, in dat kleine, keurige handschrift. Ga naar de balie en kijk wie daar ’s nachts zit. Dan weet u wie u zoekt.”<br><span style=\"opacity:.75\">— H. Lindt, 2 november 1954</span>","draad":"In Meermans agenda, 30 oktober: “M. spreken over de sleutels. Daarna: politie.”"}
+];
+
+const CONCLUSIE=[
+ {vraag:'Eén naam keert in alle vijf dossiers terug — telkens als eerste ter plaatse, telkens buiten verdenking. Wie?',
+  opties:['E. Meerman — pensionhouder','L. Mertens — nachtportier','P. de Waal — tuinman','A. Berkhout — gaste uit dossier 53-II'],
+  goed:1},
+ {vraag:'Welke rol speelde hij werkelijk?',
+  opties:['Toevallige getuige: hij had nu eenmaal altijd nachtdienst',
+          'Hij voerde alle vijf de moorden eigenhandig uit',
+          'Hij regisseerde ze: hij koos de slachtoffers en gaf de daders sleutels, tijden en instructies',
+          'Hij ontdekte de daders achteraf, maar zweeg uit angst'],
+  goed:2},
+ {vraag:'Waarom moest Eduard Meerman als laatste sterven?',
+  opties:['Hij weigerde het pension aan de nachtportier te verkopen',
+          'Hij had het patroon ontdekt en wilde de politie inlichten',
+          'Hij had gokschulden bij zijn eigen gasten',
+          'Het was willekeur — hij was die nacht toevallig alleen'],
+  goed:1}
+];
+
+const EPILOOG='<p class="aanhef">Uit het rapport aan hoofdinspecteur Willems, 4 december 1958.</p>'+
+'<p>Lucas Mertens werd aangehouden achter zijn eigen balie, om tien over half drie ’s nachts, het uur waarop hij altijd zijn ronde begon. Hij vroeg alleen of hij eerst de lampen mocht doven.</p>'+
+'<p>In zijn dienstwoning: een eigen ring met reservesleutels van alle kamers, een map met schuldbekentenissen en verzwegen zonden van jaren aan gastenlijsten — en kladversies van vijf briefjes, in klein, keurig handschrift, ondertekend met één letter.</p>'+
+'<p>Hij heeft nooit één moord gepleegd. Hij heeft er vijf <i>geschreven</i>. Vijf gasten met een zwakke plek, vijf slachtoffers die hem in de weg zaten of te veel wisten — en als laatste de man die zijn patroon had ontdekt: zijn eigen werkgever, Eduard Meerman.</p>'+
+'<p>Pension De Lindeboom staat leeg. De lamp boven de receptie is gedoofd. De vijf plattegronden gaan terug de kast in — Lade II, achterin — met op elke map, eindelijk, een naam.</p>';
+
+const BEWIJS=[
+ {titel:'Het verbrande briefje',
+  vondst:'Half verbrand aangetroffen in de haard van kamer 1.',
+  duiding:'Klein, keurig handschrift. Wie kent de looproutes van de nachtgang tot op de minuut — en kan een loper terughangen vóór de ochtend?'},
+ {titel:'Het sleutelregister',
+  vondst:'Kaart uit het sleutelkastje achter de balie.',
+  duiding:'De serresleutel verliet het kastje die nacht wél — maar buiten het register om. Alleen de nachtdienst draagt de sleutel van het kastje zelf.'},
+ {titel:'Het doorgeknipte draad',
+  vondst:'Veiliggesteld bij de zijdeur; monteursbon bijgevoegd.',
+  duiding:'Geen defect maar voorbereiding. De dader wíst dat de bel zou zwijgen — iemand had dat dagen eerder geregeld.'},
+ {titel:'Het gescheurde rooster',
+  vondst:'Los vel uit de personeelsmap; één week uitgescheurd.',
+  duiding:'De enige week die ontbreekt is de week van de moord. Wie beheert de personeelsmap? De nachtdienst zelf.'},
+ {titel:'De agenda van Meerman',
+  vondst:'Zakagenda van de pensionhouder, gevonden in de werkkamer.',
+  duiding:'Meerman had de "M." van zijn eigen nachtportier al in zijn agenda staan. Hij was de politie precies één nacht te laat.'}
+];
+</script>
+<script>
+"use strict";
+/* ================= HULPFUNCTIES ================= */
+const $=id=>document.getElementById(id);
+const sleutel=(r,c)=>r+','+c;
+function celVrij(z,r,c){
+  const o=z.objecten.find(o=>o.r===r&&o.c===c);
+  return !o || !!BEZETBAAR[o.t];
+}
+function gebiedVan(z,r,c){
+  for(const g in z.gebieden) if(z.gebieden[g].some(([a,b])=>a===r&&b===c)) return g;
+  return null;
+}
+
+/* ---------- toestand ---------- */
+const OPSLAGKEY='nachtportier_v1';
+let ST={borden:{},klaar:{},concl:false,stil:true,gezien:false};
+function laad(){
+  try{const j=localStorage.getItem(OPSLAGKEY); if(j){const d=JSON.parse(j); if(d&&typeof d==='object') ST=Object.assign(ST,d);}}catch(e){}
+}
+function bewaar(){ try{localStorage.setItem(OPSLAGKEY,JSON.stringify(ST));}catch(e){} }
+function bord(zid){ if(!ST.borden[zid]) ST.borden[zid]={p:{},x:[]}; return ST.borden[zid]; }
+function aantalKlaar(){ return ZDATA.filter(z=>ST.klaar[z.id]).length; }
+
+/* ---------- geluid ---------- */
+let AC=null;
+function toon(f,d,type,vol,start){
+  if(ST.stil) return;
+  try{
+    if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+    const t=AC.currentTime+(start||0);
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.12,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+d+0.05);
+  }catch(e){}
+}
+const klikGeluid=()=>toon(660,0.06,'triangle',0.07);
+const zetGeluid =()=>{toon(440,0.09,'triangle',0.09);toon(660,0.07,'triangle',0.05,0.05);};
+const foutGeluid=()=>{toon(180,0.18,'sawtooth',0.06);toon(140,0.22,'sawtooth',0.05,0.08);};
+const goedGeluid=()=>{[523,659,784].forEach((f,i)=>toon(f,0.16,'triangle',0.09,i*0.09));};
+const stempelGeluid=()=>{toon(110,0.16,'square',0.10);toon(70,0.22,'sine',0.12,0.02);};
+
+/* ================= GEZICHTEN ================= */
+function hashNaam(s){let h=7;for(let i=0;i<s.length;i++)h=((h*131+s.charCodeAt(i)*17)^(h>>>3))>>>0;return h;}
+function gezichtSVG(p){
+  const h=hashNaam(p.naam);
+  const bgs=['#5b7a94','#7a6a8e','#6f8a6a','#a08258','#8a6a72','#5f8a8a','#946a5b','#6a7a9e'];
+  const huiden=['#e8c39a','#d9a97c','#c68e5f','#b07a4f'];
+  const haren=['#2e2a26','#5b4632','#8a7a5a','#43434c','#6e3a2a','#9a9a94'];
+  const bg=bgs[h%bgs.length], huid=huiden[(h>>3)%huiden.length], haar=haren[(h>>6)%haren.length];
+  const stijl=(h>>9)%4;
+  let haarS='';
+  if(stijl===0) haarS='<path d="M14 26 Q32 6 50 26 L50 34 Q32 20 14 34 Z" fill="'+haar+'"/>';
+  else if(stijl===1) haarS='<path d="M14 28 Q32 4 50 28 L52 44 Q46 30 32 30 Q18 30 12 44 Z" fill="'+haar+'"/>';
+  else if(stijl===2) haarS='<path d="M14 26 Q32 8 50 26 L50 30 Q40 22 32 22 Q24 22 14 30 Z" fill="'+haar+'"/><circle cx="32" cy="12" r="7" fill="'+haar+'"/>';
+  else haarS='<path d="M14 27 Q32 7 50 27 L50 31 Q32 17 14 31 Z" fill="'+haar+'"/><rect x="12" y="27" width="6" height="12" rx="3" fill="'+haar+'"/><rect x="46" y="27" width="6" height="12" rx="3" fill="'+haar+'"/>';
+  const kraag=p.slachtoffer?'#7e2b20':'#2c3446';
+  const kruis=p.slachtoffer?'<g stroke="#a83a2b" stroke-width="4.5" stroke-linecap="round" opacity="0.9"><line x1="8" y1="8" x2="56" y2="56"/><line x1="56" y1="8" x2="8" y2="56"/></g>':'';
+  return '<svg class="gezicht" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+    '<rect width="64" height="64" rx="5" fill="'+bg+'"/>'+
+    '<path d="M10 64 Q10 46 32 46 Q54 46 54 64 Z" fill="'+kraag+'"/>'+
+    '<rect x="27" y="36" width="10" height="12" rx="4" fill="'+huid+'"/>'+
+    '<circle cx="32" cy="28" r="13" fill="'+huid+'" stroke="rgba(20,16,10,0.25)" stroke-width="1.4"/>'+
+    haarS+
+    '<path d="M26 52 L32 46 L38 52 L32 58 Z" fill="#e9dfc9" opacity="0.85"/>'+
+    kruis+'</svg>';
+}
+
+/* ================= OBJECT-ICONEN (inkt-stijl, met schaduw) ================= */
+function icoonSVG(t,v){
+  const K='#2b2620';
+  const SCH='<ellipse cx="44" cy="66" rx="27" ry="7" fill="#000" opacity="0.13"/>';
+  switch(t){
+  case 'stoel': return '<g>'+SCH+
+    '<rect x="18" y="24" width="48" height="42" rx="10" fill="#f0e9d7" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="24" y="12" width="36" height="17" rx="8" fill="#ddd0b2" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="10" y="27" width="12" height="35" rx="6" fill="#ddd0b2" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="62" y="27" width="12" height="35" rx="6" fill="#ddd0b2" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<path d="M26 34 Q42 41 58 34" fill="none" stroke="'+K+'" stroke-width="1.5" opacity="0.45"/>'+
+    '<path d="M25 50 Q42 55 59 50" fill="none" stroke="'+K+'" stroke-width="1.3" opacity="0.3"/></g>';
+  case 'tapijt': return '<g>'+
+    '<rect x="10" y="14" width="64" height="56" rx="4" fill="#c08552" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="16" y="20" width="52" height="44" rx="3" fill="#cf9a66"/>'+
+    '<rect x="21" y="25" width="42" height="34" rx="3" fill="none" stroke="#7a4426" stroke-width="2" stroke-dasharray="5 4"/>'+
+    '<path d="M42 34 L50 42 L42 50 L34 42 Z" fill="none" stroke="#7a4426" stroke-width="2"/>'+
+    '<circle cx="42" cy="42" r="3.2" fill="#7a4426"/>'+
+    '<g stroke="'+K+'" stroke-width="1.5" opacity="0.65">'+
+    '<line x1="15" y1="9" x2="15" y2="14"/><line x1="27" y1="9" x2="27" y2="14"/><line x1="39" y1="9" x2="39" y2="14"/><line x1="51" y1="9" x2="51" y2="14"/><line x1="63" y1="9" x2="63" y2="14"/>'+
+    '<line x1="15" y1="70" x2="15" y2="75"/><line x1="27" y1="70" x2="27" y2="75"/><line x1="39" y1="70" x2="39" y2="75"/><line x1="51" y1="70" x2="51" y2="75"/><line x1="63" y1="70" x2="63" y2="75"/></g></g>';
+  case 'bed': if(v==='L') return '<g>'+
+    '<path d="M14 12 Q7 12 7 19 L7 65 Q7 72 14 72 L84 72 L84 12 Z" fill="#f2ece0" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="13" y="20" width="21" height="44" rx="8" fill="#fbf8f0" stroke="'+K+'" stroke-width="2.2"/>'+
+    '<path d="M42 12 L42 72" stroke="'+K+'" stroke-width="1.8" opacity="0.5"/>'+
+    '<path d="M42 22 Q62 27 84 22 M42 42 Q62 46 84 42 M42 62 Q62 57 84 62" fill="none" stroke="#93a3b4" stroke-width="2" opacity="0.85"/>'+
+    '<path d="M50 12 L84 12 L84 26 Q66 30 50 26 Z" fill="#a8b8c6" opacity="0.35"/></g>';
+    return '<g>'+
+    '<path d="M0 12 L70 12 Q77 12 77 19 L77 65 Q77 72 70 72 L0 72 Z" fill="#dde5ec" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<path d="M0 24 Q28 29 60 24 M0 42 Q30 47 60 42 M0 60 Q28 55 60 60" fill="none" stroke="#93a3b4" stroke-width="2" opacity="0.9"/>'+
+    '<path d="M60 12 L60 72" stroke="'+K+'" stroke-width="1.8" opacity="0.35"/>'+
+    '<path d="M0 12 L34 12 Q34 28 0 26 Z" fill="#a8b8c6" opacity="0.3"/></g>';
+  case 'kast': return '<g>'+SCH+
+    '<rect x="12" y="14" width="60" height="52" rx="3" fill="#b0844f" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="16" y="18" width="52" height="44" rx="2" fill="#c19159"/>'+
+    '<line x1="42" y1="14" x2="42" y2="66" stroke="'+K+'" stroke-width="2.2"/>'+
+    '<path d="M16 18 L26 18 L26 62 L16 62 Z" fill="#8f6a3f" opacity="0.35"/>'+
+    '<line x1="12" y1="31" x2="72" y2="31" stroke="'+K+'" stroke-width="1.4" opacity="0.45"/>'+
+    '<line x1="12" y1="48" x2="72" y2="48" stroke="'+K+'" stroke-width="1.4" opacity="0.45"/>'+
+    '<circle cx="37" cy="40" r="2.6" fill="'+K+'"/><circle cx="47" cy="40" r="2.6" fill="'+K+'"/></g>';
+  case 'tafel': return '<g>'+SCH+
+    '<rect x="11" y="19" width="62" height="46" rx="9" fill="#caa872" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="17" y="25" width="50" height="34" rx="6" fill="#d9ba85"/>'+
+    '<path d="M20 32 Q42 28 64 32 M20 42 Q42 38 64 42 M20 52 Q42 48 64 52" fill="none" stroke="#8f6a3f" stroke-width="1.4" opacity="0.6"/>'+
+    '<rect x="17" y="25" width="50" height="34" rx="6" fill="none" stroke="'+K+'" stroke-width="1.2" opacity="0.35"/></g>';
+  case 'boom': return '<g>'+
+    '<ellipse cx="46" cy="50" rx="30" ry="24" fill="#000" opacity="0.12"/>'+
+    '<path d="M42 10 Q52 6 58 14 Q70 12 72 24 Q82 28 76 39 Q82 50 72 55 Q72 67 60 66 Q54 76 43 72 Q32 78 26 68 Q13 68 14 56 Q4 50 10 40 Q5 29 16 25 Q17 13 29 14 Q34 6 42 10 Z" fill="#5f7a44" stroke="'+K+'" stroke-width="2.8" stroke-linejoin="round"/>'+
+    '<path d="M42 20 Q50 17 55 23 Q64 23 65 32 Q72 37 66 44 Q69 53 60 55 Q57 63 48 61 Q41 66 35 60 Q26 61 25 52 Q18 47 23 40 Q20 31 29 29 Q31 21 42 20 Z" fill="#79955a"/>'+
+    '<path d="M42 30 Q49 28 52 34 Q58 36 55 43 Q57 50 49 50 Q44 55 38 50 Q31 50 32 43 Q28 37 35 34 Q36 29 42 30 Z" fill="#93ad72"/>'+
+    '<g stroke="#3f5530" stroke-width="1.6" fill="none" opacity="0.7">'+
+    '<path d="M43 41 Q52 36 62 36"/><path d="M43 41 Q38 30 40 20"/><path d="M43 41 Q32 44 22 42"/><path d="M43 41 Q48 52 56 58"/><path d="M43 41 Q34 52 28 60"/></g>'+
+    '<circle cx="43" cy="41" r="4.6" fill="#6d5238" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="43" cy="41" r="1.6" fill="#4a3626"/></g>';
+  case 'struik': return '<g>'+
+    '<ellipse cx="43" cy="55" rx="24" ry="10" fill="#000" opacity="0.12"/>'+
+    '<path d="M28 30 Q34 20 43 26 Q52 19 58 29 Q68 30 64 41 Q70 50 59 53 Q56 62 45 58 Q35 63 30 54 Q19 52 23 42 Q18 33 28 30 Z" fill="#7d9a5c" stroke="'+K+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+    '<path d="M34 36 Q42 31 50 36 Q56 40 51 47 Q44 52 37 47 Q31 42 34 36 Z" fill="#96b072"/>'+
+    '<g stroke="#4d6338" stroke-width="1.4" opacity="0.7" fill="none"><path d="M43 44 Q40 36 43 29"/><path d="M43 44 Q50 40 57 40"/><path d="M43 44 Q35 42 28 44"/></g></g>';
+  case 'plant': return '<g>'+
+    '<ellipse cx="42" cy="62" rx="16" ry="5" fill="#000" opacity="0.14"/>'+
+    '<circle cx="42" cy="52" r="13" fill="#b9744a" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<circle cx="42" cy="52" r="8" fill="#a05f3a"/>'+
+    '<g stroke="'+K+'" stroke-width="2" fill="#7fa05c" stroke-linejoin="round">'+
+    '<path d="M42 50 Q30 44 24 28 Q38 32 42 46 Z"/><path d="M42 50 Q54 44 60 28 Q46 32 42 46 Z"/>'+
+    '<path d="M42 48 Q40 30 42 16 Q46 32 43 48 Z"/><path d="M42 50 Q28 52 18 44 Q32 42 40 48 Z"/>'+
+    '<path d="M42 50 Q56 52 66 44 Q52 42 44 48 Z"/></g></g>';
+  case 'piano': return '<g>'+
+    '<ellipse cx="44" cy="62" rx="30" ry="8" fill="#000" opacity="0.15"/>'+
+    '<path d="M16 14 L64 14 Q74 14 74 26 Q74 40 62 46 Q56 62 38 62 L16 62 Z" fill="#241f1d" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<path d="M22 20 L60 20 Q67 20 67 27 Q67 37 57 41 Q52 55 38 55 L22 55 Z" fill="#3a322e"/>'+
+    '<rect x="8" y="18" width="10" height="42" rx="2" fill="#f4efe2" stroke="'+K+'" stroke-width="2.2"/>'+
+    '<g stroke="'+K+'" stroke-width="1.4"><line x1="8" y1="26" x2="18" y2="26"/><line x1="8" y1="34" x2="18" y2="34"/><line x1="8" y1="42" x2="18" y2="42"/><line x1="8" y1="50" x2="18" y2="50"/></g>'+
+    '<path d="M30 24 Q48 26 58 34" stroke="#6b6154" stroke-width="1.4" fill="none" opacity="0.7"/></g>';
+  case 'balie': return '<g>'+SCH+
+    '<path d="M12 18 L72 18 L72 34 L28 34 L28 66 L12 66 Z" fill="#8f6a3f" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<path d="M15 21 L69 21 L69 31 L25 31 L25 63 L15 63 Z" fill="#a67c49"/>'+
+    '<g stroke="#6d5230" stroke-width="1.3" opacity="0.7"><line x1="18" y1="24" x2="66" y2="24"/><line x1="18" y1="28" x2="66" y2="28"/><line x1="19" y1="36" x2="19" y2="60"/><line x1="23" y1="36" x2="23" y2="60"/></g>'+
+    '<rect x="44" y="10" width="14" height="8" rx="2" fill="#c9a45c" stroke="'+K+'" stroke-width="1.8"/></g>';
+  case 'fornuis': return '<g>'+SCH+
+    '<rect x="14" y="16" width="56" height="52" rx="4" fill="#3d4248" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="18" y="20" width="48" height="44" rx="3" fill="#565e66"/>'+
+    '<g stroke="'+K+'" stroke-width="2.2" fill="#2c3136">'+
+    '<circle cx="31" cy="33" r="8"/><circle cx="53" cy="33" r="8"/><circle cx="31" cy="53" r="8"/><circle cx="53" cy="53" r="8"/></g>'+
+    '<g stroke="#8a929b" stroke-width="1.6" fill="none">'+
+    '<circle cx="31" cy="33" r="4"/><circle cx="53" cy="33" r="4"/><circle cx="31" cy="53" r="4"/><circle cx="53" cy="53" r="4"/></g>'+
+    '<rect x="36" y="10" width="12" height="6" rx="2" fill="#c9a45c" stroke="'+K+'" stroke-width="1.6"/></g>';
+  case 'bad': return '<g>'+SCH+
+    '<rect x="10" y="20" width="64" height="44" rx="18" fill="#eef1ee" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="17" y="27" width="50" height="30" rx="12" fill="#a9cfdd"/>'+
+    '<path d="M22 34 Q34 30 46 34 Q58 38 62 34" stroke="#7fb3c6" stroke-width="2.2" fill="none"/>'+
+    '<path d="M24 46 Q36 42 50 46" stroke="#7fb3c6" stroke-width="2" fill="none" opacity="0.8"/>'+
+    '<circle cx="66" cy="42" r="3.4" fill="#c9a45c" stroke="'+K+'" stroke-width="1.8"/></g>';
+  case 'haard': return '<g>'+SCH+
+    '<rect x="12" y="14" width="60" height="54" rx="3" fill="#8a8378" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<path d="M12 14 h60 v10 h-60 Z M12 58 h60 v10 h-60 Z" fill="#736c62"/>'+
+    '<g stroke="'+K+'" stroke-width="1.2" opacity="0.5"><line x1="24" y1="14" x2="24" y2="24"/><line x1="40" y1="14" x2="40" y2="24"/><line x1="56" y1="14" x2="56" y2="24"/><line x1="30" y1="58" x2="30" y2="68"/><line x1="50" y1="58" x2="50" y2="68"/></g>'+
+    '<path d="M20 26 L64 26 Q64 52 42 56 Q20 52 20 26 Z" fill="#2a211c" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M36 50 Q30 42 36 35 Q36 41 40 42 Q38 33 45 27 Q44 36 49 39 Q52 33 54 36 Q57 44 49 50 Q43 54 36 50 Z" fill="#d98f3e" stroke="#8a4a1e" stroke-width="1.6"/>'+
+    '<path d="M40 48 Q37 43 42 38 Q42 43 46 44 Q48 41 49 43 Q50 47 45 49 Q42 50 40 48 Z" fill="#f0c060"/></g>';
+  case 'fontein': return '<g>'+
+    '<ellipse cx="42" cy="60" rx="30" ry="9" fill="#000" opacity="0.12"/>'+
+    '<circle cx="42" cy="42" r="30" fill="#b6b0a2" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<circle cx="42" cy="42" r="24" fill="#a9cfdd" stroke="'+K+'" stroke-width="1.8"/>'+
+    '<circle cx="42" cy="42" r="14" fill="#bcdae6"/>'+
+    '<path d="M24 40 Q33 36 42 40 Q51 44 60 40" stroke="#7fb3c6" stroke-width="2" fill="none"/>'+
+    '<circle cx="42" cy="42" r="6" fill="#8f887b" stroke="'+K+'" stroke-width="1.8"/>'+
+    '<g fill="#dcedf3"><circle cx="42" cy="31" r="2.2"/><circle cx="50" cy="35" r="1.7"/><circle cx="34" cy="35" r="1.7"/><circle cx="46" cy="52" r="1.7"/><circle cx="37" cy="51" r="1.6"/></g></g>';
+  case 'lamp': return '<g>'+
+    '<circle cx="42" cy="42" r="26" fill="#f2d489" opacity="0.28"/>'+
+    '<circle cx="42" cy="42" r="17" fill="#efc766" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<circle cx="42" cy="42" r="11" fill="#f6dd9a"/>'+
+    '<g stroke="'+K+'" stroke-width="1.3" opacity="0.55"><line x1="42" y1="25" x2="42" y2="59"/><line x1="25" y1="42" x2="59" y2="42"/><line x1="30" y1="30" x2="54" y2="54"/><line x1="54" y1="30" x2="30" y2="54"/></g>'+
+    '<circle cx="42" cy="42" r="3.4" fill="#8a6f3a" stroke="'+K+'" stroke-width="1.6"/></g>';
+  case 'beeld': return '<g>'+SCH+
+    '<rect x="20" y="20" width="44" height="44" rx="4" fill="#c9c2b2" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="26" y="26" width="32" height="32" rx="3" fill="#dcd5c4"/>'+
+    '<circle cx="42" cy="36" r="7" fill="#b6ae9c" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 56 Q30 44 42 44 Q54 44 54 56 Z" fill="#b6ae9c" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M36 33 Q42 29 48 33" stroke="'+K+'" stroke-width="1.2" fill="none" opacity="0.5"/></g>';
+  case 'kist': return '<g>'+SCH+
+    '<rect x="14" y="20" width="56" height="44" rx="4" fill="#ad8757" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="18" y="24" width="48" height="36" rx="3" fill="#c09a64"/>'+
+    '<line x1="14" y1="34" x2="70" y2="34" stroke="'+K+'" stroke-width="2"/>'+
+    '<line x1="14" y1="50" x2="70" y2="50" stroke="'+K+'" stroke-width="2"/>'+
+    '<line x1="21" y1="23" x2="63" y2="61" stroke="'+K+'" stroke-width="2.2" opacity="0.7"/>'+
+    '<line x1="63" y1="23" x2="21" y2="61" stroke="'+K+'" stroke-width="2.2" opacity="0.7"/>'+
+    '<rect x="38" y="38" width="8" height="8" rx="1.5" fill="#8a6f3a" stroke="'+K+'" stroke-width="1.6"/></g>';
+  case 'ton': return '<g>'+
+    '<ellipse cx="42" cy="60" rx="26" ry="8" fill="#000" opacity="0.13"/>'+
+    '<circle cx="42" cy="42" r="25" fill="#b8955e" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<circle cx="42" cy="42" r="19" fill="#c8a76e"/>'+
+    '<circle cx="42" cy="42" r="17" fill="none" stroke="'+K+'" stroke-width="1.8" opacity="0.55"/>'+
+    '<circle cx="42" cy="42" r="7" fill="#a3824e" stroke="'+K+'" stroke-width="1.6"/>'+
+    '<g stroke="'+K+'" stroke-width="1.4" opacity="0.45"><line x1="42" y1="17" x2="42" y2="25"/><line x1="42" y1="59" x2="42" y2="67"/><line x1="17" y1="42" x2="25" y2="42"/><line x1="59" y1="42" x2="67" y2="42"/><line x1="25" y1="25" x2="30" y2="30"/><line x1="59" y1="25" x2="54" y2="30"/><line x1="25" y1="59" x2="30" y2="54"/><line x1="59" y1="59" x2="54" y2="54"/></g></g>';
+  case 'kei': return '<g>'+
+    '<ellipse cx="42" cy="58" rx="26" ry="8" fill="#000" opacity="0.12"/>'+
+    '<path d="M20 52 Q14 36 28 26 Q44 16 58 26 Q70 34 64 50 Q56 66 38 64 Q24 62 20 52 Z" fill="#a8a496" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<path d="M26 40 Q34 28 50 28 Q60 32 60 42 Q52 34 40 34 Q31 35 26 40 Z" fill="#bcb8ab"/>'+
+    '<path d="M30 50 Q42 56 54 50" fill="none" stroke="'+K+'" stroke-width="1.4" opacity="0.4"/></g>';
+  }
+  return '';
+}
+</script>
+<script>
+"use strict";
+/* ================= BORDRENDERING ================= */
+const GEBIEDTINTEN=['#e7dcc0','#ddd0b4','#e9e1cb','#d9cdb9','#e3d5ae','#dbd6c2'];
+const TUINTINT='#c6d2a8', TERRASTINT='#d4cfae';
+
+function bordSVG(z){
+  const N=z.N, B=MARGE+N*CEL, H=MARGE+N*CEL+64;
+  const gebNamen=Object.keys(z.gebieden);
+  const tint={};
+  gebNamen.forEach((g,i)=>{
+    if(z.buiten.includes(g)) tint[g]= g==='TERRAS'?TERRASTINT:TUINTINT;
+    else tint[g]=GEBIEDTINTEN[i%GEBIEDTINTEN.length];
+  });
+  let s='<defs>'+
+    '<pattern id="gras" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'+
+      '<line x1="0" y1="0" x2="0" y2="12" stroke="#93a877" stroke-width="2.4"/></pattern>'+
+    '<pattern id="tegels" width="21" height="21" patternUnits="userSpaceOnUse">'+
+      '<path d="M0 0 H21 V21" fill="none" stroke="#b3ad8c" stroke-width="1.2"/></pattern>'+
+    '<pattern id="parket" width="26" height="13" patternUnits="userSpaceOnUse">'+
+      '<path d="M0 6.5 H26 M13 0 V6.5 M0 6.5 V13 M26 6.5 V13" fill="none" stroke="#8d8064" stroke-width="0.8" opacity="0.35"/></pattern>'+
+    '<filter id="tokschaduw" x="-40%" y="-40%" width="180%" height="180%">'+
+      '<feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#000" flood-opacity="0.45"/></filter>'+
+    '<radialGradient id="papierglans" cx="50%" cy="0%" r="120%">'+
+      '<stop offset="0%" stop-color="#fff8e6" stop-opacity="0.5"/><stop offset="55%" stop-color="#fff" stop-opacity="0"/></radialGradient>'+
+    '</defs>';
+  // papier
+  s+='<rect x="2" y="2" width="'+(B+8)+'" height="'+(H+4)+'" rx="6" fill="#e9dfc9"/>';
+  s+='<rect x="2" y="2" width="'+(B+8)+'" height="'+(H+4)+'" rx="6" fill="url(#papierglans)"/>';
+  // rij- en kolomnummering in boekstijl (R1.., K1..)
+  for(let i=0;i<N;i++){
+    s+='<text x="'+(MARGE+i*CEL+CEL/2)+'" y="'+(MARGE-8)+'" text-anchor="middle" font-family="Courier New,monospace" font-weight="bold" font-size="13" fill="#8d8064">K'+(i+1)+'</text>';
+    s+='<text x="'+(MARGE-15)+'" y="'+(MARGE+i*CEL+CEL/2+4)+'" text-anchor="middle" font-family="Courier New,monospace" font-weight="bold" font-size="13" fill="#8d8064">R'+(i+1)+'</text>';
+  }
+  // celvullingen
+  for(const g of gebNamen){
+    for(const [r,c] of z.gebieden[g]){
+      const x=MARGE+c*CEL, y=MARGE+r*CEL;
+      s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="'+tint[g]+'"/>';
+      const gl=g.toLowerCase();
+      if(z.buiten.includes(g))
+        s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="url(#'+(g==='TERRAS'?'tegels':'gras')+')" opacity="0.5"/>';
+      else if(gl.includes('keuken')||gl.includes('badkamer')||gl.includes('vestibule')||gl.includes('hal'))
+        s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="url(#tegels)" opacity="0.45"/>';
+      else
+        s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="url(#parket)"/>';
+    }
+  }
+  // dunne binnenlijnen
+  s+='<g stroke="#8d8064" stroke-width="1" opacity="0.4">';
+  for(let i=1;i<N;i++){
+    s+='<line x1="'+(MARGE+i*CEL)+'" y1="'+MARGE+'" x2="'+(MARGE+i*CEL)+'" y2="'+(MARGE+N*CEL)+'"/>';
+    s+='<line x1="'+MARGE+'" y1="'+(MARGE+i*CEL)+'" x2="'+(MARGE+N*CEL)+'" y2="'+(MARGE+i*CEL)+'"/>';
+  }
+  s+='</g>';
+  // objecten
+  for(const o of z.objecten){
+    s+='<g transform="translate('+(MARGE+o.c*CEL)+','+(MARGE+o.r*CEL)+')">'+icoonSVG(o.t,o.v)+'</g>';
+  }
+  // dikke gebiedsgrenzen
+  const geb=(r,c)=>gebiedVan(z,r,c);
+  s+='<g stroke="#3a332a" stroke-width="5" stroke-linecap="square">';
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    const g0=geb(r,c), x=MARGE+c*CEL, y=MARGE+r*CEL;
+    if(r===0||geb(r-1,c)!==g0) s+='<line x1="'+x+'" y1="'+y+'" x2="'+(x+CEL)+'" y2="'+y+'"/>';
+    if(c===0||geb(r,c-1)!==g0) s+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+CEL)+'"/>';
+    if(r===N-1) s+='<line x1="'+x+'" y1="'+(y+CEL)+'" x2="'+(x+CEL)+'" y2="'+(y+CEL)+'"/>';
+    if(c===N-1) s+='<line x1="'+(x+CEL)+'" y1="'+y+'" x2="'+(x+CEL)+'" y2="'+(y+CEL)+'"/>';
+  }
+  s+='</g>';
+  // deuren: opening in de muur + deurblad met boog
+  for(const [[r1,c1],[r2,c2]] of z.deuren){
+    let x,y,horiz;
+    if(r1===r2){ // verticale muur tussen (r1,c1) en (r1,c2)
+      const c=Math.max(c1,c2); x=MARGE+c*CEL; y=MARGE+r1*CEL; horiz=false;
+    } else { // horizontale muur
+      const r=Math.max(r1,r2); x=MARGE+c1*CEL; y=MARGE+r*CEL; horiz=true;
+    }
+    if(horiz){
+      s+='<line x1="'+(x+20)+'" y1="'+y+'" x2="'+(x+CEL-20)+'" y2="'+y+'" stroke="#e9dfc9" stroke-width="7"/>';
+      s+='<path d="M '+(x+20)+' '+y+' A 44 44 0 0 1 '+(x+CEL-20)+' '+(y+0.01)+'" fill="none" stroke="#3a332a" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.7"/>';
+      s+='<line x1="'+(x+20)+'" y1="'+y+'" x2="'+(x+20)+'" y2="'+(y+30)+'" stroke="#3a332a" stroke-width="3"/>';
+    } else {
+      s+='<line x1="'+x+'" y1="'+(y+20)+'" x2="'+x+'" y2="'+(y+CEL-20)+'" stroke="#e9dfc9" stroke-width="7"/>';
+      s+='<path d="M '+x+' '+(y+20)+' A 44 44 0 0 1 '+(x+0.01)+' '+(y+CEL-20)+'" fill="none" stroke="#3a332a" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.7"/>';
+      s+='<line x1="'+x+'" y1="'+(y+20)+'" x2="'+(x+30)+'" y2="'+(y+20)+'" stroke="#3a332a" stroke-width="3"/>';
+    }
+  }
+  // gebiedslabels
+  for(const g of gebNamen){
+    const [lr,lc]=z.labels[g];
+    const cx=MARGE+lc*CEL+CEL/2, cy=MARGE+(lr+1)*CEL;
+    const w=g.length*8.2+18;
+    s+='<g transform="translate('+cx+','+cy+')">'+
+       '<rect x="'+(-w/2)+'" y="-11" width="'+w+'" height="20" rx="10" fill="#f2ead6" stroke="#3a332a" stroke-width="2"/>'+
+       '<text x="0" y="4.5" text-anchor="middle" font-family="Courier New,monospace" font-weight="bold" font-size="11.5" letter-spacing="1" fill="#3a332a">'+g+'</text></g>';
+  }
+  // cartouche (titelblok) + kompas, als op een architectentekening
+  const cy=MARGE+N*CEL+12;
+  const blad={z1:'I',z2:'II',z3:'III',z4:'IV',z5:'V'}[z.id]||'—';
+  s+='<g font-family="Courier New,monospace" fill="#6b5f4c">'+
+     '<rect x="'+MARGE+'" y="'+cy+'" width="'+(N*CEL)+'" height="40" fill="none" stroke="#8d8064" stroke-width="1.6"/>'+
+     '<text x="'+(MARGE+12)+'" y="'+(cy+17)+'" font-size="12.5" font-weight="bold" letter-spacing="2">PENSION DE LINDEBOOM</text>'+
+     '<text x="'+(MARGE+12)+'" y="'+(cy+32)+'" font-size="10.5" letter-spacing="1">'+((N>=8?(z.locatie||'')+' · '+(z.datum||''):(z.locatie||''))).toUpperCase()+'</text>';
+  if(N>=8){
+    s+='<line x1="'+(MARGE+N*CEL-150)+'" y1="'+cy+'" x2="'+(MARGE+N*CEL-150)+'" y2="'+(cy+40)+'" stroke="#8d8064" stroke-width="1.2"/>'+
+       '<text x="'+(MARGE+N*CEL-138)+'" y="'+(cy+17)+'" font-size="9.5">SCHAAL 1:50</text>'+
+       '<text x="'+(MARGE+N*CEL-138)+'" y="'+(cy+31)+'" font-size="9.5">BLAD '+blad+' / V</text>'+
+       '</g>'+
+       '<g transform="translate('+(MARGE+N*CEL-32)+','+(cy+20)+')">'+
+       '<circle r="13" fill="none" stroke="#8d8064" stroke-width="1.6"/>'+
+       '<path d="M0 -11 L4 4 L0 1 L-4 4 Z" fill="#a83a2b" stroke="#6b5f4c" stroke-width="0.8"/>'+
+       '<text y="4" x="0" text-anchor="middle" font-family="Courier New,monospace" font-size="0" fill="#6b5f4c"></text>'+
+       '</g>';
+  } else {
+    s+='<text x="'+(MARGE+N*CEL-12)+'" y="'+(cy+17)+'" text-anchor="end" font-size="9.5">BLAD '+blad+' / V</text>'+
+       '<text x="'+(MARGE+N*CEL-12)+'" y="'+(cy+31)+'" text-anchor="end" font-size="9.5">SCHAAL 1:50</text>'+
+       '</g>';
+  }
+  // lagen voor kruisjes, tokens en klikvlakken
+  s+='<g id="laag-x"></g><g id="laag-tokens"></g><g id="laag-klik"></g>';
+  return {svg:s, w:B+12, h:H+8};
+}
+
+const PKLEUREN=['#356b8c','#7a5a8e','#5f7d4a','#a07838','#8c4a56','#4a7d78'];
+function tokenSVG(z,p,idx,r,c){
+  const x=MARGE+c*CEL+CEL/2, y=MARGE+r*CEL+CEL/2;
+  const init=p.naam.split(' ').map(w=>w[0]).slice(0,2).join('');
+  const vul=p.slachtoffer?'#7e2b20':PKLEUREN[idx%PKLEUREN.length];
+  return '<g class="token" data-k="'+p.k+'" transform="translate('+x+','+y+')" filter="url(#tokschaduw)" style="cursor:pointer">'+
+    '<circle r="27" fill="'+vul+'" stroke="#f2ead6" stroke-width="3"/>'+
+    '<circle r="27" fill="none" stroke="#2b2620" stroke-width="1.4" opacity="0.6"/>'+
+    (p.slachtoffer
+      ?'<text y="9" text-anchor="middle" font-family="Georgia,serif" font-size="26" fill="#f2ead6">†</text>'
+      :'<text y="7" text-anchor="middle" font-family="Georgia,serif" font-size="20" fill="#f2ead6">'+init+'</text>')+
+    '</g>';
+}
+function kruisSVG(r,c){
+  const x=MARGE+c*CEL, y=MARGE+r*CEL;
+  return '<g class="kruis" opacity="0.75">'+
+    '<line x1="'+(x+24)+'" y1="'+(y+24)+'" x2="'+(x+CEL-24)+'" y2="'+(y+CEL-24)+'" stroke="#6b6154" stroke-width="5.5" stroke-linecap="round"/>'+
+    '<line x1="'+(x+CEL-24)+'" y1="'+(y+24)+'" x2="'+(x+24)+'" y2="'+(y+CEL-24)+'" stroke="#6b6154" stroke-width="5.5" stroke-linecap="round"/></g>';
+}
+
+/* ================= BEWIJSSTUKKEN ================= */
+function bewijsSVG(i){
+  const K='#2b2620', PAP='#efe6d0', TIK='font-family="Courier New,monospace"', HAND='font-family="Georgia,serif" font-style="italic"';
+  if(i===0) return '<g transform="rotate(-2.5 150 105)">'+
+    '<path d="M52 32 L240 24 L248 116 L212 176 L60 182 Z" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<path d="M248 116 L212 176 L128 180 Q160 162 192 150 Q226 138 248 116 Z" fill="#221a12"/>'+
+    '<path d="M248 116 Q226 138 192 150 Q160 162 128 180" fill="none" stroke="#8a4a22" stroke-width="3" opacity="0.85"/>'+
+    '<path d="M244 100 Q220 128 186 142" fill="none" stroke="#b06c2a" stroke-width="1.6" opacity="0.5"/>'+
+    '<text x="70" y="66" '+TIK+' font-size="13.5" fill="'+K+'">de gang is leeg</text>'+
+    '<text x="70" y="88" '+TIK+' font-size="13.5" fill="'+K+'">tussen 02.30 en 02.45.</text>'+
+    '<text x="70" y="110" '+TIK+' font-size="13.5" fill="'+K+'">sleutel retour</text>'+
+    '<text x="70" y="132" '+TIK+' font-size="13.5" fill="'+K+'">onder de mat.</text>'+
+    '<text x="82" y="160" '+HAND+' font-size="18" fill="'+K+'">— L.</text></g>';
+  if(i===1) return '<g>'+
+    '<g transform="rotate(-1.5 116 106)">'+
+    '<rect x="26" y="36" width="182" height="142" rx="3" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<text x="40" y="60" '+TIK+' font-size="12.5" font-weight="bold" letter-spacing="1" fill="'+K+'">SLEUTELREGISTER</text>'+
+    '<line x1="40" y1="68" x2="194" y2="68" stroke="'+K+'" stroke-width="1.6"/>'+
+    '<text x="40" y="90" '+TIK+' font-size="10.5" fill="'+K+'">28 MRT — TUINPOORT — retour</text>'+
+    '<text x="40" y="110" '+TIK+' font-size="10.5" fill="'+K+'">30 MRT — KELDER — retour</text>'+
+    '<text x="40" y="130" '+TIK+' font-size="10.5" fill="#7e2b20">2 APR — SERRE — niet</text>'+
+    '<text x="40" y="144" '+TIK+' font-size="10.5" fill="#7e2b20">uitgegeven</text>'+
+    '<text x="40" y="166" '+HAND+' font-size="12" fill="'+K+'">paraaf nachtdienst: L.M.</text></g>'+
+    '<line x1="252" y1="56" x2="266" y2="32" stroke="'+K+'" stroke-width="1.6"/>'+
+    '<rect x="242" y="12" width="50" height="23" rx="3" fill="#f2ead6" stroke="'+K+'" stroke-width="2"/>'+
+    '<text x="267" y="27" '+TIK+' font-size="9.5" text-anchor="middle" fill="'+K+'">SERRE</text>'+
+    '<circle cx="252" cy="72" r="16" fill="none" stroke="'+K+'" stroke-width="5.5"/>'+
+    '<rect x="247" y="88" width="10" height="58" fill="#c9b48c" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<rect x="257" y="126" width="15" height="8" fill="#c9b48c" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<rect x="257" y="139" width="10" height="7" fill="#c9b48c" stroke="'+K+'" stroke-width="2.4"/></g>';
+  if(i===2) return '<g>'+
+    '<g transform="rotate(1.5 212 90)">'+
+    '<rect x="146" y="28" width="134" height="122" rx="3" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<text x="158" y="52" '+TIK+' font-size="11.5" font-weight="bold" letter-spacing="1" fill="'+K+'">MONTEURSBON</text>'+
+    '<line x1="158" y1="60" x2="268" y2="60" stroke="'+K+'" stroke-width="1.4"/>'+
+    '<text x="158" y="80" '+TIK+' font-size="10.5" fill="'+K+'">bel zijdeur —</text>'+
+    '<text x="158" y="98" '+TIK+' font-size="10.5" fill="'+K+'">geen slijtage.</text>'+
+    '<text x="158" y="116" '+TIK+' font-size="10.5" fill="#7e2b20">draad doorgeknipt.</text>'+
+    '<text x="158" y="138" '+HAND+' font-size="11" fill="'+K+'">sept. 1951</text></g>'+
+    '<path d="M18 172 C 58 150 92 188 122 166" fill="none" stroke="#5a4632" stroke-width="8" stroke-linecap="round"/>'+
+    '<path d="M142 160 C 176 140 214 186 268 170" fill="none" stroke="#5a4632" stroke-width="8" stroke-linecap="round"/>'+
+    '<g stroke="#b9762e" stroke-width="2.6" stroke-linecap="round">'+
+    '<line x1="122" y1="166" x2="132" y2="158"/><line x1="122" y1="166" x2="133" y2="166"/><line x1="122" y1="166" x2="130" y2="173"/>'+
+    '<line x1="142" y1="160" x2="132" y2="153"/><line x1="142" y1="160" x2="131" y2="161"/><line x1="142" y1="160" x2="134" y2="168"/></g></g>';
+  if(i===3) return '<g transform="rotate(-1.2 150 105)">'+
+    '<path d="M42 26 L236 26 L236 92 L214 100 L192 90 L168 100 L146 90 L122 100 L98 90 L74 100 L42 94 Z" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<path d="M42 128 L66 118 L90 130 L114 118 L138 130 L162 118 L186 130 L210 118 L236 126 L236 186 L42 186 Z" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<text x="56" y="50" '+TIK+' font-size="12.5" font-weight="bold" letter-spacing="1" fill="'+K+'">DIENSTROOSTER</text>'+
+    '<text x="56" y="66" '+TIK+' font-size="10.5" fill="'+K+'">FEBRUARI 1953</text>'+
+    '<line x1="56" y1="76" x2="222" y2="76" stroke="'+K+'" stroke-width="1.3" opacity="0.6"/>'+
+    '<text x="58" y="114" '+TIK+' font-size="11.5" font-weight="bold" fill="#d98a7a" letter-spacing="2">— WEEK 7 ONTBREEKT —</text>'+
+    '<text x="56" y="150" '+TIK+' font-size="10.5" fill="'+K+'">week 8 — nachtdienst</text>'+
+    '<text x="56" y="172" '+HAND+' font-size="12" fill="'+K+'">paraaf: L.M.</text></g>';
+  return '<g transform="rotate(1.5 150 105)">'+
+    '<rect x="60" y="22" width="180" height="168" rx="6" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<path d="M60 28 Q60 22 66 22 L234 22 Q240 22 240 28 L240 52 L60 52 Z" fill="#a83a2b"/>'+
+    '<text x="150" y="41" '+TIK+' font-size="10.5" font-weight="bold" letter-spacing="1.5" text-anchor="middle" fill="#f2ead6">ZATERDAG 30 OKTOBER</text>'+
+    '<g stroke="#9db4c9" stroke-width="1" opacity="0.7">'+
+    '<line x1="72" y1="90" x2="228" y2="90"/><line x1="72" y1="110" x2="228" y2="110"/>'+
+    '<line x1="72" y1="130" x2="228" y2="130"/><line x1="72" y1="150" x2="228" y2="150"/></g>'+
+    '<text x="76" y="84" '+HAND+' font-size="14.5" fill="#243447">M. spreken over</text>'+
+    '<text x="76" y="104" '+HAND+' font-size="14.5" fill="#243447">de sleutels.</text>'+
+    '<text x="76" y="142" '+HAND+' font-size="14.5" fill="#243447">Daarna: politie.</text>'+
+    '<text x="206" y="178" '+HAND+' font-size="11" fill="#243447">E.M.</text></g>';
+}
+function bewijsWrap(i){
+  return '<svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+BEWIJS[i].titel+'">'+bewijsSVG(i)+'</svg>';
+}
+</script>
+<script>
+"use strict";
+/* ================= SPELLOGICA ================= */
+let huidigeZaak=null, gekozenPersoon=null, xModus=false, bordZoom=false;
+
+function zetBordBreedte(z){
+  const svg=$('bord');
+  const celpx = bordZoom ? 72 : (z.N>=10 ? 52 : (z.N>=8 ? 46 : 0));
+  if(celpx===0){ svg.style.minWidth='100%'; }
+  else {
+    const px=Math.round((MARGE+z.N*CEL+12)*(celpx/CEL));
+    svg.style.minWidth=px+'px';
+  }
+}
+
+function naarScherm(id){
+  document.querySelectorAll('.scherm').forEach(s=>s.classList.remove('actief'));
+  $(id).classList.add('actief');
+  $('inhoud').scrollTop=0;
+}
+function openOverlay(id){ $(id).classList.add('open'); }
+function sluitOverlay(id){ $(id).classList.remove('open'); }
+function sluitAlleOverlays(){ document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open')); }
+
+/* ---------- overzicht ---------- */
+function renderBewijsstrook(houderId, klikbaarAltijd){
+  const romein=['I','II','III','IV','V'];
+  const h=$(houderId); h.innerHTML='';
+  ZDATA.forEach((z,i)=>{
+    const heeft=!!ST.klaar[z.id];
+    const d=document.createElement('div');
+    if(heeft){
+      d.className='bewijskaart';
+      d.innerHTML=bewijsWrap(i)+'<div class="bt">'+romein[i]+' · '+BEWIJS[i].titel+'</div>';
+      d.addEventListener('click',()=>{klikGeluid();toonBewijs(i);});
+    } else {
+      d.className='bewijskaart leeg';
+      d.innerHTML='<div class="vraagteken">?</div>BEWIJSSTUK '+romein[i]+'<br>nog niet<br>veiliggesteld';
+    }
+    h.appendChild(d);
+  });
+}
+function toonBewijs(i){
+  $('bw-titel').textContent='Bewijsstuk '+['I','II','III','IV','V'][i]+' — '+BEWIJS[i].titel;
+  $('bw-svg').innerHTML=bewijsWrap(i);
+  $('bw-vondst').textContent=BEWIJS[i].vondst;
+  $('bw-duiding').textContent=BEWIJS[i].duiding;
+  $('bw-kantlijn').textContent='Kantlijn van het dossier: '+ZDATA[i].draad;
+  openOverlay('ov-bewijs');
+}
+
+function renderOverzicht(){
+  const romein=['I','II','III','IV','V'];
+  const lijst=$('dossierlijst'); lijst.innerHTML='';
+  const open=aantalKlaar();
+  ZDATA.forEach((z,i)=>{
+    const klaar=!!ST.klaar[z.id];
+    const beschikbaar=i<=open;
+    const d=document.createElement('div');
+    d.className='dossier'+(beschikbaar?'':' dicht');
+    let binnen='<div class="dnr">MAP '+romein[i]+' · '+z.nr+'</div>'+
+      '<div class="dtitel">'+z.titel+'</div>'+
+      '<div class="dmeta">'+z.datum+' · '+z.locatie+'</div>';
+    if(klaar){
+      const m=z.personen.find(p=>p.k===z.moordenaar);
+      binnen+='<div class="stempel">OPGELOST</div>'+
+        '<div class="dmeta" style="margin-top:6px;color:#c9a45c">Dader: '+m.naam+'</div>';
+    } else if(!beschikbaar){
+      binnen+='<div class="slot">🔒</div>';
+    }
+    d.innerHTML=binnen;
+    if(beschikbaar) d.addEventListener('click',()=>{klikGeluid();openZaak(i);});
+    lijst.appendChild(d);
+  });
+  $('voortgang').textContent=open+' VAN DE 5 DOSSIERS OPGELOST';
+  renderBewijsstrook('bewijsstrook');
+  $('conclusieknoprij').style.display = open>=5 && !ST.concl ? 'flex':'none';
+  if(ST.concl){
+    $('conclusieknoprij').style.display='flex';
+    $('kn-conclusie').textContent='Lees het rapport terug';
+  }
+}
+
+/* ---------- zaak ---------- */
+function openZaak(i){
+  huidigeZaak=i; gekozenPersoon=null; xModus=false;
+  const z=ZDATA[i];
+  const romein=['I','II','III','IV','V'];
+  $('z-nr').textContent='MAP '+romein[i]+' · '+z.nr;
+  $('z-titel').textContent=z.titel;
+  $('z-meta').textContent=z.datum+' · '+z.locatie;
+  $('z-vondst').textContent=z.vondst;
+  $('z-tekst').textContent=z.tekst;
+  const b=bordSVG(z);
+  const svg=$('bord');
+  svg.setAttribute('viewBox','0 0 '+b.w+' '+b.h);
+  svg.innerHTML=b.svg;
+  zetBordBreedte(z);
+  bouwKlikvlakken(z);
+  renderPortretten(z);
+  renderClues(z);
+  renderMarkeringen(z);
+  werkToolsBij(z);
+  $('oordeel').textContent=''; $('oordeel').className='';
+  naarScherm('s-zaak');
+}
+function bouwKlikvlakken(z){
+  const laag=$('bord').querySelector('#laag-klik');
+  let s='';
+  for(let r=0;r<z.N;r++)for(let c=0;c<z.N;c++){
+    s+='<rect class="klikcel" data-r="'+r+'" data-c="'+c+'" x="'+(MARGE+c*CEL)+'" y="'+(MARGE+r*CEL)+
+       '" width="'+CEL+'" height="'+CEL+'" fill="transparent" style="cursor:pointer"/>';
+  }
+  laag.innerHTML=s;
+  laag.querySelectorAll('.klikcel').forEach(el=>{
+    el.addEventListener('click',()=>celKlik(z,+el.dataset.r,+el.dataset.c));
+  });
+}
+function renderPortretten(z){
+  const st=bord(z.id), strook=$('z-portretten'); strook.innerHTML='';
+  z.personen.forEach((p,idx)=>{
+    const d=document.createElement('div');
+    d.className='portret'+(p.slachtoffer?' slachtoffer':'')+
+      (gekozenPersoon===p.k?' gekozen':'')+(st.p[p.k]?' geplaatst':'');
+    d.innerHTML=gezichtSVG(p)+'<div class="pnaam">'+p.naam+'</div>'+
+      '<div class="prol">'+p.rol+(p.slachtoffer?' · slachtoffer':'')+'</div>';
+    d.addEventListener('click',()=>{
+      klikGeluid();
+      gekozenPersoon = gekozenPersoon===p.k ? null : p.k;
+      renderPortretten(z); renderClues(z);
+    });
+    strook.appendChild(d);
+  });
+}
+function renderClues(z){
+  const el=$('z-clues'); el.innerHTML='';
+  z.personen.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='clue'+(p.slachtoffer?' v':'')+(gekozenPersoon===p.k?' actief':'');
+    d.innerHTML='<b>'+p.naam+(p.slachtoffer?' †':'')+' <span style="font-style:normal;font-family:Courier New,monospace;font-size:10px;color:#8b94a8;letter-spacing:.06em">— '+p.rol.toUpperCase()+'</span></b><span>&ldquo;'+p.clue+'&rdquo;</span>';
+    el.appendChild(d);
+  });
+}
+function renderMarkeringen(z){
+  const st=bord(z.id);
+  const lx=$('bord').querySelector('#laag-x');
+  const lt=$('bord').querySelector('#laag-tokens');
+  lx.innerHTML=st.x.map(k=>{const [r,c]=k.split(',').map(Number);return kruisSVG(r,c);}).join('');
+  let s='';
+  z.personen.forEach((p,idx)=>{
+    const pos=st.p[p.k];
+    if(pos){const [r,c]=pos.split(',').map(Number); s+=tokenSVG(z,p,idx,r,c);}
+  });
+  lt.innerHTML=s;
+  lt.querySelectorAll('.token').forEach(el=>{
+    el.addEventListener('click',ev=>{
+      ev.stopPropagation();
+      if(ST.klaar[z.id]) return;
+      const k=el.dataset.k;
+      delete st.p[k]; bewaar();
+      gekozenPersoon=k; klikGeluid();
+      renderPortretten(z); renderClues(z); renderMarkeringen(z);
+    });
+  });
+}
+function celKlik(z,r,c){
+  if(ST.klaar[z.id]) return;
+  const st=bord(z.id), k=sleutel(r,c);
+  const bezetDoor=Object.keys(st.p).find(pk=>st.p[pk]===k);
+  if(xModus){
+    if(bezetDoor) return;
+    const i=st.x.indexOf(k);
+    if(i>=0) st.x.splice(i,1); else { if(!celVrij(z,r,c)) return; st.x.push(k); }
+    bewaar(); klikGeluid(); renderMarkeringen(z);
+    return;
+  }
+  if(bezetDoor) return; // token-klik regelt verwijderen
+  if(!gekozenPersoon){ $('oordeel').textContent='Kies eerst een portret, en tik dan een vak aan.'; $('oordeel').className=''; return; }
+  if(!celVrij(z,r,c)){ foutGeluid(); $('oordeel').textContent='Dat object kan niet worden bezet.'; $('oordeel').className='fout'; return; }
+  const xi=st.x.indexOf(k); if(xi>=0) st.x.splice(xi,1);
+  st.p[gekozenPersoon]=k; bewaar(); zetGeluid();
+  // kies automatisch de volgende niet-geplaatste persoon
+  const volgende=z.personen.find(p=>!st.p[p.k]);
+  gekozenPersoon=volgende?volgende.k:null;
+  $('oordeel').textContent='';
+  renderPortretten(z); renderClues(z); renderMarkeringen(z);
+}
+function werkToolsBij(z){
+  const klaar=!!ST.klaar[z.id];
+  $('t-controleer').style.display=klaar?'none':'';
+  $('t-xmodus').style.display=klaar?'none':'';
+  $('t-wis').style.display=klaar?'none':'';
+  $('t-bekentenis').style.display=klaar?'':'none';
+  $('t-xmodus').classList.toggle('aan',xModus);
+  if(klaar){
+    const m=z.personen.find(p=>p.k===z.moordenaar);
+    $('oordeel').textContent='OPGELOST — dader: '+m.naam;
+    $('oordeel').className='';
+  }
+}
+
+/* ---------- controleren ---------- */
+function controleer(){
+  const z=ZDATA[huidigeZaak], st=bord(z.id);
+  const totaal=z.personen.length;
+  const geplaatst=z.personen.filter(p=>st.p[p.k]).length;
+  if(geplaatst<totaal){
+    foutGeluid();
+    $('oordeel').textContent='Plaats eerst iedereen op de plattegrond ('+geplaatst+' van '+totaal+' geplaatst).';
+    $('oordeel').className='fout';
+    return;
+  }
+  let goed=0;
+  z.personen.forEach(p=>{ if(st.p[p.k]===z.sol[p.k].join(',')) goed++; });
+  if(goed===totaal){
+    goedGeluid();
+    openMoordPicker(z);
+  } else {
+    foutGeluid();
+    $('bordhoes').classList.remove('schud'); void $('bordhoes').offsetWidth; $('bordhoes').classList.add('schud');
+    $('oordeel').textContent=goed+' van de '+totaal+' personen staan op de juiste plek. Kijk de verklaringen nog eens na.';
+    $('oordeel').className='fout';
+  }
+}
+function openMoordPicker(z){
+  $('moordvraag').textContent='De plattegrond klopt.';
+  const slachtoffer=z.personen.find(p=>p.slachtoffer);
+  $('moordsub').textContent='Wie bevond zich in hetzelfde gebied als '+slachtoffer.naam+'? Wijs de dader aan.';
+  const lijst=$('moordkeuzes'); lijst.innerHTML=''; $('moordoordeel').textContent='';
+  z.personen.filter(p=>!p.slachtoffer).forEach(p=>{
+    const d=document.createElement('div');
+    d.className='portret';
+    d.innerHTML=gezichtSVG(p)+'<div class="pnaam">'+p.naam+'</div><div class="prol">'+p.rol+'</div>';
+    d.addEventListener('click',()=>kiesMoordenaar(z,p));
+    lijst.appendChild(d);
+  });
+  openOverlay('ov-moord');
+}
+function kiesMoordenaar(z,p){
+  if(p.k===z.moordenaar){
+    stempelGeluid();
+    ST.klaar[z.id]=true; bewaar();
+    sluitOverlay('ov-moord');
+    toonBekentenis(z);
+    werkToolsBij(z);
+  } else {
+    foutGeluid();
+    const slachtoffer=z.personen.find(q=>q.slachtoffer);
+    $('moordoordeel').textContent=p.naam+' was niet in het gebied van '+slachtoffer.naam+'. Kijk nog eens goed.';
+  }
+}
+function toonBekentenis(z){
+  const i=ZDATA.indexOf(z);
+  const m=z.personen.find(p=>p.k===z.moordenaar);
+  $('bek-kop').textContent=z.titel+' — dader: '+m.naam;
+  $('bek-tekst').innerHTML=z.bekentenis;
+  $('bek-bewijskop').textContent='Bewijsstuk '+['I','II','III','IV','V'][i]+' veiliggesteld — '+BEWIJS[i].titel;
+  $('bek-bewijs').innerHTML=bewijsWrap(i);
+  $('bek-vondstregel').textContent=BEWIJS[i].vondst;
+  $('bek-draad').textContent=BEWIJS[i].duiding+' — Kantlijn: '+z.draad;
+  openOverlay('ov-bekentenis');
+}
+
+/* ---------- conclusie ---------- */
+let conclKeuzes=[null,null,null];
+function renderConclusie(){
+  renderBewijsstrook('bewijsmuur');
+  const h=$('vragenhouder'); h.innerHTML='';
+  CONCLUSIE.forEach((v,i)=>{
+    const blok=document.createElement('div');
+    blok.className='vraagblok';
+    let s='<div class="vk">'+(i+1)+'. '+v.vraag+'</div>';
+    v.opties.forEach((o,j)=>{
+      s+='<div class="optie'+(conclKeuzes[i]===j?' gekozen':'')+'" data-v="'+i+'" data-o="'+j+'"><span class="bol"></span><span>'+o+'</span></div>';
+    });
+    blok.innerHTML=s; h.appendChild(blok);
+  });
+  h.querySelectorAll('.optie').forEach(el=>{
+    el.addEventListener('click',()=>{
+      if(ST.concl) return;
+      klikGeluid();
+      conclKeuzes[+el.dataset.v]=+el.dataset.o;
+      renderConclusie();
+    });
+  });
+  if(ST.concl){
+    conclKeuzes=CONCLUSIE.map(v=>v.goed);
+    h.querySelectorAll('.optie').forEach(el=>{
+      if(CONCLUSIE[+el.dataset.v].goed===+el.dataset.o) el.classList.add('gekozen','goedmark');
+    });
+    $('kn-rapport').style.display='none';
+    $('concl-oordeel').textContent='';
+  } else {
+    $('kn-rapport').style.display='';
+  }
+}
+function dienRapportIn(){
+  if(conclKeuzes.some(k=>k===null)){
+    foutGeluid();
+    $('concl-oordeel').textContent='Beantwoord eerst alle drie de vragen.';
+    return;
+  }
+  const fouten=CONCLUSIE.filter((v,i)=>conclKeuzes[i]!==v.goed).length;
+  if(fouten===0){
+    ST.concl=true; bewaar();
+    stempelGeluid();
+    $('epiloogtekst').innerHTML=EPILOOG;
+    naarScherm('s-epiloog');
+  } else {
+    foutGeluid();
+    $('concl-oordeel').textContent='Het rapport rammelt nog ('+fouten+' van de 3 conclusies houden geen stand). Lees de kantlijnen van je dossiers terug.';
+    document.querySelectorAll('#vragenhouder .optie.gekozen').forEach(el=>{
+      if(CONCLUSIE[+el.dataset.v].goed!==+el.dataset.o){
+        el.classList.add('foutmark');
+        setTimeout(()=>el.classList.remove('foutmark'),1400);
+      }
+    });
+  }
+}
+</script>
+<script>
+"use strict";
+/* ================= KOPPELINGEN & INIT ================= */
+function koppel(){
+  $('kn-start').addEventListener('click',()=>{klikGeluid();ST.gezien=true;bewaar();renderOverzicht();naarScherm('s-overzicht');});
+  $('kn-regels-intro').addEventListener('click',()=>{klikGeluid();openOverlay('ov-hulp');});
+  $('k-hulp').addEventListener('click',()=>{klikGeluid();openOverlay('ov-hulp');});
+  $('k-reset').addEventListener('click',()=>{klikGeluid();openOverlay('ov-reset');});
+  $('k-geluid').addEventListener('click',()=>{
+    ST.stil=!ST.stil; bewaar();
+    $('k-geluid').textContent=ST.stil?'♪̸':'♪';
+    $('k-geluid').style.opacity=ST.stil?0.45:1;
+    if(!ST.stil) klikGeluid();
+  });
+  $('kn-reset-ja').addEventListener('click',()=>{
+    try{localStorage.removeItem(OPSLAGKEY);}catch(e){}
+    ST={borden:{},klaar:{},concl:false,stil:ST.stil,gezien:false};
+    conclKeuzes=[null,null,null];
+    sluitAlleOverlays();
+    naarScherm('s-intro');
+  });
+  document.querySelectorAll('[data-sluit]').forEach(el=>{
+    el.addEventListener('click',()=>{klikGeluid();sluitOverlay(el.dataset.sluit);});
+  });
+  document.querySelectorAll('.overlay').forEach(ov=>{
+    ov.addEventListener('click',ev=>{ if(ev.target===ov && ov.id!=='ov-moord') sluitOverlay(ov.id); });
+  });
+  $('t-controleer').addEventListener('click',()=>{klikGeluid();controleer();});
+  $('t-xmodus').addEventListener('click',()=>{
+    xModus=!xModus; klikGeluid();
+    $('t-xmodus').classList.toggle('aan',xModus);
+  });
+  $('t-zoom').addEventListener('click',()=>{
+    bordZoom=!bordZoom; klikGeluid();
+    $('t-zoom').classList.toggle('aan',bordZoom);
+    $('t-zoom').textContent=bordZoom?'Verklein':'Vergroot';
+    if(huidigeZaak!==null) zetBordBreedte(ZDATA[huidigeZaak]);
+  });
+  $('t-wis').addEventListener('click',()=>{
+    const z=ZDATA[huidigeZaak];
+    if(ST.klaar[z.id]) return;
+    ST.borden[z.id]={p:{},x:[]}; bewaar(); klikGeluid();
+    gekozenPersoon=null;
+    renderPortretten(z); renderClues(z); renderMarkeringen(z);
+    $('oordeel').textContent='';
+  });
+  $('t-bekentenis').addEventListener('click',()=>{klikGeluid();toonBekentenis(ZDATA[huidigeZaak]);});
+  $('t-terug').addEventListener('click',()=>{klikGeluid();renderOverzicht();naarScherm('s-overzicht');});
+  $('kn-bek-verder').addEventListener('click',()=>{
+    klikGeluid(); sluitOverlay('ov-bekentenis');
+    renderOverzicht(); naarScherm('s-overzicht');
+  });
+  $('kn-conclusie').addEventListener('click',()=>{klikGeluid();renderConclusie();naarScherm('s-conclusie');});
+  $('kn-rapport').addEventListener('click',()=>{dienRapportIn();});
+  $('kn-epi-terug').addEventListener('click',()=>{klikGeluid();renderOverzicht();naarScherm('s-overzicht');});
+  // terugknop van het toestel: overlays sluiten of terug naar de kast
+  try{
+    history.pushState({nd:1},'');
+    window.addEventListener('popstate',()=>{
+      const open=document.querySelector('.overlay.open');
+      if(open && open.id!=='ov-moord'){ sluitOverlay(open.id); }
+      else if($('s-zaak').classList.contains('actief')||$('s-conclusie').classList.contains('actief')||$('s-epiloog').classList.contains('actief')){
+        renderOverzicht(); naarScherm('s-overzicht');
+      }
+      try{history.pushState({nd:1},'');}catch(e){}
+    });
+  }catch(e){}
+}
+
+function init(){
+  laad();
+  koppel();
+  if(ST.stil){ $('k-geluid').textContent='♪̸'; $('k-geluid').style.opacity=0.45; }
+  if(ST.concl){
+    $('epiloogtekst').innerHTML=EPILOOG;
+  }
+  if(ST.gezien){ renderOverzicht(); naarScherm('s-overzicht'); }
+  else naarScherm('s-intro');
+}
+init();
+</script>
+</body>
+</html>

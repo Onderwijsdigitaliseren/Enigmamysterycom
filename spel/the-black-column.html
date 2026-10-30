@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Black Column · De Zwarte Kolom | Enigma Mystery</title>
+<meta name="description" content="Three murder puzzles from three November nights in 1958, at a newspaper where a section has gone missing. Cross out the deduction grid; each case has exactly one solution. Free in your browser, also in Dutch.">
+<link rel="canonical" href="https://www.enigmamystery.com/spel/the-black-column.html">
+<link rel="alternate" hreflang="nl" href="https://www.enigmamystery.com/spel/the-black-column.html#nl">
+<link rel="alternate" hreflang="en" href="https://www.enigmamystery.com/spel/the-black-column.html#en">
+<link rel="alternate" hreflang="x-default" href="https://www.enigmamystery.com/spel/the-black-column.html">
+<meta property="og:site_name" content="Enigma Mystery">
+<meta property="og:title" content="The Black Column – Enigma Mystery">
+<meta property="og:description" content="Three murder puzzles from three November nights in 1958, at a newspaper where a section has gone missing. Cross out the deduction grid; each case has exactly one solution. Free in your browser, also in Dutch.">
+<meta property="og:url" content="https://www.enigmamystery.com/spel/the-black-column.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<style>
+:root{
+  --nacht:#0f1113;
+  --karton:#191d21;
+  --karton2:#222830;
+  --lijn:#2f363d;
+  --krant:#e7e0cc;
+  --krant2:#d9d1ba;
+  --inkt:#17150f;
+  --inkt2:#4b473c;
+  --rood:#b8352b;
+  --roodlicht:#e0705f;
+  --lood:#8b9294;
+  --tekst:#cdd2cd;
+  --wit:#f1f2ee;
+  --lamp:#ffe4a8;
+  --kop:'Haettenschweiler','Arial Narrow Bold','Arial Narrow',Impact,sans-serif;
+  --serif:Georgia,'Times New Roman',serif;
+  --mono:'Courier New',Courier,monospace;
+  --gotisch:'Old English Text MT','Engravers Old English','Goudy Old Style',Georgia,serif;
+  --korrel:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--nacht);color:var(--tekst);font-family:var(--serif)}
+body{min-height:100vh;background:
+  radial-gradient(900px 520px at 50% -80px,rgba(255,228,168,.10),transparent 70%),var(--nacht)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 64px}
+p{line-height:1.62;font-size:16.5px;margin:0 0 14px}
+
+/* ── bovenbalk ─────────────────────────────────────────────── */
+.balk{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
+.balk a{font-family:var(--mono);font-size:13px;color:var(--lood);text-decoration:none}
+.balk a:hover{color:var(--wit)}
+.balk .rechts{display:flex;gap:8px}
+.kn{font-family:var(--mono);font-size:13.5px;background:transparent;color:var(--wit);
+  border:1px solid #5d666c;padding:11px 16px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.kn:hover:not(:disabled){background:var(--krant);color:var(--inkt)}
+.kn:focus-visible,.dossier:focus-visible,.cel:focus-visible{outline:2px solid var(--roodlicht);outline-offset:2px}
+.kn:disabled{opacity:.38;cursor:default}
+.kn.klein{padding:7px 11px;font-size:12.5px;border-color:var(--lijn);color:var(--tekst)}
+.kn.primair{background:var(--rood);border-color:var(--rood);color:#fff;font-weight:bold}
+.kn.primair:hover:not(:disabled){background:#cf4338;color:#fff}
+.knoppen{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+.scherm{display:none}
+.scherm.actief{display:block}
+
+/* ── scènes ────────────────────────────────────────────────── */
+.scene{display:block;width:100%;height:auto;background:#0b0d0f}
+.hero{background:#030405;max-height:46vh;border:1px solid var(--lijn);border-bottom:0}
+.strook{border:1px solid var(--lijn)}
+.hero .regel{opacity:0;animation:zetten .5s ease forwards}
+.hero .zwart{opacity:0;animation:zetten .9s ease 1.5s forwards}
+@keyframes zetten{from{opacity:0;transform:translateX(-9px)}to{opacity:1;transform:none}}
+.hero .lamp{animation:flikker 8s infinite}
+@keyframes flikker{0%,90%,100%{opacity:1}91%{opacity:.68}92%{opacity:1}95%{opacity:.82}96%{opacity:1}}
+.hero .stof{animation:zweef 11s linear infinite}
+@keyframes zweef{0%{transform:translateY(0);opacity:0}25%{opacity:.4}100%{transform:translateY(-80px);opacity:0}}
+.knipper,.spleet{animation:pols 3.6s ease-in-out infinite}
+@keyframes pols{0%,100%{opacity:1}50%{opacity:.42}}
+.golf{animation:deining 7s ease-in-out infinite}
+@keyframes deining{0%,100%{transform:translateX(0)}50%{transform:translateX(-26px)}}
+
+/* ── krantenpapier ─────────────────────────────────────────── */
+.krant{background:var(--korrel),linear-gradient(180deg,var(--krant),var(--krant2));color:var(--inkt);
+  box-shadow:0 18px 40px rgba(0,0,0,.55)}
+.krant p{color:var(--inkt)}
+
+/* voorpagina met de zwarte kolom */
+.voorpagina{display:grid;grid-template-columns:minmax(0,1fr) 92px}
+.voorpagina .zetsel{padding:22px 28px 26px;min-width:0}
+.krantkop{text-align:center;font-family:var(--gotisch);font-weight:bold;
+  font-size:clamp(26px,5.4vw,46px);line-height:1;margin:0}
+.datumregel{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:var(--serif);font-style:italic;font-size:13.5px;color:var(--inkt2);
+  border-top:3px double var(--inkt);border-bottom:1px solid var(--inkt);padding:5px 2px;margin:10px 0 18px}
+.voorpagina h1{font-family:var(--kop);font-weight:normal;text-transform:uppercase;color:var(--inkt);
+  font-size:clamp(54px,14vw,132px);line-height:.84;letter-spacing:.01em;margin:0 0 6px}
+.onderkop{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--inkt2);margin:0 0 16px}
+.kolommen{columns:2 280px;column-gap:26px;column-rule:1px solid #a9a18b}
+.kolommen p{font-size:16px;line-height:1.55;text-align:left}
+.kolommen p:first-child::first-letter{font-family:var(--kop);font-size:58px;float:left;line-height:.8;
+  padding:5px 7px 0 0;color:var(--rood)}
+.uitleg{border-top:1px solid var(--inkt);margin-top:10px;padding-top:12px}
+.uitleg h2{font-family:var(--kop);font-weight:normal;text-transform:uppercase;letter-spacing:.04em;
+  font-size:22px;margin:0 0 8px;color:var(--inkt)}
+.uitleg ul{margin:0;padding:0 0 0 18px}
+.uitleg li{font-size:15.5px;line-height:1.5;margin-bottom:4px}
+.proefvak{display:inline-grid;grid-template-columns:repeat(3,26px);gap:0;vertical-align:middle;margin:8px 10px 0 0}
+.proefvak i{width:26px;height:26px;border:1px solid var(--inkt2);margin:-1px 0 0 -1px;font:bold 16px/24px var(--mono);
+  text-align:center;font-style:normal;background:#f1ecdc;color:var(--inkt2)}
+.proefvak i.v{color:var(--rood)}
+.proeflabel{font-family:var(--mono);font-size:13px;color:var(--inkt2)}
+
+#kolom{background:#000;display:flex;flex-direction:column}
+#kolom .seg{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  border-bottom:1px solid #26292c;color:#3b4044;font-family:var(--kop);font-size:34px;
+  transition:background .6s,color .6s;min-height:84px;padding:8px 4px;text-align:center}
+#kolom .seg:last-child{border-bottom:0}
+#kolom .seg small{font-family:var(--mono);font-size:10.5px;line-height:1.2;color:inherit}
+#kolom .seg.vol{color:var(--rood);
+  background:repeating-linear-gradient(180deg,#ece6d4 0 3px,#bdb6a2 3px 4px,#ece6d4 4px 7px)}
+#kolom .seg.vol small{color:var(--inkt);background:#ece6d4;padding:1px 3px}
+
+/* ── dossiers op het bureau ────────────────────────────────── */
+.tussenkop{font-family:var(--kop);font-weight:normal;text-transform:uppercase;letter-spacing:.05em;
+  font-size:26px;color:var(--wit);margin:44px 0 4px}
+.tussenkop + .mini{margin-bottom:18px}
+.mini{font-family:var(--mono);font-size:13px;color:var(--lood);margin:0 0 10px;line-height:1.5}
+#ladenlijst{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.dossier{position:relative;display:flex;flex-direction:column;text-align:left;border:0;cursor:pointer;
+  padding:16px 16px 14px;font-family:var(--serif);color:var(--inkt);min-height:300px;
+  transition:transform .2s ease, box-shadow .2s ease}
+.dossier:nth-child(3n+1){transform:rotate(-1.1deg)}
+.dossier:nth-child(3n+2){transform:rotate(.7deg) translateY(6px)}
+.dossier:nth-child(3n){transform:rotate(-.4deg)}
+.dossier:hover:not(:disabled),.dossier:focus-visible{transform:rotate(0) translateY(-4px);box-shadow:0 26px 46px rgba(0,0,0,.6)}
+.dossier .nr{font-family:var(--kop);font-size:64px;line-height:.8;color:var(--rood)}
+.dossier .tt{font-family:var(--kop);font-size:27px;letter-spacing:.03em;text-transform:uppercase;
+  line-height:1;margin:8px 0 6px;border-bottom:2px solid var(--inkt);padding-bottom:8px;display:block}
+.dossier .sub{font-style:italic;font-size:14.5px;color:var(--inkt2);line-height:1.4;display:block}
+.dossier .prent{margin-top:auto;padding-top:14px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.dossier .prent svg{display:block;flex:0 0 auto}
+.dossier .stand{font-family:var(--mono);font-size:12.5px;color:var(--inkt2);text-align:right;line-height:1.35}
+.dossier .stempel{position:absolute;right:12px;top:14px;font-family:var(--mono);font-weight:bold;font-size:13px;
+  color:var(--rood);border:2px solid var(--rood);padding:3px 8px;transform:rotate(7deg);opacity:.9;background:rgba(231,224,204,.6)}
+.dossier:disabled{cursor:default;filter:grayscale(1) brightness(.5)}
+.dossier:disabled .stempel{color:var(--inkt);border-color:var(--inkt)}
+
+#epiloogblok .epiloog{margin-top:44px;padding:24px 28px}
+.epiloog h2{font-family:var(--kop);font-weight:normal;text-transform:uppercase;font-size:34px;margin:0 0 10px;
+  border-bottom:3px double var(--inkt);padding-bottom:6px}
+
+/* ── zaak ──────────────────────────────────────────────────── */
+.hoofd{padding:22px 0 8px;border-bottom:1px solid var(--lijn);margin-bottom:18px}
+.hoofd .nacht{font-family:var(--mono);font-size:13.5px;color:var(--roodlicht);margin:0 0 6px}
+.hoofd h2{font-family:var(--kop);font-weight:normal;text-transform:uppercase;letter-spacing:.03em;color:var(--wit);
+  font-size:clamp(38px,8vw,72px);line-height:.9;margin:0 0 8px}
+.hoofd .plek{font-style:italic;font-size:15.5px;color:var(--lood);margin:0 0 8px}
+#z-intro{max-width:68ch}
+#z-intro p:first-child{font-size:19px;color:var(--wit)}
+h3.kopje{font-family:var(--kop);font-weight:normal;text-transform:uppercase;letter-spacing:.06em;
+  font-size:21px;color:var(--wit);margin:30px 0 10px}
+
+.kaarten{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.kaart{display:grid;grid-template-columns:54px minmax(0,1fr);gap:4px 12px;align-items:start;
+  background:var(--karton);border:1px solid var(--lijn);border-top:3px solid var(--rood);padding:13px}
+.kaart.ding{border-top-color:#6c757a}
+.kaart .beeld{grid-row:span 3;width:54px;height:54px;border-radius:50%;background:var(--krant);color:var(--inkt);
+  display:flex;align-items:center;justify-content:center}
+.kaart.ding .beeld{border-radius:3px;background:#2b3238;color:var(--lamp)}
+.kaart .beeld .ico{width:32px;height:32px}
+.kaart .nm{font-size:17.5px;font-weight:bold;color:var(--wit);line-height:1.2}
+.kaart .dt{font-family:var(--mono);font-size:12.5px;color:var(--roodlicht);line-height:1.35}
+.kaart .om{font-size:14.5px;line-height:1.5;color:#aeb5af;margin:4px 0 0}
+.ico{width:22px;height:22px;flex:0 0 auto}
+
+/* speelvel: aanwijzingen naast het rooster */
+.speel{margin-top:34px;padding:22px 24px 24px;display:grid;grid-template-columns:minmax(0,1fr);gap:22px 30px}
+@media (min-width:940px){
+  .speel{grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:start}
+  .speel .rechts{position:sticky;top:12px}
+}
+.speel h3{font-family:var(--kop);font-weight:normal;text-transform:uppercase;letter-spacing:.05em;font-size:24px;
+  margin:0 0 4px;color:var(--inkt);border-bottom:3px double var(--inkt);padding-bottom:5px}
+.speel .mini{color:var(--inkt2);margin:8px 0 10px}
+ol.clues{list-style:none;margin:0;padding:0;counter-reset:c}
+ol.clues li{counter-increment:c;position:relative;padding:11px 6px 11px 42px;border-bottom:1px solid #b3ab95;
+  cursor:pointer;font-size:16.5px;line-height:1.45;color:var(--inkt)}
+ol.clues li::before{content:counter(c);position:absolute;left:0;top:9px;width:30px;font-family:var(--kop);
+  font-size:27px;line-height:1;color:var(--rood);text-align:center}
+ol.clues li:hover{background:rgba(255,255,255,.28)}
+ol.clues li.af{color:#8c8572;text-decoration:line-through;text-decoration-color:var(--rood);text-decoration-thickness:2px}
+ol.clues li.af::before{color:#a79f8a}
+ol.clues li.lijk{background:var(--inkt);color:var(--krant);cursor:default;border-bottom:0;margin-top:10px;font-style:italic}
+ol.clues li.lijk::before{content:'✱';color:var(--roodlicht);counter-increment:none}
+
+#aanwijzer{font-family:var(--mono);font-size:13.5px;color:var(--inkt);min-height:20px;margin:0 0 6px}
+#aanwijzer b{color:var(--rood)}
+#roosterbox{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;--cel:32px}
+table.rooster{border-collapse:collapse;margin:0}
+table.rooster td{padding:0;border:0}
+table.rooster td.cel{border:1px solid #8e8771}
+.cel{width:var(--cel);height:var(--cel);min-width:var(--cel);background:#f3eedf;cursor:pointer;
+  font-family:var(--mono);font-size:calc(var(--cel) * .56);line-height:1;color:#8a8472;text-align:center;
+  vertical-align:middle;user-select:none}
+.cel:hover{background:#fffdf4}
+.cel.v{color:#fff;font-weight:bold;background:radial-gradient(circle,var(--rood) 0 58%,#f3eedf 60%)}
+.cel.nieuw{animation:stempel .22s ease-out}
+@keyframes stempel{from{transform:scale(1.5);opacity:.3}to{transform:none;opacity:1}}
+table.rooster td.cel.bl{border-left:2.5px solid var(--inkt)}
+table.rooster td.cel.bt{border-top:2.5px solid var(--inkt)}
+.rijlabel{font-family:var(--mono);font-size:12px;color:var(--inkt);padding:0 7px 0 0;white-space:nowrap;
+}
+.rijlabel .in{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.rijlabel .ico{width:19px;height:19px}
+.kolabel{height:104px;vertical-align:bottom;padding-bottom:4px!important;text-align:center}
+.kolabel .tx{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--mono);font-size:12px;
+  color:var(--inkt);display:inline-block}
+.kolabel .ico{width:20px;height:20px;color:var(--inkt);display:block;margin:0 auto 4px}
+.rijlabel.hl,.kolabel.hl{color:var(--rood)}
+.rijlabel.hl .lb,.kolabel.hl .tx{color:var(--rood);font-weight:bold}
+.kolabel.hl .ico{color:var(--rood)}
+.catlabel{font-family:var(--kop);font-size:15px;letter-spacing:.08em;color:var(--inkt2);text-transform:uppercase;
+  padding:0 6px 3px 0!important;text-align:right}
+.speel .kn{color:var(--inkt);border-color:var(--inkt)}
+.speel .kn:hover:not(:disabled){background:var(--inkt);color:var(--krant)}
+
+/* ── beschuldiging ─────────────────────────────────────────── */
+.formulier{border:1px solid var(--lijn);border-left:4px solid var(--rood);background:var(--karton);padding:18px 20px;margin-top:26px;max-width:640px}
+.formulier h3{font-family:var(--kop);font-weight:normal;text-transform:uppercase;letter-spacing:.05em;font-size:24px;color:var(--wit);margin:0 0 12px}
+.veld{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.veld label{font-family:var(--mono);font-size:14px;color:var(--roodlicht);min-width:92px}
+.veld select{flex:1;min-width:180px;background:var(--karton2);color:var(--wit);border:1px solid #5d666c;
+  padding:11px;font-family:var(--serif);font-size:16px}
+.uitslag{margin-top:14px;padding:13px;border-left:3px solid var(--rood);background:#211517;
+  font-size:15.5px;line-height:1.55;display:none;color:var(--wit)}
+.uitslag.zicht{display:block}
+
+/* ── onthulling: extra editie ──────────────────────────────── */
+#onthulling{display:none;margin-top:30px;padding:24px 28px;max-width:760px}
+#onthulling.zicht{display:block;animation:opkomst .7s ease both}
+@keyframes opkomst{from{opacity:0;transform:translateY(16px) rotate(-1deg)}to{opacity:1;transform:none}}
+#onthulling .extra{font-family:var(--kop);text-transform:uppercase;font-size:clamp(40px,9vw,76px);line-height:.86;
+  margin:0 0 10px;border-bottom:3px double var(--inkt);padding-bottom:10px}
+.oplos{font-family:var(--mono);font-size:15px;line-height:1.9;margin:0 0 16px;color:var(--inkt)}
+.oplos b{display:inline-block;min-width:104px;color:var(--rood)}
+#onthulling .kn{color:#fff}
+
+@media (max-width:620px){
+  .wrap{padding:0 12px 48px}
+  p{font-size:16px}
+  .voorpagina{grid-template-columns:minmax(0,1fr) 46px}
+  .voorpagina .zetsel{padding:16px 14px 20px}
+  #kolom .seg{font-size:24px}
+  #kolom .seg small{display:none}
+  .speel{padding:16px 12px 18px}
+  .kolabel{height:92px}
+  .kolabel .tx,.rijlabel{font-size:11px}
+  .rijlabel{position:sticky;left:0;z-index:2;background:#e2dbc6}
+  table.rooster[data-krap="1"] .rijlabel .lb{display:none}
+  #onthulling,#epiloogblok .epiloog{padding:18px 16px}
+  .dossier{min-height:0}
+  .dossier:nth-child(n){transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .hero .regel,.hero .zwart{opacity:1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="balk">
+    <a href="index.html" id="thuis"></a>
+    <div class="rechts">
+      <button class="kn klein" id="taalknop" type="button"></button>
+      <button class="kn klein" id="geluidknop" type="button"></button>
+    </div>
+  </div>
+
+  <!-- ══ OVERZICHT ══ -->
+  <section id="scherm-kast" class="scherm actief">
+    <svg class="scene hero" viewBox="0 0 1000 560" preserveAspectRatio="xMidYMid meet" role="img" aria-label="A newspaper page under a hanging lamp; one column is entirely black."><defs><linearGradient id="kegel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6df" stop-opacity=".30"/><stop offset=".55" stop-color="#fff6df" stop-opacity=".09"/><stop offset="1" stop-color="#fff6df" stop-opacity="0"/></linearGradient><radialGradient id="gloed" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe9b0" stop-opacity=".95"/><stop offset="1" stop-color="#ffe9b0" stop-opacity="0"/></radialGradient><radialGradient id="belicht" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#fff6df" stop-opacity=".34"/><stop offset=".6" stop-color="#fff6df" stop-opacity=".05"/><stop offset="1" stop-color="#000" stop-opacity=".30"/></radialGradient><radialGradient id="vignet" cx=".5" cy=".45" r=".75"><stop offset=".42" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".88"/></radialGradient><linearGradient id="tafel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#20262a"/><stop offset="1" stop-color="#0d1012"/></linearGradient></defs><rect width="1000" height="560" fill="#0b0d0f"/><rect y="392" width="1000" height="168" fill="url(#tafel)"/><g class="lamp"><polygon points="474,86 526,86 892,560 108,560" fill="url(#kegel)"/><path d="M500 0v44" stroke="#3a4148" stroke-width="2"/><path d="M468 84 484 46h32l16 38z" fill="#171b1f" stroke="#4b545c" stroke-width="1.5"/><circle cx="500" cy="88" r="34" fill="url(#gloed)"/><circle cx="500" cy="86" r="6" fill="#ffe9b0"/></g><g transform="translate(258 138) rotate(-1.6)"><rect x="7" y="11" width="500" height="360" fill="#000" opacity=".6"/><rect width="500" height="360" fill="#d4d9d5"/><rect x="30" y="26" width="440" height="3" fill="#6d7570"/><rect x="30" y="40" width="300" height="19" fill="#20262a"/><rect x="30" y="66" width="200" height="7" fill="#4c534e"/><rect x="30" y="84" width="440" height="2" fill="#8f958f"/><rect class="regel" style="animation-delay:0.35s" x="30" y="98" width="98" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.39s" x="30" y="109" width="105" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.42s" x="30" y="120" width="119" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.45s" x="30" y="131" width="99" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.49s" x="30" y="142" width="98" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.53s" x="30" y="153" width="102" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.56s" x="30" y="164" width="107" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.59s" x="30" y="175" width="82" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.63s" x="30" y="186" width="81" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.67s" x="30" y="197" width="102" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.70s" x="30" y="208" width="100" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.73s" x="30" y="219" width="110" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.77s" x="30" y="230" width="109" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.81s" x="30" y="241" width="120" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.84s" x="30" y="252" width="81" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.88s" x="30" y="263" width="76" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.91s" x="30" y="274" width="98" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.95s" x="30" y="285" width="89" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.98s" x="30" y="296" width="79" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:1.02s" x="30" y="307" width="75" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:1.05s" x="30" y="318" width="104" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:1.08s" x="30" y="329" width="114" height="4" fill="#6d7570"/><rect class="zwart" x="190" y="98" width="120" height="240" fill="#07090b"/><rect class="regel" style="animation-delay:0.35s" x="350" y="98" width="110" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.39s" x="350" y="109" width="72" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.42s" x="350" y="120" width="108" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.45s" x="350" y="131" width="95" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.49s" x="350" y="142" width="98" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.53s" x="350" y="153" width="111" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.56s" x="350" y="164" width="117" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.59s" x="350" y="175" width="109" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.63s" x="350" y="186" width="111" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.67s" x="350" y="197" width="80" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.70s" x="350" y="208" width="109" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.73s" x="350" y="219" width="70" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.77s" x="350" y="230" width="103" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.81s" x="350" y="241" width="74" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.84s" x="350" y="252" width="73" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.88s" x="350" y="263" width="72" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.91s" x="350" y="274" width="82" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.95s" x="350" y="285" width="85" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:0.98s" x="350" y="296" width="108" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:1.02s" x="350" y="307" width="71" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:1.05s" x="350" y="318" width="119" height="4" fill="#6d7570"/><rect class="regel" style="animation-delay:1.08s" x="350" y="329" width="99" height="4" fill="#6d7570"/><rect x="30" y="344" width="440" height="2" fill="#8f958f"/><rect width="500" height="360" fill="url(#belicht)"/></g><g transform="translate(700 434) rotate(-8)"><rect width="210" height="34" rx="3" fill="#2a3035"/><rect x="4" y="4" width="202" height="26" fill="#171b1f"/><path d="M22 8v22M52 8v22M82 8v22M112 8v22M142 8v22M172 8v22" stroke="#4b545c" stroke-width="2"/></g><g transform="translate(140 474) rotate(14)"><rect width="188" height="12" rx="2" fill="#a8322a"/><polygon points="188,0 210,6 188,12" fill="#cfd4d0"/><polygon points="204,4 210,6 204,8" fill="#0b0d0f"/><rect width="16" height="12" fill="#8f958f"/></g><circle class="stof" style="animation-delay:2.0s" cx="420" cy="425" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:3.8s" cx="731" cy="162" r="2.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:0.5s" cx="504" cy="368" r="2.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:6.0s" cx="305" cy="290" r="1.6" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:4.5s" cx="745" cy="307" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:0.4s" cx="330" cy="365" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:5.1s" cx="615" cy="194" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:5.1s" cx="220" cy="269" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:5.6s" cx="273" cy="400" r="1.6" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:5.9s" cx="626" cy="374" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:3.4s" cx="423" cy="505" r="1.6" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:2.0s" cx="538" cy="330" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:5.8s" cx="340" cy="228" r="1.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:4.2s" cx="231" cy="190" r="1.6" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:4.8s" cx="401" cy="509" r="2.2" fill="#ffe9b0" opacity=".4"/><circle class="stof" style="animation-delay:1.1s" cx="741" cy="257" r="2.2" fill="#ffe9b0" opacity=".4"/><rect width="1000" height="560" fill="url(#vignet)"/></svg>
+    <div class="krant voorpagina">
+      <div class="zetsel">
+        <p class="krantkop" id="krantkop"></p>
+        <div class="datumregel"><span id="datum1"></span><span id="datum2"></span><span id="datum3"></span></div>
+        <h1 id="serietitel"></h1>
+        <p class="onderkop" id="serieonder"></p>
+        <div class="kolommen" id="serie-intro"></div>
+        <div class="uitleg">
+          <h2 id="hoekop"></h2>
+          <ul id="serie-hoe"></ul>
+          <span class="proefvak" aria-hidden="true"><i></i><i>×</i><i class="v">✓</i></span>
+          <span class="proeflabel" id="proeflabel"></span>
+        </div>
+      </div>
+      <div id="kolom"></div>
+    </div>
+
+    <h2 class="tussenkop" id="ladenkop"></h2>
+    <p class="mini" id="ladenuitleg"></p>
+    <div id="ladenlijst"></div>
+    <div id="epiloogblok"></div>
+  </section>
+
+  <!-- ══ ZAAK ══ -->
+  <section id="scherm-zaak" class="scherm">
+    <div id="z-scene"></div>
+    <div class="hoofd">
+      <p class="nacht" id="z-nacht"></p>
+      <h2 id="z-titel"></h2>
+      <p class="plek" id="z-plek"></p>
+    </div>
+    <div id="z-intro"></div>
+
+    <h3 class="kopje" id="kop-verdachten"></h3>
+    <div class="kaarten" id="z-verdachten"></div>
+    <div id="z-categorieen"></div>
+
+    <div class="krant speel">
+      <div class="links">
+        <h3 id="kop-clues"></h3>
+        <p class="mini" id="clue-uitleg"></p>
+        <ol class="clues" id="z-clues"></ol>
+      </div>
+      <div class="rechts">
+        <h3 id="kop-rooster"></h3>
+        <p class="mini" id="rooster-uitleg"></p>
+        <p id="aanwijzer" aria-live="polite"></p>
+        <div id="roosterbox"><table class="rooster" id="z-rooster"></table></div>
+        <div class="knoppen">
+          <button type="button" class="kn" id="hintknop"></button>
+          <button type="button" class="kn" id="wisknop"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="formulier">
+      <h3 id="kop-beschuldiging"></h3>
+      <div id="z-velden"></div>
+      <div class="knoppen" style="margin-bottom:0">
+        <button type="button" class="kn primair" id="beschuldig"></button>
+      </div>
+      <div class="uitslag" id="z-uitslag" role="status"></div>
+    </div>
+
+    <div id="onthulling" class="krant">
+      <p class="krantkop" id="o-krant" style="text-align:left;font-size:22px"></p>
+      <p class="extra" id="o-extra"></p>
+      <div class="oplos" id="z-oplos"></div>
+      <div id="z-onthul"></div>
+      <div class="knoppen">
+        <button type="button" class="kn primair" id="volgende"></button>
+      </div>
+    </div>
+    <div class="knoppen"><button class="kn klein" id="terugknop" type="button"></button></div>
+  </section>
+</div>
+<script>
+"use strict";
+const HASHTAAL = location.hash === "#nl" ? "nl" : location.hash === "#en" ? "en" : "";
+const STANDAARD = HASHTAAL || (function(){ try { const l = localStorage.getItem("mm_lang"); if (l === "nl" || l === "en") return l; } catch(e){} return "en"; })();
+const DATA = {"nl":{"serie":{"titel":"De Zwarte Kolom","onder":"Drie nachten · november 1958 · dagblad De Nieuwe Wacht","intro":["Op 12 november 1958 wordt een katern van acht pagina's uit de persen gehaald. Het staat op geen enkele planning, het heeft geen auteur, en het verdwijnt nog dezelfde nacht uit de kelder van het archief.","In de drie nachten daarna valt er drie keer een dode. Er is telkens één verdachte die het gedaan heeft, telkens één voorwerp, telkens één plek. Verder is er niets: geen getuige die praat, geen bekentenis, geen naam.","Wat u wel hebt is een rooster. Elke verdachte hoort bij precies één voorwerp en precies één plek — nooit bij twee. Streep weg wat niet kan, en wat overblijft is wat er gebeurd is."],"hoe":["Tik een vakje aan om te wisselen tussen leeg, kruis (kan niet) en vinkje (klopt).","Zet u een vinkje, dan streept het rooster de rest van die rij en kolom automatisch weg.","Elke aanwijzing is waar. Elke aanwijzing is nodig. Er is precies één oplossing."]},"epiloog":["Drie nachten, drie doden, één katern van acht pagina's dat nooit gedraaid is.","De negatieven zijn nooit teruggevonden. Het zetsel is de week erna omgesmolten tot nieuwe regels; er is die maand nog gewoon een krant verschenen, elke dag, op tijd.","In het archief staat de jaargang 1958 compleet. Alleen tussen 12 en 13 november zit een gat ter grootte van acht pagina's. Wie de map opslaat, ziet witte ruimte — en witruimte, zei de advertentiechef, wordt verkocht."],"zaken":[{"code":"I","titel":"De Nachtdruk","nacht":"Nacht van 12 op 13 november","plek":"Drukkerij De Zwaan, Spaarndamseweg","intro":["Om kwart over drie staat de rotatiepers stil. Dat gebeurt nooit; de pers staat alleen stil als iemand hem stilzet.","Nachtchef Kolthoff wordt gevonden tussen de rollen. Hij had die avond acht pagina's laten zetten die niemand had besteld, en hij was van plan ze te draaien.","Vier mensen waren binnen. De poort was op slot; de sleutel hing waar hij hoort."],"lijk":"Het lichaam van nachtchef Kolthoff lag in de perskelder.","cats":[{"key":"verdachte","label":"VERDACHTEN","items":[{"naam":"Corrector Vromen","kort":"Vromen","detail":"168 cm · linkshandig · grijze ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"7\" cy=\"13\" r=\"3.6\"/><circle cx=\"17\" cy=\"13\" r=\"3.6\"/><path d=\"M10.6 12.6h2.8\"/><path d=\"M3.4 11.4 5 7.6\"/><path d=\"M20.6 11.4 19 7.6\"/><\/svg>","tekst":"Haalt al negentien jaar andermans fouten weg. De zijne staan in de kantlijn van zijn eigen leven."},{"naam":"Drukker Bekkers","kort":"Bekkers","detail":"184 cm · rechtshandig · bruine ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2.6 15.4h15.4\"/><path d=\"M6 15.4a6 6 0 0 1 12 0\"/><path d=\"M18 15.4h2.6a1.4 1.4 0 0 1 0 2.8H18\"/><path d=\"M12 9.4v-3\"/><path d=\"M2.6 18.2h15.4\"/><\/svg>","tekst":"Bedient de rotatiepers alsof het een paard is. Zwart tot boven de polsen, ook op zondag."},{"naam":"Mevrouw Sluis","kort":"Sluis","detail":"159 cm · linkshandig · blauwe ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"4.6\" y=\"4.2\" width=\"14.8\" height=\"16.4\" rx=\"1.6\"/><rect x=\"9\" y=\"2.4\" width=\"6\" height=\"3.4\" rx=\"1\"/><path d=\"M8.4 10.4h7.2M8.4 13.8h7.2M8.4 17.2h4.4\"/><\/svg>","tekst":"Doet de loonlijst, de post en de sleutels. Weet dus precies wie wat waard is."},{"naam":"Fotograaf Duyn","kort":"Duyn","detail":"176 cm · rechtshandig · groene ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"2.6\" y=\"7.4\" width=\"18.8\" height=\"12\" rx=\"2\"/><circle cx=\"12\" cy=\"13.4\" r=\"3.4\"/><path d=\"M8.4 7.4 9.6 5h4.8l1.2 2.4\"/><circle cx=\"18\" cy=\"10.4\" r=\".9\"/><\/svg>","tekst":"Ontwikkelt bij rood licht en verkoopt bij daglicht. Aan wie het meeste biedt."}]},{"key":"wapen","label":"WAPENS","items":[{"naam":"Loden zetregel","kort":"zetregel","detail":"zwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"2.6\" y=\"8.6\" width=\"18.8\" height=\"6.8\" rx=\"1\"/><path d=\"M7 8.6v6.8M11.4 8.6v6.8M15.8 8.6v6.8\"/><path d=\"M2.6 18.4h18.8\"/><\/svg>","tekst":"Een regel gezette letters, massief lood. Zwaar genoeg om het laatste woord te hebben."},{"naam":"Papiersnijmes","kort":"snijmes","detail":"licht","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M3.6 19.4 14 9l3.4 3.4L7 22.8z\" transform=\"translate(0,-3)\"/><path d=\"M14.6 5.2 18 8.6\"/><path d=\"M3.6 16.4l1.6-.8\"/><\/svg>","tekst":"Snijdt duizend vel in één haal. Een hals is dunner dan duizend vel."},{"naam":"Fles inktverdunner","kort":"verdunner","detail":"licht","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M9.6 3.4h4.8v3.2l2.8 5v8.8a1.6 1.6 0 0 1-1.6 1.6H8.4a1.6 1.6 0 0 1-1.6-1.6v-8.8l2.8-5z\" transform=\"translate(0,-1.2)\"/><path d=\"M7 12.4h10\"/><\/svg>","tekst":"Ruikt zoetig. Twee teugen en de drukkerij ruikt naar een begrafenis."},{"naam":"Rol perskoord","kort":"perskoord","detail":"middelzwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"12\" r=\"8.2\"/><circle cx=\"12\" cy=\"12\" r=\"2.8\"/><path d=\"M12 3.8v5.4M20.2 12h-5.4M12 20.2v-5.4M3.8 12h5.4\"/><\/svg>","tekst":"Bindt stapels kranten bijeen. Of iets anders wat stil moet blijven liggen."}]},{"key":"locatie","label":"LOCATIES","items":[{"naam":"De zetterij","kort":"zetterij","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"3.2\" y=\"4\" width=\"17.6\" height=\"16\" rx=\"1\"/><path d=\"M3.2 9.4h17.6M3.2 14.6h17.6M9 4v16M15 4v16\"/><\/svg>","tekst":"Rijen letterkasten. Wie hier werkt, vindt elke letter op de tast — ook in het donker."},{"naam":"De perskelder","kort":"perskelder","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"8\" cy=\"10\" r=\"4.2\"/><circle cx=\"16.6\" cy=\"10\" r=\"4.2\"/><path d=\"M3 17.4h18\"/><path d=\"M6 20.4h12\"/><\/svg>","tekst":"Onder de vloer dreunt de pers. Boven de vloer hoort niemand iets."},{"naam":"Het platte dak","kort":"dak","detail":"buiten","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2.2 15.6h19.6v4.2H2.2z\"/><rect x=\"14.6\" y=\"7\" width=\"4.4\" height=\"8.6\"/><path d=\"M16.8 5c1.2-1.2 0-2.4 1.2-3.8\"/><path d=\"M4 15.6v-2.4M7.4 15.6v-2.4M10.8 15.6v-2.4\"/><\/svg>","tekst":"Teer, grind, en een stad die de andere kant op kijkt."},{"naam":"De laadplaats","kort":"laadplaats","detail":"buiten","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2.4 16.6V8.4h10.8v8.2\"/><path d=\"M13.2 11.4h3.8l3.2 3.2v2h-7z\"/><circle cx=\"7\" cy=\"17.8\" r=\"1.9\"/><circle cx=\"17\" cy=\"17.8\" r=\"1.9\"/><\/svg>","tekst":"Waar de bestelwagens om vier uur de stapels komen halen. Tot die tijd: niemand."}]}],"clues":["Wie op het platte dak was, had blauwe ogen.","Wie een papiersnijmes bij zich had, was korter dan 168 cm.","De verdachte met de loden zetregel was langer dan de verdachte in de zetterij.","Wie een rol perskoord bij zich had, was op de laadplaats.","Drukker Bekkers had een rol perskoord bij zich."],"oplossing":[null,[2,3,1,0],[0,3,2,1]],"dader":3,"onthulling":["Fotograaf Duyn had de zetregel al in zijn hand toen hij de trap af kwam. Acht pagina's, en op vier daarvan stonden zijn foto's — met een onderschrift dat hij nooit had geleverd.","Kolthoff wilde ze draaien. Duyn wilde ze terug. Een regel lood weegt vier kilo en zegt in één klap het laatste woord.","Wat Duyn niet meenam waren de negatieven. Die lagen nog boven, in de donkere kamer van de redactie. Zeven nachten later gaat het daar mis."],"scene":"<svg class=\"scene strook\" viewBox=\"0 0 1000 260\" preserveAspectRatio=\"xMidYMid meet\" role=\"img\" aria-label=\"De perskelder bij nacht: maanlicht door hoge ramen, de pers in silhouet.\"><defs><radialGradient id=\"s-gloed\" cx=\".5\" cy=\".5\" r=\".5\"><stop offset=\"0\" stop-color=\"#ffe4a8\" stop-opacity=\".9\"/><stop offset=\"1\" stop-color=\"#ffe4a8\" stop-opacity=\"0\"/><\/radialGradient><radialGradient id=\"s-rood\" cx=\".5\" cy=\".5\" r=\".5\"><stop offset=\"0\" stop-color=\"#b8352b\" stop-opacity=\".75\"/><stop offset=\"1\" stop-color=\"#b8352b\" stop-opacity=\"0\"/><\/radialGradient><linearGradient id=\"s-bundel\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#9fc4dd\" stop-opacity=\".30\"/><stop offset=\"1\" stop-color=\"#9fc4dd\" stop-opacity=\"0\"/><\/linearGradient><linearGradient id=\"s-warmbundel\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#ffe4a8\" stop-opacity=\".26\"/><stop offset=\"1\" stop-color=\"#ffe4a8\" stop-opacity=\"0\"/><\/linearGradient><linearGradient id=\"s-lucht\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#22303a\"/><stop offset=\"1\" stop-color=\"#111a20\"/><\/linearGradient><radialGradient id=\"s-vignet\" cx=\".5\" cy=\".5\" r=\".72\"><stop offset=\".4\" stop-color=\"#000\" stop-opacity=\"0\"/><stop offset=\"1\" stop-color=\"#000\" stop-opacity=\".7\"/><\/radialGradient><\/defs><rect width=\"1000\" height=\"260\" fill=\"url(#s-lucht)\"/><rect x=\"70\" y=\"18\" width=\"104\" height=\"56\" fill=\"#6d8ba1\" opacity=\".55\"/><path d=\"M70 18h104M70 74h104M122 18v56\" stroke=\"#07090b\" stroke-width=\"7\"/><polygon points=\"70,74 174,74 234,210 130,210\" fill=\"url(#s-bundel)\"/><polygon points=\"130,210 234,210 220,218 116,218\" fill=\"#9fc4dd\" opacity=\".10\"/><rect x=\"260\" y=\"18\" width=\"104\" height=\"56\" fill=\"#6d8ba1\" opacity=\".55\"/><path d=\"M260 18h104M260 74h104M312 18v56\" stroke=\"#07090b\" stroke-width=\"7\"/><polygon points=\"260,74 364,74 424,210 320,210\" fill=\"url(#s-bundel)\"/><polygon points=\"320,210 424,210 410,218 306,218\" fill=\"#9fc4dd\" opacity=\".10\"/><rect x=\"450\" y=\"18\" width=\"104\" height=\"56\" fill=\"#6d8ba1\" opacity=\".55\"/><path d=\"M450 18h104M450 74h104M502 18v56\" stroke=\"#07090b\" stroke-width=\"7\"/><polygon points=\"450,74 554,74 614,210 510,210\" fill=\"url(#s-bundel)\"/><polygon points=\"510,210 614,210 600,218 496,218\" fill=\"#9fc4dd\" opacity=\".10\"/><rect x=\"640\" y=\"18\" width=\"104\" height=\"56\" fill=\"#6d8ba1\" opacity=\".55\"/><path d=\"M640 18h104M640 74h104M692 18v56\" stroke=\"#07090b\" stroke-width=\"7\"/><polygon points=\"640,74 744,74 804,210 700,210\" fill=\"url(#s-bundel)\"/><polygon points=\"700,210 804,210 790,218 686,218\" fill=\"#9fc4dd\" opacity=\".10\"/><rect x=\"830\" y=\"18\" width=\"104\" height=\"56\" fill=\"#6d8ba1\" opacity=\".55\"/><path d=\"M830 18h104M830 74h104M882 18v56\" stroke=\"#07090b\" stroke-width=\"7\"/><polygon points=\"830,74 934,74 994,210 890,210\" fill=\"url(#s-bundel)\"/><polygon points=\"890,210 994,210 980,218 876,218\" fill=\"#9fc4dd\" opacity=\".10\"/><rect y=\"210\" width=\"1000\" height=\"50\" fill=\"#07090b\"/><g fill=\"#07090b\"><rect x=\"196\" y=\"96\" width=\"420\" height=\"118\" rx=\"6\"/><rect x=\"150\" y=\"150\" width=\"60\" height=\"64\"/><rect x=\"606\" y=\"132\" width=\"86\" height=\"82\"/><\/g><g stroke=\"#3c4952\" stroke-width=\"3\" fill=\"none\" opacity=\".85\"><circle cx=\"286\" cy=\"152\" r=\"46\"/><circle cx=\"470\" cy=\"152\" r=\"46\"/><path d=\"M286 106h184M286 198h184\"/><path d=\"M516 118h96M516 190h96\"/><\/g><circle cx=\"286\" cy=\"152\" r=\"7\" fill=\"#3c4952\"/><circle cx=\"470\" cy=\"152\" r=\"7\" fill=\"#3c4952\"/><g fill=\"#07090b\"><rect x=\"726\" y=\"168\" width=\"128\" height=\"46\"/><rect x=\"742\" y=\"146\" width=\"96\" height=\"24\"/><rect x=\"880\" y=\"180\" width=\"96\" height=\"34\"/><\/g><g stroke=\"#2b3a44\" stroke-width=\"2\"><path d=\"M726 180h128M726 192h128M880 192h96\"/><\/g><circle cx=\"672\" cy=\"120\" r=\"22\" fill=\"url(#s-rood)\"/><circle class=\"knipper\" cx=\"672\" cy=\"120\" r=\"5\" fill=\"#b8352b\"/><rect width=\"1000\" height=\"260\" fill=\"url(#s-vignet)\"/><\/svg>"},{"code":"II","titel":"De Redactievloer","nacht":"Nacht van 19 op 20 november","plek":"Redactieburelen De Nieuwe Wacht, tweede etage","intro":["Hoofdredacteur Van Ossen had die middag twee dingen gedaan: de negatieven van Duyn opgevraagd, en aan vijf mensen laten weten dat hij ze had.","Om half twee brandt het rode licht in de donkere kamer nog. Om half drie brandt het nog steeds, en reageert er niemand op de telefoon.","Vijf mensen waren die nacht in het gebouw. Alle vijf zeggen dat ze de trap niet zijn opgegaan."],"lijk":"Het lichaam van hoofdredacteur Van Ossen lag in de donkere kamer.","cats":[{"key":"verdachte","label":"VERDACHTEN","items":[{"naam":"Chef-redactie Haverkamp","kort":"Haverkamp","detail":"181 cm · rechtshandig · bruine ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M3.6 16.4h16.8\"/><path d=\"M7 16.4c0-4.6 1-7.6 5-7.6s5 3 5 7.6\"/><path d=\"M7 13.6h10\"/><\/svg>","tekst":"Bepaalt wat er op de voorpagina komt. En dus ook wat er nooit op komt."},{"naam":"Verslaggever Rendorp","kort":"Rendorp","detail":"174 cm · linkshandig · groene ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M3.6 16.4h16.8\"/><path d=\"M7 16.4c0-4.6 1-7.6 5-7.6s5 3 5 7.6\"/><rect x=\"13.4\" y=\"10.6\" width=\"5.4\" height=\"3.6\" rx=\".6\"/><\/svg>","tekst":"Schrijft snel, drinkt sneller. Heeft één verhaal dat hij nooit heeft ingeleverd."},{"naam":"Telexiste Bruinsma","kort":"Bruinsma","detail":"163 cm · rechtshandig · grijze ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M5 14.4v-2.2a7 7 0 0 1 14 0v2.2\"/><rect x=\"2.6\" y=\"13.4\" width=\"4.4\" height=\"6.4\" rx=\"1.5\"/><rect x=\"17\" y=\"13.4\" width=\"4.4\" height=\"6.4\" rx=\"1.5\"/><\/svg>","tekst":"Leest elk bericht twee keer: één keer voor de krant, één keer voor zichzelf."},{"naam":"Advertentiechef De Kok","kort":"De Kok","detail":"170 cm · linkshandig · blauwe ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M3.6 7.6 10.6 12l-7 4.4z\"/><path d=\"M20.4 7.6 13.4 12l7 4.4z\"/><rect x=\"10.2\" y=\"9.8\" width=\"3.6\" height=\"4.4\" rx=\"1\"/><\/svg>","tekst":"Verkoopt witruimte. Zegt erbij dat zwijgen ook witruimte is."},{"naam":"Archivaris Wildschut","kort":"Wildschut","detail":"157 cm · rechtshandig · donkere ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"4\" y=\"3.6\" width=\"16\" height=\"16.8\" rx=\"1.5\"/><path d=\"M4 9.2h16M4 14.8h16\"/><path d=\"M10.4 6.4h3.2M10.4 12h3.2M10.4 17.6h3.2\"/><\/svg>","tekst":"Weet in welke la welk jaartal ligt. En welke la altijd op slot moet."}]},{"key":"wapen","label":"WAPENS","items":[{"naam":"Zware schrijfmachine","kort":"schrijfmachine","detail":"zwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M6.2 5h11.6l1.8 5.6H4.4z\"/><rect x=\"2.8\" y=\"10.6\" width=\"18.4\" height=\"6.8\" rx=\"1.5\"/><path d=\"M6.6 13.8h10.8\"/><path d=\"M9 17.4h6v2.6H9z\"/><\/svg>","tekst":"Vijftien kilo staal. Het laatste wat je erop tikt is meestal niet van jou."},{"naam":"Koperen asbak","kort":"asbak","detail":"middelzwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M3.4 11.8h17.2l-2 6.6H5.4z\"/><path d=\"M8.2 11.8V9.2\"/><path d=\"M12.8 10.2 18.6 8\"/><path d=\"M18.6 8l1.8-.7\"/><\/svg>","tekst":"Gepoetst tot je je eigen schuldgevoel erin ziet."},{"naam":"Briefopener","kort":"briefopener","detail":"licht","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4.6 19.6 13 11.2\"/><path d=\"M11.4 9.6 15.6 5.4l3.4 3.4-4.2 4.2z\"/><path d=\"M3.4 20.8l2.2-1.2-1-1z\"/><\/svg>","tekst":"Voor enveloppen bedoeld. Zoals bijna alles hier voor iets anders bedoeld was."},{"naam":"Telexrol","kort":"telexrol","detail":"middelzwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"13\" r=\"7\"/><circle cx=\"12\" cy=\"13\" r=\"2.2\"/><path d=\"M12 6V3.2h5.4\"/><\/svg>","tekst":"Driehonderd meter papier, strak gewikkeld. Strak genoeg."},{"naam":"Flesje fixeer","kort":"fixeer","detail":"licht","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"8\" y=\"7.4\" width=\"8\" height=\"12.6\" rx=\"1.5\"/><path d=\"M10 7.4V4.2h4v3.2\"/><path d=\"M12 11.4l1.7 2.7a2 2 0 1 1-3.4 0z\"/><\/svg>","tekst":"Maakt beelden onveranderlijk. Doet met longen ongeveer hetzelfde."}]},{"key":"locatie","label":"LOCATIES","items":[{"naam":"Het telexhok","kort":"telexhok","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"3.8\" y=\"8.4\" width=\"16.4\" height=\"9\" rx=\"1.5\"/><path d=\"M8 8.4V5h8v3.4\"/><path d=\"M7 12h10M7 15h6\"/><\/svg>","tekst":"Ratelt de hele nacht door. Perfect voor een gesprek dat niemand mag horen."},{"naam":"De archiefkelder","kort":"archief","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"3.2\" y=\"4.6\" width=\"17.6\" height=\"15\" rx=\"1\"/><path d=\"M3.2 12.2h17.6\"/><rect x=\"5.6\" y=\"7\" width=\"4.4\" height=\"3.4\"/><rect x=\"12.6\" y=\"14.4\" width=\"5.4\" height=\"3.4\"/><\/svg>","tekst":"Vijftig jaargangen. Eén ontbrekend katern."},{"naam":"De donkere kamer","kort":"donkere kamer","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2.4 6.4h19.2\"/><path d=\"M9 6.4v1.8M15 6.4v1.8\"/><rect x=\"7.4\" y=\"8.2\" width=\"9.2\" height=\"9.6\" rx=\".6\"/><circle cx=\"12\" cy=\"13\" r=\"2.2\"/><circle cx=\"4.6\" cy=\"4\" r=\"1.4\"/><\/svg>","tekst":"Rood licht, azijnlucht, en negatieven die niemand had mogen afdrukken."},{"naam":"De brandtrap","kort":"brandtrap","detail":"buiten","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M5 3.4v17.2M19 3.4v17.2\"/><path d=\"M5 7.4h14M5 11.4h14M5 15.4h14M5 19.4h14\"/><\/svg>","tekst":"IJzer, roest, vier hoog. De enige plek waar hier gerookt én gepraat wordt."},{"naam":"De binnenplaats","kort":"binnenplaats","detail":"buiten","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"6.8\" cy=\"15.8\" r=\"3.6\"/><circle cx=\"17.2\" cy=\"15.8\" r=\"3.6\"/><path d=\"M6.8 15.8 10.4 9.4h4l3.4 6.4\"/><path d=\"M9 9.4h4.4\"/><\/svg>","tekst":"Fietsen, kratten, en een lantaarn die al sinds de zomer stuk is."}]}],"clues":["Wie in het telexhok was, was langer dan 157 cm.","De kortste verdachte had een briefopener bij zich.","De langste verdachte had geen telexrol bij zich.","Chef-redactie Haverkamp had geen koperen asbak bij zich.","De verdachte in de donkere kamer was langer dan de verdachte op de brandtrap.","Wie een zware schrijfmachine bij zich had, was niet in de donkere kamer.","Advertentiechef De Kok was op de brandtrap.","De verdachte met de zware schrijfmachine was langer dan de verdachte in het telexhok.","Wie een koperen asbak bij zich had, was op de binnenplaats."],"oplossing":[null,[4,1,3,0,2],[2,4,0,3,1]],"dader":0,"onthulling":["Chef-redactie Haverkamp bepaalde al twaalf jaar wat de voorpagina haalde. Deze keer bepaalde hij het in de donkere kamer, met een flesje fixeer en een deur die van binnen niet opengaat.","De negatieven waren toen al weg. Iemand anders had ze eerder die avond opgehaald — iemand met een sleutel van alles, en een reden om zelf niet op een foto te staan.","In de kas van de drukkerij staan die maand twee contante uitbetalingen. Twee keer aan niemand. De boeking is met de hand gedaan."],"scene":"<svg class=\"scene strook\" viewBox=\"0 0 1000 260\" preserveAspectRatio=\"xMidYMid meet\" role=\"img\" aria-label=\"De redactievloer 's nachts: drie bureaulampen en een deur met rood licht.\"><defs><radialGradient id=\"s-gloed\" cx=\".5\" cy=\".5\" r=\".5\"><stop offset=\"0\" stop-color=\"#ffe4a8\" stop-opacity=\".9\"/><stop offset=\"1\" stop-color=\"#ffe4a8\" stop-opacity=\"0\"/><\/radialGradient><radialGradient id=\"s-rood\" cx=\".5\" cy=\".5\" r=\".5\"><stop offset=\"0\" stop-color=\"#b8352b\" stop-opacity=\".75\"/><stop offset=\"1\" stop-color=\"#b8352b\" stop-opacity=\"0\"/><\/radialGradient><linearGradient id=\"s-bundel\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#9fc4dd\" stop-opacity=\".30\"/><stop offset=\"1\" stop-color=\"#9fc4dd\" stop-opacity=\"0\"/><\/linearGradient><linearGradient id=\"s-warmbundel\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#ffe4a8\" stop-opacity=\".26\"/><stop offset=\"1\" stop-color=\"#ffe4a8\" stop-opacity=\"0\"/><\/linearGradient><linearGradient id=\"s-lucht\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#22303a\"/><stop offset=\"1\" stop-color=\"#111a20\"/><\/linearGradient><radialGradient id=\"s-vignet\" cx=\".5\" cy=\".5\" r=\".72\"><stop offset=\".4\" stop-color=\"#000\" stop-opacity=\"0\"/><stop offset=\"1\" stop-color=\"#000\" stop-opacity=\".7\"/><\/radialGradient><\/defs><rect width=\"1000\" height=\"260\" fill=\"url(#s-lucht)\"/><rect y=\"200\" width=\"1000\" height=\"60\" fill=\"#07090b\"/><ellipse cx=\"166\" cy=\"152\" rx=\"104\" ry=\"30\" fill=\"url(#s-gloed)\" opacity=\".30\"/><g fill=\"#07090b\"><rect x=\"70\" y=\"150\" width=\"192\" height=\"52\"/><rect x=\"96\" y=\"128\" width=\"76\" height=\"22\"/><\/g><path d=\"M220 150v-42h-30\" stroke=\"#3c4952\" stroke-width=\"4\" fill=\"none\"/><path d=\"M174 100h34l-10 16h-34z\" fill=\"#3c4952\"/><polygon points=\"174,116 208,116 246,150 136,150\" fill=\"url(#s-warmbundel)\"/><circle class=\"knipper\" style=\"animation-delay:0.0s\" cx=\"191\" cy=\"116\" r=\"4.5\" fill=\"#ffe4a8\"/><ellipse cx=\"396\" cy=\"152\" rx=\"104\" ry=\"30\" fill=\"url(#s-gloed)\" opacity=\".30\"/><g fill=\"#07090b\"><rect x=\"300\" y=\"150\" width=\"192\" height=\"52\"/><rect x=\"326\" y=\"128\" width=\"76\" height=\"22\"/><\/g><path d=\"M450 150v-42h-30\" stroke=\"#3c4952\" stroke-width=\"4\" fill=\"none\"/><path d=\"M404 100h34l-10 16h-34z\" fill=\"#3c4952\"/><polygon points=\"404,116 438,116 476,150 366,150\" fill=\"url(#s-warmbundel)\"/><circle class=\"knipper\" style=\"animation-delay:1.7s\" cx=\"421\" cy=\"116\" r=\"4.5\" fill=\"#ffe4a8\"/><ellipse cx=\"626\" cy=\"152\" rx=\"104\" ry=\"30\" fill=\"url(#s-gloed)\" opacity=\".30\"/><g fill=\"#07090b\"><rect x=\"530\" y=\"150\" width=\"192\" height=\"52\"/><rect x=\"556\" y=\"128\" width=\"76\" height=\"22\"/><\/g><path d=\"M680 150v-42h-30\" stroke=\"#3c4952\" stroke-width=\"4\" fill=\"none\"/><path d=\"M634 100h34l-10 16h-34z\" fill=\"#3c4952\"/><polygon points=\"634,116 668,116 706,150 596,150\" fill=\"url(#s-warmbundel)\"/><circle class=\"knipper\" style=\"animation-delay:3.4s\" cx=\"651\" cy=\"116\" r=\"4.5\" fill=\"#ffe4a8\"/><rect x=\"716\" width=\"284\" height=\"200\" fill=\"#111a20\"/><rect x=\"764\" y=\"36\" width=\"150\" height=\"164\" fill=\"#07090b\"/><rect x=\"774\" y=\"46\" width=\"130\" height=\"154\" fill=\"#0d1418\" stroke=\"#3c4952\" stroke-width=\"3\"/><rect class=\"spleet\" x=\"898\" y=\"46\" width=\"10\" height=\"154\" fill=\"#b8352b\"/><ellipse cx=\"908\" cy=\"126\" rx=\"70\" ry=\"96\" fill=\"url(#s-rood)\" opacity=\".45\"/><polygon points=\"908,200 908,46 986,200\" fill=\"#b8352b\" opacity=\".12\"/><circle cx=\"884\" cy=\"128\" r=\"5\" fill=\"#3c4952\"/><rect width=\"1000\" height=\"260\" fill=\"url(#s-vignet)\"/><\/svg>"},{"code":"III","titel":"Het Zwarte Katern","nacht":"Nacht van 26 op 27 november","plek":"Expeditiedepot, aan de vaart","intro":["Uitgever Grevelink had de kasboeken meegenomen naar het depot. Hij wilde weten wie er tweemaal contant is betaald, en waarvoor.","Om vijf uur staat de hele oplage klaar in de hal. Om vijf uur ligt Grevelink drie meter lager in het water van de vaart, tegen de kade.","Vier mensen hebben deze maand een sleutel van het depot gehad. Alle vier hebben de vorige twee nachten van dichtbij meegemaakt. En één van hen staat op de foto's die nooit gedrukt zijn."],"lijk":"Het lichaam van uitgever Grevelink lag op de laadkade.","cats":[{"key":"verdachte","label":"VERDACHTEN","items":[{"naam":"Corrector Vromen","kort":"Vromen","detail":"168 cm · linkshandig · grijze ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"7\" cy=\"13\" r=\"3.6\"/><circle cx=\"17\" cy=\"13\" r=\"3.6\"/><path d=\"M10.6 12.6h2.8\"/><path d=\"M3.4 11.4 5 7.6\"/><path d=\"M20.6 11.4 19 7.6\"/><\/svg>","tekst":"Zag als eerste wat er in het katern stond. Zegt nu dat hij niets heeft gelezen."},{"naam":"Mevrouw Sluis","kort":"Sluis","detail":"159 cm · linkshandig · blauwe ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"4.6\" y=\"4.2\" width=\"14.8\" height=\"16.4\" rx=\"1.6\"/><rect x=\"9\" y=\"2.4\" width=\"6\" height=\"3.4\" rx=\"1\"/><path d=\"M8.4 10.4h7.2M8.4 13.8h7.2M8.4 17.2h4.4\"/><\/svg>","tekst":"Boekte elke uitbetaling. Ook die welke nergens op de loonlijst staan."},{"naam":"Telexiste Bruinsma","kort":"Bruinsma","detail":"163 cm · rechtshandig · grijze ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M5 14.4v-2.2a7 7 0 0 1 14 0v2.2\"/><rect x=\"2.6\" y=\"13.4\" width=\"4.4\" height=\"6.4\" rx=\"1.5\"/><rect x=\"17\" y=\"13.4\" width=\"4.4\" height=\"6.4\" rx=\"1.5\"/><\/svg>","tekst":"Bewaarde een doorslag van elk bericht. Behalve van dat ene."},{"naam":"Archivaris Wildschut","kort":"Wildschut","detail":"157 cm · rechtshandig · donkere ogen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"4\" y=\"3.6\" width=\"16\" height=\"16.8\" rx=\"1.5\"/><path d=\"M4 9.2h16M4 14.8h16\"/><path d=\"M10.4 6.4h3.2M10.4 12h3.2M10.4 17.6h3.2\"/><\/svg>","tekst":"Meldde de diefstal uit zijn eigen kelder. Drie dagen te laat."}]},{"key":"wapen","label":"WAPENS","items":[{"naam":"Stapelhaak","kort":"stapelhaak","detail":"zwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M8 3.6v9.8a4.2 4.2 0 0 0 8.4 0\"/><path d=\"M4.8 3.6h6.4\"/><path d=\"M16.4 15.6v4.8\"/><\/svg>","tekst":"Om pakken kranten mee te verslepen. En al wat verder verplaatst moet worden."},{"naam":"Bus stencilinkt","kort":"stencilinkt","detail":"middelzwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><ellipse cx=\"12\" cy=\"6.2\" rx=\"6.8\" ry=\"2.6\"/><path d=\"M5.2 6.2v11.6c0 1.4 3 2.6 6.8 2.6s6.8-1.2 6.8-2.6V6.2\"/><path d=\"M9 12h6\"/><\/svg>","tekst":"Twee liter. Gaat er nooit meer uit — uit stof, uit hout, uit longen."},{"naam":"Sleutelbos van de expeditie","kort":"sleutelbos","detail":"middelzwaar","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"8\" cy=\"8\" r=\"4\"/><path d=\"M11 11l7.4 7.4\"/><path d=\"M16.4 16.4l2-2 2 2-2 2z\"/><path d=\"M13.4 8.4l4.8 4.8\"/><\/svg>","tekst":"Elf sleutels aan een ring. Eén ervan past op een deur die niet bestaat."},{"naam":"Stalen liniaal","kort":"liniaal","detail":"licht","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"2.2\" y=\"9\" width=\"19.6\" height=\"6\" rx=\".6\"/><path d=\"M6 9v2.6M10 9v3.6M14 9v2.6M18 9v3.6\"/><\/svg>","tekst":"Recht, koud en scherp aan één kant. Zoals de meeste feiten hier."}]},{"key":"locatie","label":"LOCATIES","items":[{"naam":"De expeditiehal","kort":"expeditie","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"2.8\" y=\"6\" width=\"8\" height=\"10\"/><rect x=\"13.2\" y=\"9\" width=\"8\" height=\"7\"/><circle cx=\"5.2\" cy=\"18\" r=\"1.4\"/><circle cx=\"8.8\" cy=\"18\" r=\"1.4\"/><circle cx=\"15.4\" cy=\"18\" r=\"1.4\"/><circle cx=\"19\" cy=\"18\" r=\"1.4\"/><\/svg>","tekst":"Rolcontainers tot aan het plafond. Om vijf uur staat hier de hele oplage."},{"naam":"Het weegbrughuisje","kort":"weegbrug","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M3.6 20.4V10L12 4.6 20.4 10v10.4z\"/><path d=\"M8.6 20.4v-6h6.8v6\"/><path d=\"M8 10.4h8\"/><\/svg>","tekst":"Eén bureau, één weegschaal, één raam met uitzicht op alles wat vertrekt."},{"naam":"De papieropslag","kort":"papieropslag","detail":"binnen","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"7\" cy=\"8.6\" r=\"4\"/><circle cx=\"17\" cy=\"8.6\" r=\"4\"/><circle cx=\"12\" cy=\"16.6\" r=\"4\"/><circle cx=\"7\" cy=\"8.6\" r=\"1\"/><circle cx=\"17\" cy=\"8.6\" r=\"1\"/><circle cx=\"12\" cy=\"16.6\" r=\"1\"/><\/svg>","tekst":"Rollen van een ton. Als er één kantelt, hoor je alleen het papier."},{"naam":"De laadkade","kort":"laadkade","detail":"buiten","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2.2 8.8h12.6v4.6H2.2z\"/><path d=\"M17 6.6h3.4v6.8H17z\"/><path d=\"M2.2 17.4c2-1.3 4-1.3 6 0s4 1.3 6 0 4-1.3 6 0\"/><path d=\"M2.2 21c2-1.3 4-1.3 6 0s4 1.3 6 0 4-1.3 6 0\"/><\/svg>","tekst":"Regen, diesel, en het water van de vaart drie meter lager."}]},{"key":"motief","label":"MOTIEVEN","items":[{"naam":"Het geld","kort":"geld","detail":"","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M9.2 3.4h5.6l-1.4 3h-2.8z\"/><path d=\"M12.6 6.4c4.8 1.6 7.2 5 7.2 9.2a4.8 4.8 0 0 1-4.8 4.8H9a4.8 4.8 0 0 1-4.8-4.8c0-4.2 2.4-7.6 7.2-9.2z\"/><path d=\"M12 10.4v7M10.2 12.4h3.4a1.7 1.7 0 0 1 0 3.4H10.2\"/><\/svg>","tekst":"Er is deze maand tweemaal contant uitbetaald. Twee keer aan niemand."},{"naam":"De foto's","kort":"foto's","detail":"","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"2.4\" y=\"7\" width=\"19.2\" height=\"10\" rx=\"1\"/><path d=\"M2.4 10h19.2M2.4 14h19.2\"/><path d=\"M5.4 7v3M9.4 7v3M13.4 7v3M17.4 7v3M5.4 14v3M9.4 14v3M13.4 14v3M17.4 14v3\"/><\/svg>","tekst":"Negatieven waarop mensen staan die daar niet hoorden te staan."},{"naam":"De wraak","kort":"wraak","detail":"","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M13.4 2.6 5 13.4h6.2L9 21.4l8.4-10.8h-6.2z\"/><\/svg>","tekst":"Iemand heeft negentien jaar op deze nacht gewacht."},{"naam":"De angst","kort":"angst","detail":"","ico":"<svg class=\"ico\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2.2 12s4.2-6.2 9.8-6.2S21.8 12 21.8 12s-4.2 6.2-9.8 6.2S2.2 12 2.2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3.1\"/><circle cx=\"12\" cy=\"12\" r=\"1\"/><\/svg>","tekst":"Wie de vorige twee nachten heeft gezien, weet wat er van getuigen komt."}]}],"clues":["Mevrouw Sluis had de foto's als motief.","De verdachte in het weegbrughuisje was langer dan de verdachte met de foto's als motief.","De verdachte met de sleutelbos van de expeditie was langer dan de verdachte met de angst als motief.","De kortste verdachte had geen bus stencilinkt bij zich.","Wie de wraak als motief had, was korter dan 163 cm.","Corrector Vromen was niet in de expeditiehal.","Wie in de expeditiehal was, was langer dan 159 cm.","Wie een stalen liniaal bij zich had, had de foto's als motief.","De kortste verdachte was niet op de laadkade."],"oplossing":[null,[2,3,1,0],[1,3,0,2],[0,1,3,2]],"dader":1,"onthulling":["Mevrouw Sluis deed de loonlijst, de post en de sleutels. Ze deed ook de uitbetalingen: één aan Duyn, één aan Haverkamp, allebei met de hand geboekt op een rekening die niet bestaat.","Op de vierde foto van het zwarte katern staat zij, in een auto die niet van haar is, naast een man die vier maanden later een haventerrein kocht.","Grevelink had de kasboeken bij zich. Een stalen liniaal is recht, koud en scherp aan één kant — en de vaart is drie meter lager dan de kade."],"scene":"<svg class=\"scene strook\" viewBox=\"0 0 1000 260\" preserveAspectRatio=\"xMidYMid meet\" role=\"img\" aria-label=\"De laadkade bij nacht: een lantaarn boven het water en een vrachtwagen in silhouet.\"><defs><radialGradient id=\"s-gloed\" cx=\".5\" cy=\".5\" r=\".5\"><stop offset=\"0\" stop-color=\"#ffe4a8\" stop-opacity=\".9\"/><stop offset=\"1\" stop-color=\"#ffe4a8\" stop-opacity=\"0\"/><\/radialGradient><radialGradient id=\"s-rood\" cx=\".5\" cy=\".5\" r=\".5\"><stop offset=\"0\" stop-color=\"#b8352b\" stop-opacity=\".75\"/><stop offset=\"1\" stop-color=\"#b8352b\" stop-opacity=\"0\"/><\/radialGradient><linearGradient id=\"s-bundel\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#9fc4dd\" stop-opacity=\".30\"/><stop offset=\"1\" stop-color=\"#9fc4dd\" stop-opacity=\"0\"/><\/linearGradient><linearGradient id=\"s-warmbundel\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#ffe4a8\" stop-opacity=\".26\"/><stop offset=\"1\" stop-color=\"#ffe4a8\" stop-opacity=\"0\"/><\/linearGradient><linearGradient id=\"s-lucht\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#22303a\"/><stop offset=\"1\" stop-color=\"#111a20\"/><\/linearGradient><radialGradient id=\"s-vignet\" cx=\".5\" cy=\".5\" r=\".72\"><stop offset=\".4\" stop-color=\"#000\" stop-opacity=\"0\"/><stop offset=\"1\" stop-color=\"#000\" stop-opacity=\".7\"/><\/radialGradient><\/defs><rect width=\"1000\" height=\"260\" fill=\"url(#s-lucht)\"/><ellipse cx=\"500\" cy=\"70\" rx=\"520\" ry=\"70\" fill=\"#334551\" opacity=\".35\"/><rect x=\"20\" y=\"62\" width=\"92\" height=\"54\" fill=\"#111a20\"/><rect x=\"36\" y=\"78\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"136\" y=\"42\" width=\"92\" height=\"74\" fill=\"#111a20\"/><rect x=\"190\" y=\"58\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"252\" y=\"22\" width=\"92\" height=\"94\" fill=\"#111a20\"/><rect x=\"268\" y=\"38\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"368\" y=\"62\" width=\"92\" height=\"54\" fill=\"#111a20\"/><rect x=\"422\" y=\"78\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"484\" y=\"42\" width=\"92\" height=\"74\" fill=\"#111a20\"/><rect x=\"500\" y=\"58\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"600\" y=\"22\" width=\"92\" height=\"94\" fill=\"#111a20\"/><rect x=\"654\" y=\"38\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"716\" y=\"62\" width=\"92\" height=\"54\" fill=\"#111a20\"/><rect x=\"732\" y=\"78\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"832\" y=\"42\" width=\"92\" height=\"74\" fill=\"#111a20\"/><rect x=\"886\" y=\"58\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"948\" y=\"22\" width=\"92\" height=\"94\" fill=\"#111a20\"/><rect x=\"964\" y=\"38\" width=\"14\" height=\"16\" fill=\"#ffe4a8\" opacity=\".55\"/><rect y=\"116\" width=\"1000\" height=\"76\" fill=\"#080f13\"/><path class=\"golf\" style=\"animation-delay:0.0s\" d=\"M-40 126q60 -7 120 0t120 0 120 0 120 0 120 0 120 0 120 0 120 0 120 0\" stroke=\"#22343d\" stroke-width=\"3\" fill=\"none\"/><path class=\"golf\" style=\"animation-delay:0.9s\" d=\"M-40 139q60 -7 120 0t120 0 120 0 120 0 120 0 120 0 120 0 120 0 120 0\" stroke=\"#22343d\" stroke-width=\"3\" fill=\"none\"/><path class=\"golf\" style=\"animation-delay:1.8s\" d=\"M-40 152q60 -7 120 0t120 0 120 0 120 0 120 0 120 0 120 0 120 0 120 0\" stroke=\"#22343d\" stroke-width=\"3\" fill=\"none\"/><path class=\"golf\" style=\"animation-delay:2.7s\" d=\"M-40 165q60 -7 120 0t120 0 120 0 120 0 120 0 120 0 120 0 120 0 120 0\" stroke=\"#22343d\" stroke-width=\"3\" fill=\"none\"/><path class=\"golf\" style=\"animation-delay:3.6s\" d=\"M-40 178q60 -7 120 0t120 0 120 0 120 0 120 0 120 0 120 0 120 0 120 0\" stroke=\"#22343d\" stroke-width=\"3\" fill=\"none\"/><rect x=\"651\" y=\"116\" width=\"9\" height=\"76\" fill=\"#ffe4a8\" opacity=\".55\"/><rect x=\"668\" y=\"116\" width=\"9\" height=\"76\" fill=\"#ffe4a8\" opacity=\".3\"/><rect x=\"300\" y=\"116\" width=\"9\" height=\"76\" fill=\"#ffe4a8\" opacity=\".28\"/><rect x=\"772\" y=\"116\" width=\"9\" height=\"76\" fill=\"#ffe4a8\" opacity=\".24\"/><rect y=\"192\" width=\"1000\" height=\"68\" fill=\"#07090b\"/><ellipse cx=\"620\" cy=\"206\" rx=\"150\" ry=\"26\" fill=\"url(#s-gloed)\" opacity=\".28\"/><path d=\"M596 192V56h60\" stroke=\"#3c4952\" stroke-width=\"5\" fill=\"none\"/><path d=\"M646 50h34l-10 16h-34z\" fill=\"#3c4952\"/><polygon points=\"646,66 680,66 736,192 570,192\" fill=\"url(#s-warmbundel)\"/><circle cx=\"663\" cy=\"66\" r=\"26\" fill=\"url(#s-gloed)\"/><circle class=\"knipper\" cx=\"663\" cy=\"66\" r=\"6\" fill=\"#ffe4a8\"/><g fill=\"#07090b\"><rect x=\"80\" y=\"104\" width=\"212\" height=\"88\" rx=\"4\"/><rect x=\"276\" y=\"130\" width=\"92\" height=\"62\" rx=\"4\"/><rect x=\"352\" y=\"150\" width=\"26\" height=\"42\"/><\/g><rect x=\"292\" y=\"140\" width=\"52\" height=\"30\" fill=\"#16222a\"/><circle cx=\"150\" cy=\"192\" r=\"17\" fill=\"#07090b\" stroke=\"#3c4952\" stroke-width=\"4\"/><circle cx=\"318\" cy=\"192\" r=\"17\" fill=\"#07090b\" stroke=\"#3c4952\" stroke-width=\"4\"/><g fill=\"#07090b\"><rect x=\"820\" y=\"164\" width=\"34\" height=\"28\" rx=\"8\"/><rect x=\"896\" y=\"164\" width=\"34\" height=\"28\" rx=\"8\"/><\/g><path d=\"M0 192h1000\" stroke=\"#3c4952\" stroke-width=\"2\" opacity=\".5\"/><rect width=\"1000\" height=\"260\" fill=\"url(#s-vignet)\"/><\/svg>"}]},"en":{"serie":{"titel":"The Black Column","onder":"Three nights · November 1958 · The Evening Sentinel","intro":["On the 12th of November 1958 an eight-page section is pulled off the presses. It appears on no schedule anywhere, it carries no by-line, and before that night is out it has vanished from the archive cellar.","Over the three nights that follow, three people die. Each time there is one suspect who did it, one object, one place. Beyond that there is nothing: no witness who will talk, no confession, no name.","What you do have is a grid. Every suspect belongs to exactly one object and exactly one place — never to two. Cross out what cannot be true, and what is left is what happened."],"hoe":["Tap a square to cycle it: empty, cross (cannot be) and tick (is so).","Place a tick and the grid crosses out the rest of that row and column for you.","Every clue is true. Every clue is needed. There is exactly one solution."]},"epiloog":["Three nights, three dead, one eight-page section that was never run.","The negatives were never recovered. The following week the type was melted down into fresh lines; the paper came out that month as it always did, every day, on time.","The archive holds the 1958 volume complete. Only between the 12th and the 13th of November is there a gap the size of eight pages. Open the binder and you are looking at white space — and white space, as the advertising manager liked to say, is something we sell."],"zaken":[{"code":"I","titel":"The Night Run","nacht":"Night of the 12th to 13th of November","plek":"The Swan Printing Works, Wharf Road","intro":["At a quarter past three the rotary press stands still. That never happens; the press only stops when somebody stops it.","Night foreman Colthurst is found among the reels. That evening he had had eight pages set that nobody had ordered, and he meant to run them.","Four people were inside. The gate was locked; the key was hanging where it belongs."],"lijk":"Night foreman Colthurst’s body was found in the press cellar.","cats":[{"key":"verdachte","label":"SUSPECTS","items":[{"naam":"Proofreader Vance","kort":"Vance","detail":"5 ft 6 · left-handed · grey eyes","tekst":"Nineteen years of taking other men’s mistakes out. His own are in the margin of his own life."},{"naam":"Pressman Beckett","kort":"Beckett","detail":"6 ft 0 · right-handed · brown eyes","tekst":"Works the rotary press the way a man works a horse. Black past the wrists, Sundays included."},{"naam":"Mrs Slaney","kort":"Slaney","detail":"5 ft 3 · left-handed · blue eyes","tekst":"Handles the wages, the post and the keys. So she knows exactly what everyone is worth."},{"naam":"Photographer Doyne","kort":"Doyne","detail":"5 ft 10 · right-handed · green eyes","tekst":"Develops by red light and sells by daylight. To whoever bids highest."}]},{"key":"wapen","label":"OBJECTS","items":[{"naam":"Lead slug of type","kort":"slug","detail":"heavy","tekst":"A line of set type, solid lead. Heavy enough to have the last word."},{"naam":"Paper knife","kort":"knife","detail":"light","tekst":"Cuts a thousand sheets in one stroke. A throat is thinner than a thousand sheets."},{"naam":"Bottle of ink thinner","kort":"thinner","detail":"light","tekst":"Sweet-smelling. Two lungfuls and the works smells like a funeral."},{"naam":"Coil of bundling cord","kort":"cord","detail":"medium","tekst":"Binds stacks of papers together. Or anything else that has to lie still."}]},{"key":"locatie","label":"PLACES","items":[{"naam":"The composing room","kort":"composing room","detail":"indoors","tekst":"Rows of type cases. A man who works here finds any letter by touch — in the dark as well."},{"naam":"The press cellar","kort":"press cellar","detail":"indoors","tekst":"Below the floor the press thunders. Above the floor nobody hears a thing."},{"naam":"The flat roof","kort":"roof","detail":"outdoors","tekst":"Tar, gravel, and a city looking the other way."},{"naam":"The loading yard","kort":"loading yard","detail":"outdoors","tekst":"Where the vans come for the bundles at four. Until then: nobody."}]}],"clues":["Whoever was on the flat roof had blue eyes.","Whoever carried a paper knife stood under 5 ft 6.","The suspect with the lead slug was taller than the suspect in the composing room.","Whoever carried a coil of bundling cord was in the loading yard.","Pressman Beckett carried a coil of bundling cord."],"oplossing":[null,[2,3,1,0],[0,3,2,1]],"dader":3,"onthulling":["Photographer Doyne already had the slug in his hand when he came down the stairs. Eight pages, and on four of them were his photographs — under a caption he had never supplied.","Colthurst meant to run them. Doyne wanted them back. A line of lead weighs the better part of nine pounds and has the last word in a single blow.","What Doyne did not take were the negatives. Those were still upstairs, in the editorial darkroom. Seven nights later it goes wrong up there."],"sceneLabel":"The press cellar at night: moonlight through high windows, the press in silhouette."},{"code":"II","titel":"The Editorial Floor","nacht":"Night of the 19th to 20th of November","plek":"The Evening Sentinel newsroom, second floor","intro":["That afternoon Vosper, the editor-in-chief, had done two things: sent for Doyne’s negatives, and let five people know he had them.","At half past one the red light in the darkroom is still burning. At half past two it is burning still, and nobody is answering the telephone.","Five people were in the building that night. All five say they never went up the stairs."],"lijk":"Vosper, the editor-in-chief, was found in the darkroom.","cats":[{"key":"verdachte","label":"SUSPECTS","items":[{"naam":"News Editor Haverstock","kort":"Haverstock","detail":"5 ft 11 · right-handed · brown eyes","tekst":"Decides what goes on the front page. And therefore what never does."},{"naam":"Reporter Rendall","kort":"Rendall","detail":"5 ft 9 · left-handed · green eyes","tekst":"Writes fast, drinks faster. Has one story he has never filed."},{"naam":"Telex Clerk Brimley","kort":"Brimley","detail":"5 ft 4 · right-handed · grey eyes","tekst":"Reads every wire twice: once for the paper, once for himself."},{"naam":"Advertising Manager Cook","kort":"Cook","detail":"5 ft 7 · left-handed · blue eyes","tekst":"Sells white space. Likes to add that silence is white space too."},{"naam":"Archivist Wildash","kort":"Wildash","detail":"5 ft 2 · right-handed · dark eyes","tekst":"Knows which drawer holds which year. And which drawer must always be locked."}]},{"key":"wapen","label":"OBJECTS","items":[{"naam":"Heavy typewriter","kort":"typewriter","detail":"heavy","tekst":"Thirty pounds of steel. The last thing typed on it is usually not yours."},{"naam":"Brass ashtray","kort":"ashtray","detail":"medium","tekst":"Polished until you can see your own guilty conscience in it."},{"naam":"Letter opener","kort":"letter opener","detail":"light","tekst":"Meant for envelopes. As nearly everything here was meant for something else."},{"naam":"Telex roll","kort":"telex roll","detail":"medium","tekst":"A thousand feet of paper, wound tight. Tight enough."},{"naam":"Bottle of fixer","kort":"fixer","detail":"light","tekst":"Makes images permanent. Does much the same to a pair of lungs."}]},{"key":"locatie","label":"PLACES","items":[{"naam":"The telex room","kort":"telex room","detail":"indoors","tekst":"Clatters all night long. Ideal for a conversation nobody is to hear."},{"naam":"The archive cellar","kort":"archive","detail":"indoors","tekst":"Fifty bound years. One missing section."},{"naam":"The darkroom","kort":"darkroom","detail":"indoors","tekst":"Red light, the smell of acetic acid, and negatives nobody should have printed."},{"naam":"The fire escape","kort":"fire escape","detail":"outdoors","tekst":"Iron, rust, four floors up. The only place here where men both smoke and talk."},{"naam":"The inner yard","kort":"inner yard","detail":"outdoors","tekst":"Bicycles, crates, and a lamp that has been out since the summer."}]}],"clues":["Whoever was in the telex room stood over 5 ft 2.","The shortest suspect carried a letter opener.","The tallest suspect did not carry a telex roll.","News Editor Haverstock did not carry a brass ashtray.","The suspect in the darkroom was taller than the suspect on the fire escape.","Whoever carried a heavy typewriter was not in the darkroom.","Advertising Manager Cook was on the fire escape.","The suspect with the heavy typewriter was taller than the suspect in the telex room.","Whoever carried a brass ashtray was in the inner yard."],"oplossing":[null,[4,1,3,0,2],[2,4,0,3,1]],"dader":0,"onthulling":["For twelve years News Editor Haverstock had decided what made the front page. This time he decided it in the darkroom, with a bottle of fixer and a door that does not open from the inside.","By then the negatives had already gone. Somebody else had collected them earlier that evening — somebody with a key to everything, and a reason not to appear in a photograph.","The printing works’ petty cash shows two payments in notes that month. Twice, to nobody. Both entries made by hand."],"sceneLabel":"The editorial floor at night: three desk lamps and a door with a red light."},{"code":"III","titel":"The Black Section","nacht":"Night of the 26th to 27th of November","plek":"The dispatch depot, on the cut","intro":["Grevill, the publisher, had taken the cash books out to the depot with him. He wanted to know who had been paid twice in notes, and what for.","At five o’clock the whole print run stands ready in the hall. At five o’clock Grevill is lying ten feet lower, in the water of the cut, against the wharf.","Four people held a depot key this month. All four were close to the last two nights. And one of them is in the photographs that were never printed."],"lijk":"Grevill, the publisher, was found on the loading wharf.","cats":[{"key":"verdachte","label":"SUSPECTS","items":[{"naam":"Proofreader Vance","kort":"Vance","detail":"5 ft 6 · left-handed · grey eyes","tekst":"Was the first to see what was in the section. Now says he read none of it."},{"naam":"Mrs Slaney","kort":"Slaney","detail":"5 ft 3 · left-handed · blue eyes","tekst":"Entered every payment. Including the ones that appear on no wages sheet."},{"naam":"Telex Clerk Brimley","kort":"Brimley","detail":"5 ft 4 · right-handed · grey eyes","tekst":"Kept a carbon of every wire. Except that one."},{"naam":"Archivist Wildash","kort":"Wildash","detail":"5 ft 2 · right-handed · dark eyes","tekst":"Reported the theft from his own cellar. Three days late."}]},{"key":"wapen","label":"OBJECTS","items":[{"naam":"Bale hook","kort":"bale hook","detail":"heavy","tekst":"For dragging bundles of papers about. And whatever else has to be moved."},{"naam":"Drum of stencil ink","kort":"stencil ink","detail":"medium","tekst":"Half a gallon. It never comes out again — not of cloth, not of wood, not of lungs."},{"naam":"Dispatch key ring","kort":"key ring","detail":"medium","tekst":"Eleven keys on a ring. One of them fits a door that does not exist."},{"naam":"Steel rule","kort":"steel rule","detail":"light","tekst":"Straight, cold and sharp on one edge. Like most of the facts around here."}]},{"key":"locatie","label":"PLACES","items":[{"naam":"The dispatch hall","kort":"dispatch hall","detail":"indoors","tekst":"Roll cages to the ceiling. At five o’clock the whole run stands here."},{"naam":"The weighbridge hut","kort":"weighbridge","detail":"indoors","tekst":"One desk, one scale, one window looking out on everything that leaves."},{"naam":"The paper store","kort":"paper store","detail":"indoors","tekst":"Reels of a ton apiece. If one goes over, all you hear is the paper."},{"naam":"The loading wharf","kort":"loading wharf","detail":"outdoors","tekst":"Rain, diesel, and the water of the cut ten feet below."}]},{"key":"motief","label":"MOTIVES","items":[{"naam":"The money","kort":"money","detail":"","tekst":"Two payments in notes this month. Twice, to nobody."},{"naam":"The photographs","kort":"photographs","detail":"","tekst":"Negatives with people on them who had no business being there."},{"naam":"Revenge","kort":"revenge","detail":"","tekst":"Somebody has waited nineteen years for this night."},{"naam":"Fear","kort":"fear","detail":"","tekst":"Anyone who saw the last two nights knows what becomes of witnesses."}]}],"clues":["Mrs Slaney’s motive was the photographs.","The suspect in the weighbridge hut was taller than the suspect whose motive was the photographs.","The suspect with the dispatch key ring was taller than the suspect whose motive was fear.","The shortest suspect did not carry a drum of stencil ink.","Whoever had revenge as a motive stood under 5 ft 4.","Proofreader Vance was not in the dispatch hall.","Whoever was in the dispatch hall stood over 5 ft 3.","Whoever carried a steel rule had the photographs as a motive.","The shortest suspect was not on the loading wharf."],"oplossing":[null,[2,3,1,0],[1,3,0,2],[0,1,3,2]],"dader":1,"onthulling":["Mrs Slaney handled the wages, the post and the keys. She handled the payments too: one to Doyne, one to Haverstock, both entered by hand against an account that does not exist.","In the fourth photograph of the black section it is she who stands there, in a car that is not hers, beside a man who bought a stretch of dockland four months later.","Grevill had the cash books with him. A steel rule is straight, cold and sharp on one edge — and the cut lies ten feet below the wharf."],"sceneLabel":"The loading wharf at night: a lamp above the water and a lorry in silhouette."}]}};
+const T = {"nl":{"titel":"De Zwarte Kolom – drie moordpuzzels in een kruisrooster | Enigma Mystery","thuis":"← Enigma Mystery","anderetaal":"English","anderetaalLang":"Switch to English","geluidAan":"Geluid aan","geluidUit":"Geluid uit","heroLabel":"Een krantenpagina onder een hanglamp; één kolom is volledig zwart.","krant":"De Nieuwe Wacht","datum1":"Donderdag 13 november 1958","datum2":"Nachteditie","datum3":"83e jaargang, 12 cent","onderkop":"Drie nachten, drie doden en acht pagina’s die nooit zijn verschenen","hoekop":"Zo werkt een kruisrooster","proef":"leeg, kan niet, klopt","ladenkop":"De drie dossiers","ladenuitleg":"Elk dossier is één nacht. Het rooster op de kaart laat zien hoe ver u bent; een opgeloste zaak haalt een stuk van de zwarte kolom weg.","opSlot":"Gaat open zodra zaak {a} is opgelost.","stOpSlot":"OP SLOT","stOpgelost":"OPGELOST","stBezig":"BEZIG","stand":"{a} verdachten<br>{b} roosters<br>{c} aanwijzingen","zwart":"Nog zwart","epiloog":"Epiloog","zaak":"Zaak","verdachten":"Verdachten","clues":"Aanwijzingen","clueUitleg":"Tik een aanwijzing aan om hem door te strepen als u hem hebt gebruikt.","rooster":"Rooster","roosterUitleg":"Tik een vakje: leeg, ✗ kan niet, ✓ klopt. Een ✓ streept de rest van rij en kolom weg.","wis":"Rooster wissen","hint":"Vakje laten invullen ({a} over)","beschuldiging":"Beschuldiging","dienIn":"Beschuldiging indienen","kies":"— kies —","vraag":{"verdachte":"Wie","wapen":"Waarmee","locatie":"Waar","motief":"Waarom"},"onvolledig":"Vul eerst elk onderdeel van de beschuldiging in.","fout":"Deze beschuldiging houdt geen stand. Minstens één aanwijzing spreekt hem tegen. Loop het rooster na en zoek de regel die u nog niet hebt gebruikt.","hintGegeven":"Eén vakje is voor u ingevuld. De rest van die rij en kolom is weggestreept.","extra":"Zaak opgelost","volgende":"Volgend dossier","sluit":"Terug naar de voorpagina","terug":"← Terug naar de voorpagina"},"en":{"titel":"The Black Column – three murder puzzles on a deduction grid | Enigma Mystery","thuis":"← Enigma Mystery","anderetaal":"Nederlands","anderetaalLang":"Schakel naar Nederlands","geluidAan":"Sound on","geluidUit":"Sound off","heroLabel":"A newspaper page under a hanging lamp; one column is entirely black.","krant":"The Evening Sentinel","datum1":"Thursday, 13 November 1958","datum2":"Night edition","datum3":"83rd year, threepence","onderkop":"Three nights, three deaths and eight pages that never ran","hoekop":"How a deduction grid works","proef":"empty, cannot be, is so","ladenkop":"The three case files","ladenuitleg":"Each file is one night. The grid on the card shows how far you are; a solved case lifts part of the black column.","opSlot":"Opens once case {a} is solved.","stOpSlot":"LOCKED","stOpgelost":"SOLVED","stBezig":"IN PROGRESS","stand":"{a} suspects<br>{b} grids<br>{c} clues","zwart":"Still black","epiloog":"Epilogue","zaak":"Case","verdachten":"Suspects","clues":"Clues","clueUitleg":"Tap a clue to strike it through once you have used it.","rooster":"Grid","roosterUitleg":"Tap a square: empty, ✗ cannot be, ✓ is so. A ✓ crosses out the rest of its row and column.","wis":"Clear the grid","hint":"Fill in one square ({a} left)","beschuldiging":"The charge","dienIn":"File the charge","kies":"— choose —","vraag":{"verdachte":"Who","wapen":"With what","locatie":"Where","motief":"Why"},"onvolledig":"Fill in every part of the charge first.","fout":"This charge will not stand. At least one clue contradicts it. Go back over the grid and find the line you have not used yet.","hintGegeven":"One square has been filled in for you. The rest of that row and column is crossed out.","extra":"Case solved","volgende":"Next case file","sluit":"Back to the front page","terug":"← Back to the front page"}};
+
+/* iconen en scènes staan één keer in de data (nl) en worden gedeeld */
+DATA.en.zaken.forEach((z, zi) => {
+  const b = DATA.nl.zaken[zi];
+  z.scene = b.scene.replace(/aria-label="[^"]*"/, 'aria-label="' + z.sceneLabel + '"');
+  z.cats.forEach((c, ci) => c.items.forEach((it, ii) => { it.ico = b.cats[ci].items[ii].ico; }));
+});
+
+/* ───────────────────────── opslag (valt terug op geheugen) */
+const Kluis = (function(){
+  let mem = {};
+  let ok = false;
+  try { window.localStorage.setItem("__t","1"); window.localStorage.removeItem("__t"); ok = true; }
+  catch(e){ ok = false; }
+  return {
+    lees(k){ try { return ok ? window.localStorage.getItem(k) : (mem[k]||null); } catch(e){ return mem[k]||null; } },
+    schrijf(k,v){ try { if(ok) window.localStorage.setItem(k,v); else mem[k]=v; } catch(e){ mem[k]=v; } }
+  };
+})();
+const SLEUTEL = "graveyardfiles_zwartekolom_v2";
+const OUD = ["nachtdossier_zwartekolom_v1", "graveyardfiles_blackcolumn_en_v1"];
+const TAALSLEUTEL = "graveyardfiles_zwartekolom_taal";
+let taal = STANDAARD;
+let S = { versie:2, geluid:false, zaken:{} };
+const D = () => DATA[taal];
+const t = () => T[taal];
+
+function laad(){
+  try {
+    const rauw = Kluis.lees(SLEUTEL);
+    if(rauw){ const g = JSON.parse(rauw); if(g && g.versie === 2) S = g; }
+    else {
+      /* voortgang uit de oude, aparte NL- en EN-versie overnemen */
+      (STANDAARD === "nl" ? OUD : OUD.slice().reverse()).forEach(k => {
+        try {
+          const o = JSON.parse(Kluis.lees(k) || "null");
+          if(!o || !o.zaken) return;
+          Object.keys(o.zaken).forEach(c => {
+            const a = S.zaken[c], b = o.zaken[c];
+            if(!a || (b.opgelost && !a.opgelost)) S.zaken[c] = b;
+          });
+        } catch(e){}
+      });
+    }
+    const tl = Kluis.lees(TAALSLEUTEL);
+    if(!HASHTAAL && (tl === "nl" || tl === "en")) taal = tl;
+  } catch(e){ /* corrupte opslag: verse staat */ }
+  DATA.nl.zaken.forEach(z => {
+    const s = S.zaken[z.code];
+    if(!s || typeof s.grid !== "object" || !Array.isArray(s.af)) S.zaken[z.code] = { grid:{}, af:[], opgelost:false, hints:0 };
+  });
+}
+function bewaar(){ try { Kluis.schrijf(SLEUTEL, JSON.stringify(S)); } catch(e){} }
+
+/* ───────────────────────── geluid */
+let AC = null;
+function toon(freq, duur, type, vol){
+  if(!S.geluid) return;
+  try{
+    if(!AC){ const C = window.AudioContext || window.webkitAudioContext; if(!C) return; AC = new C(); }
+    if(AC.state === "suspended") AC.resume();
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = type || "square"; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(vol || 0.05, AC.currentTime + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + (duur || 0.08));
+    o.connect(g); g.connect(AC.destination);
+    o.start(); o.stop(AC.currentTime + (duur || 0.08) + 0.02);
+  }catch(e){}
+}
+const klik    = () => toon(1180, 0.04, "square", 0.035);
+const zetVink = () => toon(660, 0.09, "triangle", 0.06);
+const misser  = () => { toon(150, 0.22, "sawtooth", 0.05); };
+const treffer = () => { toon(392,0.16,"triangle",0.06); setTimeout(()=>toon(523,0.16,"triangle",0.06),150);
+                        setTimeout(()=>toon(659,0.3,"triangle",0.06),300); };
+
+/* ───────────────────────── hulp */
+const $  = s => document.querySelector(s);
+const el = (tg, k, tx) => { const n = document.createElement(tg); if(k) n.className = k;
+                            if(tx !== undefined) n.textContent = tx; return n; };
+function alinea(doel, regels, tag){
+  doel.innerHTML = "";
+  regels.forEach(r => doel.appendChild(el(tag || "p", null, r)));
+}
+const vul = (s, a, b, c) => s.replace("{a}", a).replace("{b}", b).replace("{c}", c);
+function zaakVan(code){ return D().zaken.filter(z => z.code === code)[0]; }
+function icoon(it){
+  const h = document.createElement("span");
+  h.innerHTML = it.ico || "";
+  return h.firstChild;
+}
+function kaart(it, ding){
+  const k = el("div", "kaart" + (ding ? " ding" : ""));
+  const beeld = el("div", "beeld");
+  const ic = icoon(it);
+  if(ic) beeld.appendChild(ic);
+  k.appendChild(beeld);
+  k.appendChild(el("span", "nm", it.naam));
+  if(it.detail) k.appendChild(el("span", "dt", it.detail));
+  k.appendChild(el("p", "om", it.tekst));
+  return k;
+}
+const vraag = c => t().vraag[c.key] || t().vraag.motief;
+
+/* oplossing: sol[c][p] = itemindex van categorie c voor verdachte p (c>=1) */
+function hoortBij(z, r, c, i, j){
+  if(c === 0) return z.oplossing[r][j] === i;
+  for(let p = 0; p < z.cats[0].items.length; p++){
+    if(z.oplossing[c][p] === j) return z.oplossing[r][p] === i;
+  }
+  return false;
+}
+
+/* ───────────────────────── vaste teksten */
+function zetTeksten(){
+  const x = t();
+  document.documentElement.lang = taal;
+  document.title = x.titel;
+  $("#thuis").textContent = x.thuis;
+  $("#taalknop").textContent = x.anderetaal;
+  $("#taalknop").setAttribute("aria-label", x.anderetaalLang);
+  $("#geluidknop").textContent = S.geluid ? x.geluidAan : x.geluidUit;
+  const hero = $(".hero"); if(hero) hero.setAttribute("aria-label", x.heroLabel);
+  $("#krantkop").textContent = x.krant;
+  $("#datum1").textContent = x.datum1; $("#datum2").textContent = x.datum2; $("#datum3").textContent = x.datum3;
+  $("#hoekop").textContent = x.hoekop;
+  $("#proeflabel").textContent = x.proef;
+  $("#ladenkop").textContent = x.ladenkop;
+  $("#ladenuitleg").textContent = x.ladenuitleg;
+  $("#kop-verdachten").textContent = x.verdachten;
+  $("#kop-clues").textContent = x.clues;
+  $("#clue-uitleg").textContent = x.clueUitleg;
+  $("#kop-rooster").textContent = x.rooster;
+  $("#rooster-uitleg").textContent = x.roosterUitleg;
+  $("#wisknop").textContent = x.wis;
+  $("#kop-beschuldiging").textContent = x.beschuldiging;
+  $("#beschuldig").textContent = x.dienIn;
+  $("#terugknop").textContent = x.terug;
+  $("#o-krant").textContent = x.krant;
+}
+
+/* ───────────────────────── overzicht */
+function miniRooster(z, st){
+  const N = z.cats[0].items.length, K = z.cats.length, s = 9, g = 3, blok = N * s + g;
+  const W = (K - 1) * blok - g, ns = "http://www.w3.org/2000/svg";
+  let h = "";
+  for(let r = 1; r < K; r++) for(let c = 0; c < r; c++){
+    const x0 = c * blok, y0 = (r - 1) * blok;
+    for(let i = 0; i < N; i++) for(let j = 0; j < N; j++){
+      const w = st.grid[r + "_" + c + "_" + i + "_" + j] || 0, x = x0 + j * s, y = y0 + i * s;
+      h += '<rect x="' + x + '" y="' + y + '" width="' + s + '" height="' + s + '" fill="' + (w === 2 ? "#b8352b" : "#f3eedf")
+        + '" stroke="#17150f" stroke-width=".6"/>';
+      if(w === 1) h += '<path d="M' + (x+2.5) + " " + (y+2.5) + "l4 4m0-4l-4 4" + '" stroke="#8a8472" stroke-width="1"/>';
+    }
+    h += '<rect x="' + x0 + '" y="' + y0 + '" width="' + (N*s) + '" height="' + (N*s) + '" fill="none" stroke="#17150f" stroke-width="1.6"/>';
+  }
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "-1 -1 " + (W + 2) + " " + (W + 2));
+  svg.setAttribute("width", Math.min(W, 108)); svg.setAttribute("height", Math.min(W, 108));
+  svg.setAttribute("aria-hidden", "true");
+  svg.innerHTML = h;
+  return svg;
+}
+function toonKast(){
+  const d = D(), x = t();
+  zetTeksten();
+  $("#serietitel").textContent = d.serie.titel;
+  $("#serieonder").textContent = x.onderkop;
+  alinea($("#serie-intro"), d.serie.intro);
+  alinea($("#serie-hoe"), d.serie.hoe, "li");
+
+  const lijst = $("#ladenlijst"); lijst.innerHTML = "";
+  d.zaken.forEach((z, idx) => {
+    const vorige = idx === 0 ? null : d.zaken[idx-1];
+    const st = S.zaken[z.code];
+    const open = idx === 0 || S.zaken[vorige.code].opgelost;
+    const N = z.cats[0].items.length;
+    const b = el("button", "dossier krant");
+    b.type = "button";
+    b.dataset.op = st.opgelost ? "1" : "0";
+    b.disabled = !open;
+    b.appendChild(el("span", "nr", z.code));
+    b.appendChild(el("span", "tt", z.titel));
+    b.appendChild(el("span", "sub", open ? z.nacht + ". " + z.plek + "." : vul(x.opSlot, vorige.code)));
+    const gezet = Object.keys(st.grid).length;
+    const stempel = !open ? x.stOpSlot : (st.opgelost ? x.stOpgelost : (gezet ? x.stBezig : ""));
+    if(stempel) b.appendChild(el("span", "stempel", stempel));
+    const prent = el("span", "prent");
+    prent.appendChild(miniRooster(z, st));
+    const stand = el("span", "stand");
+    stand.innerHTML = vul(x.stand, N, z.cats.length - 1, z.clues.length);
+    prent.appendChild(stand);
+    b.appendChild(prent);
+    b.addEventListener("click", () => { klik(); openZaak(z.code); });
+    lijst.appendChild(b);
+  });
+
+  const ep = $("#epiloogblok"); ep.innerHTML = "";
+  if(d.zaken.every(z => S.zaken[z.code].opgelost)){
+    const blok = el("div", "krant epiloog");
+    blok.appendChild(el("h2", null, x.epiloog));
+    d.epiloog.forEach(r => blok.appendChild(el("p", null, r)));
+    ep.appendChild(blok);
+  }
+  kolomBij();
+  huidig = null;
+  wissel("#scherm-kast");
+}
+function kolomBij(){
+  const k = $("#kolom"); k.innerHTML = "";
+  D().zaken.forEach(z => {
+    const op = S.zaken[z.code].opgelost;
+    const s = el("div", "seg" + (op ? " vol" : ""), z.code);
+    if(op) s.appendChild(el("small", null, z.cats[0].items[z.dader].kort));
+    s.title = op ? z.titel + ": " + z.cats[0].items[z.dader].naam : t().zwart;
+    k.appendChild(s);
+  });
+}
+function wissel(sel){
+  document.querySelectorAll(".scherm").forEach(s => s.classList.remove("actief"));
+  $(sel).classList.add("actief");
+  window.scrollTo(0, 0);
+}
+
+/* ───────────────────────── zaak */
+let huidig = null;
+function openZaak(code, blijf){
+  huidig = zaakVan(code);
+  const z = huidig, st = S.zaken[code], x = t();
+  zetTeksten();
+  $("#z-nacht").textContent = z.nacht;
+  $("#z-titel").textContent = z.titel;
+  $("#z-plek").textContent = x.zaak + " " + z.code + " — " + z.plek;
+  $("#z-scene").innerHTML = z.scene || "";
+  alinea($("#z-intro"), z.intro);
+
+  const vd = $("#z-verdachten"); vd.innerHTML = "";
+  z.cats[0].items.forEach(p => vd.appendChild(kaart(p)));
+
+  const cb = $("#z-categorieen"); cb.innerHTML = "";
+  z.cats.slice(1).forEach(cat => {
+    cb.appendChild(el("h3", "kopje", cat.label.charAt(0) + cat.label.slice(1).toLowerCase()));
+    const g = el("div", "kaarten");
+    cat.items.forEach(it => g.appendChild(kaart(it, true)));
+    cb.appendChild(g);
+  });
+
+  const ol = $("#z-clues"); ol.innerHTML = "";
+  z.clues.forEach((c, i) => {
+    const li = el("li", st.af.indexOf(i) >= 0 ? "af" : null, c);
+    li.addEventListener("click", () => {
+      klik();
+      const p = st.af.indexOf(i);
+      if(p >= 0) st.af.splice(p, 1); else st.af.push(i);
+      li.className = st.af.indexOf(i) >= 0 ? "af" : "";
+      bewaar();
+    });
+    ol.appendChild(li);
+  });
+  ol.appendChild(el("li", "lijk", z.lijk));
+
+  bouwRooster();
+  bouwVelden();
+  $("#aanwijzer").textContent = "";
+  $("#z-uitslag").className = "uitslag";
+  $("#onthulling").className = "krant" + (st.opgelost ? " zicht" : "");
+  if(st.opgelost) vulOnthulling();
+  hintKnop();
+  if(!blijf) wissel("#scherm-zaak");
+  maatRooster();
+}
+function hintKnop(){
+  const st = S.zaken[huidig.code];
+  $("#hintknop").disabled = st.hints >= 2 || st.opgelost;
+  $("#hintknop").textContent = vul(t().hint, 2 - st.hints);
+}
+
+/* ───────────────────────── rooster */
+function bouwRooster(){
+  const z = huidig, tb = $("#z-rooster"), N = z.cats[0].items.length, K = z.cats.length;
+  tb.innerHTML = "";
+  tb.dataset.n = (K - 1) * N;
+  tb.dataset.krap = (K - 1) * N >= 12 ? "1" : "0";
+  const kolCats = [], rijCats = [];
+  for(let c = 0; c < K - 1; c++) kolCats.push(c);
+  for(let r = 1; r < K; r++) rijCats.push(r);
+
+  const rTop = el("tr");
+  rTop.appendChild(el("td", "hoek"));
+  kolCats.forEach(c => {
+    const td = el("td", "catlabel", z.cats[c].label);
+    td.colSpan = N; td.style.textAlign = "center";
+    rTop.appendChild(td);
+  });
+  tb.appendChild(rTop);
+
+  const rKop = el("tr");
+  rKop.appendChild(el("td", "hoek"));
+  kolCats.forEach(c => z.cats[c].items.forEach((it, j) => {
+    const td = el("td", "kolabel");
+    td.title = it.naam;
+    td.dataset.kol = c + "_" + j;
+    const ic = icoon(it);
+    if(ic) td.appendChild(ic);
+    td.appendChild(el("span", "tx", it.kort));
+    rKop.appendChild(td);
+  }));
+  tb.appendChild(rKop);
+
+  rijCats.forEach(r => {
+    const rc = el("tr");
+    const td = el("td", "catlabel", z.cats[r].label);
+    td.colSpan = 1 + kolCats.length * N;
+    td.style.paddingTop = "8px"; td.style.textAlign = "left";
+    rc.appendChild(td);
+    tb.appendChild(rc);
+
+    z.cats[r].items.forEach((it, i) => {
+      const tr = el("tr");
+      const rl = el("td", "rijlabel");
+      rl.title = it.naam;
+      rl.dataset.rij = r + "_" + i;
+      const rin = el("div", "in");
+      rin.appendChild(el("span", "lb", it.kort));
+      const ric = icoon(it);
+      if(ric) rin.appendChild(ric);
+      rl.appendChild(rin);
+      tr.appendChild(rl);
+      kolCats.forEach(c => {
+        z.cats[c].items.forEach((_, j) => {
+          if(c >= r){ tr.appendChild(el("td", "hoek")); return; }
+          const cel = el("td", "cel");
+          cel.dataset.k = r + "_" + c + "_" + i + "_" + j;
+          cel.dataset.rand = (j === 0 && c > 0 ? "l" : "") + (i === 0 && r > 1 ? "t" : "");
+          cel.setAttribute("role", "button");
+          cel.setAttribute("aria-label", it.kort + " × " + z.cats[c].items[j].kort);
+          cel.tabIndex = 0;
+          cel.addEventListener("click", () => wisselCel(cel));
+          cel.addEventListener("mouseenter", () => wijsAan(cel));
+          cel.addEventListener("focus", () => wijsAan(cel));
+          cel.addEventListener("keydown", e => {
+            if(e.key === "Enter" || e.key === " "){ e.preventDefault(); wisselCel(cel); }
+          });
+          tr.appendChild(cel);
+        });
+      });
+      tb.appendChild(tr);
+    });
+  });
+  tekenRooster();
+}
+/* laat zien welk paar bij een vakje hoort (onmisbaar op een telefoon) */
+function wijsAan(cel){
+  const d = cel.dataset.k.split("_"), z = huidig;
+  document.querySelectorAll("#z-rooster .hl").forEach(n => n.classList.remove("hl"));
+  const rl = document.querySelector('#z-rooster [data-rij="' + d[0] + "_" + d[2] + '"]');
+  const kl = document.querySelector('#z-rooster [data-kol="' + d[1] + "_" + d[3] + '"]');
+  if(rl) rl.classList.add("hl"); if(kl) kl.classList.add("hl");
+  const w = S.zaken[z.code].grid[cel.dataset.k] || 0;
+  const a = $("#aanwijzer"); a.innerHTML = "";
+  a.appendChild(document.createTextNode(z.cats[d[1]].items[d[3]].naam + " "));
+  a.appendChild(el("b", null, w === 2 ? "✓" : (w === 1 ? "✗" : "?")));
+  a.appendChild(document.createTextNode(" " + z.cats[d[0]].items[d[2]].naam));
+}
+function maatRooster(){
+  const tb = $("#z-rooster"), box = $("#roosterbox");
+  if(!tb || !box || !box.clientWidth) return;
+  const n = +tb.dataset.n || 8;
+  const smal = window.innerWidth <= 620;
+  const label = smal ? (tb.dataset.krap === "1" ? 34 : 96) : 122;
+  const c = Math.max(24, Math.min(38, Math.floor((box.clientWidth - label) / n)));
+  box.style.setProperty("--cel", c + "px");
+}
+function tekenRooster(nieuw){
+  const g = S.zaken[huidig.code].grid;
+  document.querySelectorAll("#z-rooster .cel").forEach(cel => {
+    const w = g[cel.dataset.k] || 0;
+    const rand = cel.dataset.rand || "";
+    cel.textContent = w === 1 ? "✗" : (w === 2 ? "✓" : "");
+    cel.className = "cel" + (w === 2 ? " v" : "") + (nieuw && nieuw === cel.dataset.k ? " nieuw" : "")
+      + (rand.indexOf("l") >= 0 ? " bl" : "") + (rand.indexOf("t") >= 0 ? " bt" : "");
+  });
+}
+function zet(k, w){ const g = S.zaken[huidig.code].grid; if(w === 0) delete g[k]; else g[k] = w; }
+function wisselCel(cel){
+  if(S.zaken[huidig.code].opgelost) return;
+  const g = S.zaken[huidig.code].grid, k = cel.dataset.k;
+  const w = ((g[k] || 0) + 1) % 3;
+  zet(k, w);
+  if(w === 2){ streepWeg(k); zetVink(); } else klik();
+  tekenRooster(w === 2 ? k : null); bewaar();
+  wijsAan(cel);
+}
+function streepWeg(k){
+  const d = k.split("_"), r = +d[0], c = +d[1], i = +d[2], j = +d[3];
+  const N = huidig.cats[0].items.length;
+  for(let x = 0; x < N; x++){
+    if(x !== j){ const kk = r+"_"+c+"_"+i+"_"+x; if(!S.zaken[huidig.code].grid[kk]) zet(kk, 1); }
+    if(x !== i){ const kk = r+"_"+c+"_"+x+"_"+j; if(!S.zaken[huidig.code].grid[kk]) zet(kk, 1); }
+  }
+}
+
+/* ───────────────────────── beschuldiging */
+function bouwVelden(){
+  const z = huidig, box = $("#z-velden");
+  const oud = z.cats.map((c, idx) => { const s = $("#sel" + idx); return s ? s.value : ""; });
+  box.innerHTML = "";
+  z.cats.forEach((c, idx) => {
+    const rij = el("div", "veld");
+    const lab = el("label", null, vraag(c) + "?");
+    lab.htmlFor = "sel" + idx;
+    const sel = document.createElement("select");
+    sel.id = "sel" + idx;
+    sel.appendChild(new Option(t().kies, ""));
+    c.items.forEach((it, ix) => sel.appendChild(new Option(it.naam, String(ix))));
+    if(S.zaken[z.code].opgelost){
+      sel.value = String(idx === 0 ? z.dader : z.oplossing[idx][z.dader]);
+      sel.disabled = true;
+    } else if(oud[idx]) sel.value = oud[idx];
+    rij.appendChild(lab); rij.appendChild(sel);
+    box.appendChild(rij);
+  });
+}
+function beschuldig(){
+  const z = huidig, st = S.zaken[z.code];
+  if(st.opgelost) return;
+  const keuzes = [];
+  let compleet = true;
+  z.cats.forEach((c, idx) => {
+    const sel = $("#sel" + idx);
+    if(!sel) return;
+    if(sel.value === "") compleet = false;
+    keuzes[idx] = sel.value === "" ? -1 : +sel.value;
+  });
+  const u = $("#z-uitslag");
+  u.className = "uitslag zicht";
+  if(!compleet){ u.textContent = t().onvolledig; misser(); return; }
+  let goed = keuzes[0] === z.dader;
+  z.cats.forEach((c, idx) => { if(idx > 0 && keuzes[idx] !== z.oplossing[idx][z.dader]) goed = false; });
+  if(!goed){ u.textContent = t().fout; misser(); return; }
+  st.opgelost = true;
+  bewaar(); treffer();
+  u.className = "uitslag";
+  bouwVelden();
+  vulOnthulling();
+  $("#onthulling").className = "krant zicht";
+  hintKnop();
+  kolomBij();
+  setTimeout(() => { $("#onthulling").scrollIntoView({block:"start", behavior:"smooth"}); }, 120);
+}
+function vulOnthulling(){
+  const z = huidig, d = D();
+  const regels = [];
+  z.cats.forEach((c, idx) => {
+    regels.push("<b>" + vraag(c) + "</b>" + c.items[idx === 0 ? z.dader : z.oplossing[idx][z.dader]].naam);
+  });
+  $("#o-extra").textContent = t().extra;
+  $("#z-oplos").innerHTML = regels.join("<br>");
+  alinea($("#z-onthul"), z.onthulling);
+  const idx = d.zaken.map(x => x.code).indexOf(z.code);
+  $("#volgende").textContent = idx < d.zaken.length - 1 ? t().volgende : t().sluit;
+}
+
+/* ───────────────────────── hint */
+function hint(){
+  const z = huidig, st = S.zaken[z.code];
+  if(st.hints >= 2 || st.opgelost) return;
+  const kans = [];
+  const N = z.cats[0].items.length;
+  for(let r = 1; r < z.cats.length; r++){
+    for(let c = 0; c < r; c++){
+      for(let i = 0; i < N; i++){
+        for(let j = 0; j < N; j++){
+          const k = r+"_"+c+"_"+i+"_"+j;
+          if(hoortBij(z, r, c, i, j) && st.grid[k] !== 2) kans.push(k);
+        }
+      }
+    }
+  }
+  if(!kans.length) return;
+  const k = kans[Math.floor(Math.random() * kans.length)];
+  zet(k, 2); streepWeg(k);
+  st.hints++;
+  bewaar(); tekenRooster(k); zetVink();
+  hintKnop();
+  const u = $("#z-uitslag");
+  u.className = "uitslag zicht";
+  u.textContent = t().hintGegeven;
+}
+
+/* ───────────────────────── taal */
+function zetTaal(nieuw){
+  taal = nieuw;
+  try { Kluis.schrijf(TAALSLEUTEL, taal); history.replaceState(null, "", "#" + taal); } catch(e){}
+  if(huidig){ const y = window.scrollY; openZaak(huidig.code, true); window.scrollTo(0, y); }
+  else toonKast();
+}
+
+/* ───────────────────────── init */
+function init(){
+  laad();
+  $("#terugknop").addEventListener("click", () => { klik(); toonKast(); });
+  $("#beschuldig").addEventListener("click", beschuldig);
+  $("#hintknop").addEventListener("click", () => { klik(); hint(); });
+  $("#wisknop").addEventListener("click", () => {
+    if(!huidig || S.zaken[huidig.code].opgelost) return;
+    S.zaken[huidig.code].grid = {};
+    bewaar(); tekenRooster(); klik();
+    $("#aanwijzer").textContent = "";
+  });
+  $("#volgende").addEventListener("click", () => {
+    klik();
+    const codes = D().zaken.map(x => x.code), idx = codes.indexOf(huidig.code);
+    if(idx < codes.length - 1) openZaak(codes[idx+1]); else toonKast();
+  });
+  $("#geluidknop").addEventListener("click", () => {
+    S.geluid = !S.geluid; bewaar();
+    $("#geluidknop").textContent = S.geluid ? t().geluidAan : t().geluidUit;
+    if(S.geluid) klik();
+  });
+  $("#taalknop").addEventListener("click", () => { klik(); zetTaal(taal === "nl" ? "en" : "nl"); });
+  window.addEventListener("resize", maatRooster);
+  toonKast();
+}
+window.__zwartekolom = { DATA, get S(){ return S; }, get taal(){ return taal; }, init, openZaak, beschuldig, hint,
+                         bouwRooster, tekenRooster, wisselCel, hoortBij, toonKast, zetTaal };
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>The Night Porter – A floor-plan logic puzzle | Enigma Mystery</title>
+<meta name="description" content="Floor-plan logic puzzle: five floor plans, 41 witness statements, one killer per plan. Place everyone, put the weapon back, name the porter&#x27;s lie. Free.">
+<link rel="canonical" href="https://www.enigmamystery.com/spel/the-night-porter.html">
+<meta property="og:site_name" content="Enigma Mystery">
+<meta property="og:title" content="The Night Porter – Enigma Mystery">
+<meta property="og:description" content="Floor-plan logic puzzle: five floor plans, 41 witness statements, one killer per plan. Place everyone, put the weapon back, name the porter&#x27;s lie. Free.">
+<meta property="og:url" content="https://www.enigmamystery.com/spel/the-night-porter.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<style>
+:root{
+  --nacht:#0a0d12; --nacht2:#131923; --paneel:#171d28; --rand:#2a3345;
+  --papier:#e9dfc9; --papier2:#dfd3b8; --inkt:#2b2620; --inktzwak:#5a5044;
+  --rood:#a83a2b; --roodd:#7e2b20; --goud:#c9a45c; --groen:#7d8f66;
+  --tekst:#d8d2c4; --tekstzwak:#9a94886;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  position:fixed; inset:0; overflow:hidden;
+  background:radial-gradient(120% 90% at 50% -10%, #1b2433 0%, #10151f 45%, #07090d 100%);
+  color:var(--tekst);
+  font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px; line-height:1.55;
+}
+#app{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  padding-top:env(safe-area-inset-top); padding-bottom:env(safe-area-inset-bottom);
+}
+/* ---------- kop ---------- */
+#kop{
+  flex:0 0 auto; display:flex; align-items:center; gap:10px;
+  padding:10px 14px 8px 14px; border-bottom:1px solid #232c3c;
+  background:linear-gradient(180deg, rgba(20,26,37,.92), rgba(13,17,25,.85));
+  backdrop-filter:blur(3px); z-index:5;
+}
+#kop .reeks{font-family:Georgia,"Times New Roman",serif; letter-spacing:.22em; font-size:11px; color:var(--goud); text-transform:uppercase; opacity:.9}
+#kop .titel{font-family:Georgia,serif; font-size:17px; letter-spacing:.04em; color:#efe9da; margin-top:1px}
+#kop .vullen{flex:1}
+.kopknop{
+  flex:0 0 auto; min-width:42px; height:42px; padding:0 12px;
+  border:1px solid #38445c; border-radius:9px; background:#1a2231; color:#cfd6e4;
+  font-size:15px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+}
+.kopknop:active{background:#232d40}
+/* ---------- schermen ---------- */
+#inhoud{flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative}
+.scherm{display:none; max-width:760px; margin:0 auto; padding:22px 16px 60px 16px; animation:opdoemen .5s ease}
+.scherm.actief{display:block}
+@keyframes opdoemen{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+h1.groot{font-family:Georgia,serif; font-weight:normal; font-size:34px; letter-spacing:.06em; color:#f0ead9; margin:10px 0 4px 0; text-align:center}
+.ondertitel{text-align:center; color:var(--goud); font-family:Georgia,serif; letter-spacing:.28em; font-size:12px; text-transform:uppercase; margin-bottom:26px}
+.proza{color:#cfc9bb; font-size:16.5px}
+.proza p{margin:0 0 14px 0}
+.proza .aanhef{font-family:Georgia,serif; font-style:italic; color:#e6dfcd}
+.centrum{text-align:center}
+/* typemachine-notitie */
+.notitie{
+  background:linear-gradient(180deg,#efe6d0,#e5d9bf); color:var(--inkt);
+  border-radius:3px; padding:18px 20px; margin:20px 0;
+  font-family:"Courier New",Courier,monospace; font-size:14.5px; line-height:1.6;
+  box-shadow:0 10px 26px rgba(0,0,0,.5), inset 0 0 60px rgba(120,90,40,.12);
+  position:relative; transform:rotate(-.4deg);
+}
+.notitie:before{content:""; position:absolute; left:0; right:0; top:0; height:5px;
+  background:repeating-linear-gradient(90deg, rgba(60,40,20,.15) 0 14px, transparent 14px 28px)}
+.notitie .kopje{letter-spacing:.14em; font-weight:bold; border-bottom:1px dashed rgba(43,38,32,.5); padding-bottom:6px; margin-bottom:10px}
+/* knoppen */
+.knop{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  min-height:48px; padding:12px 22px; border-radius:10px; cursor:pointer;
+  border:1px solid #3a4660; background:linear-gradient(180deg,#232d42,#1a2233);
+  color:#e8e2d2; font-size:16px; font-family:inherit; letter-spacing:.02em;
+}
+.knop:active{transform:translateY(1px)}
+.knop.goud{border-color:#8a6f3a; background:linear-gradient(180deg,#4a3d22,#2e2715); color:#ecd9a8}
+.knop.rood{border-color:#7e3a2e; background:linear-gradient(180deg,#4a231b,#2e1611); color:#eec2b4}
+.knop.klein{min-height:40px; padding:8px 14px; font-size:14px; border-radius:8px}
+.knoprij{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:18px}
+/* ---------- overzicht ---------- */
+.kastlabel{font-family:"Courier New",monospace; color:#9aa4b8; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; margin:6px 2px 12px 2px; text-align:center}
+.dossierlijst{display:flex; flex-direction:column; gap:14px}
+.dossier{
+  position:relative; border:1px solid #33405a; border-radius:12px; overflow:hidden;
+  background:linear-gradient(160deg,#1b2334 0%,#141a27 70%);
+  padding:16px 16px 14px 16px; cursor:pointer; transition:border-color .2s;
+}
+.dossier:active{border-color:#5a6c94}
+.dossier .dnr{font-family:"Courier New",monospace; font-size:11.5px; color:#8fa0bf; letter-spacing:.22em}
+.dossier .dtitel{font-family:Georgia,serif; font-size:20px; color:#efe8d6; margin:3px 0 2px 0}
+.dossier .dmeta{font-size:13px; color:#9aa3b5}
+.dossier.dicht{opacity:.55; cursor:default}
+.dossier.dicht .slot{position:absolute; right:14px; top:14px; font-size:18px; color:#7d8698}
+.stempel{
+  position:absolute; right:10px; top:10px; transform:rotate(8deg);
+  border:2.5px solid var(--rood); color:var(--rood); border-radius:6px;
+  font-family:"Courier New",monospace; font-weight:bold; font-size:12px; letter-spacing:.18em;
+  padding:3px 8px; opacity:.9; background:rgba(168,58,43,.07);
+}
+.voortgang{margin:18px auto 0 auto; text-align:center; font-family:"Courier New",monospace; font-size:12.5px; color:#8b94a8; letter-spacing:.14em}
+/* ---------- zaakscherm ---------- */
+.zaakkop{margin-bottom:10px}
+.zaakkop .znr{font-family:"Courier New",monospace; color:#8fa0bf; font-size:11.5px; letter-spacing:.22em}
+.zaakkop h2{font-family:Georgia,serif; font-weight:normal; font-size:26px; color:#f0e9d8; margin:2px 0 2px 0}
+.zaakkop .zmeta{font-size:13.5px; color:#a7b0c2}
+.vondst{
+  margin:12px 0; padding:10px 14px; border-left:3px solid var(--rood);
+  background:rgba(168,58,43,.08); color:#d8cfc0; font-size:14px; border-radius:0 8px 8px 0;
+  font-family:"Courier New",monospace;
+}
+.zaaktekst{color:#c9c3b5; font-size:15.5px; margin:10px 0 16px 0}
+/* portretten */
+.portretstrook{display:flex; gap:10px; overflow-x:auto; padding:6px 2px 12px 2px; -webkit-overflow-scrolling:touch}
+.portret{
+  flex:0 0 auto; width:106px; border-radius:10px; padding:9px 8px 8px 8px; cursor:pointer;
+  background:linear-gradient(180deg,#ece2cc,#ddd0b2); color:var(--inkt);
+  border:2px solid transparent; box-shadow:0 6px 14px rgba(0,0,0,.45);
+  text-align:center; transition:transform .15s, border-color .15s; position:relative;
+}
+.portret.gekozen{border-color:var(--goud); transform:translateY(-3px)}
+.portret.geplaatst .gezicht{opacity:.45}
+.portret.geplaatst:after{content:"on the plan"; position:absolute; left:0; right:0; bottom:44px;
+  font-family:"Courier New",monospace; font-size:9.5px; letter-spacing:.06em; color:#6b5f4c}
+.portret .gezicht{width:64px; height:64px; margin:0 auto 6px auto; border-radius:6px; display:block}
+.portret .pnaam{font-family:Georgia,serif; font-size:13.5px; line-height:1.2}
+.portret .prol{font-family:"Courier New",monospace; font-size:9.5px; color:#6b5f4c; letter-spacing:.04em; margin-top:2px; min-height:22px}
+.portret.slachtoffer{background:linear-gradient(180deg,#e4cfc4,#d3b8a9)}
+.portret.slachtoffer .pnaam{color:#5c221a}
+/* clues */
+.cluelijst{margin:2px 0 14px 0; display:flex; flex-direction:column; gap:6px}
+.clue{
+  display:flex; gap:10px; align-items:baseline; padding:8px 12px; border-radius:8px;
+  background:rgba(233,223,201,.07); border:1px solid rgba(233,223,201,.12);
+  font-size:14.5px; color:#d5cfc0;
+}
+.clue.actief{background:rgba(201,164,92,.14); border-color:rgba(201,164,92,.5)}
+.clue b{color:#efe6ce; font-family:Georgia,serif; font-weight:normal; white-space:nowrap}
+.clue.v b{color:#e0a08f}
+/* bord */
+#bordhoes{
+  background:
+    radial-gradient(140% 120% at 50% 0%, rgba(201,164,92,.10), transparent 55%),
+    linear-gradient(180deg,#11161f,#0c1017);
+  border:1px solid #2b3549; border-radius:14px; padding:12px 10px 8px 10px; margin:4px 0 12px 0;
+  box-shadow:inset 0 0 44px rgba(0,0,0,.55);
+}
+#bord{display:block; width:100%; height:auto; touch-action:manipulation}
+.bordtools{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:2px 0 20px 0}
+.tool{
+  min-height:44px; padding:9px 14px; border-radius:9px; cursor:pointer; font-size:14.5px;
+  border:1px solid #3a4660; background:#1a2231; color:#d6dcea; font-family:inherit;
+}
+.tool.aan{border-color:var(--goud); color:#ecd9a8; background:#2c2716}
+.tool.hoofd{border-color:#8a6f3a; background:linear-gradient(180deg,#4a3d22,#2e2715); color:#ecd9a8; font-size:15.5px; padding:10px 18px}
+#oordeel{font-family:"Courier New",monospace; font-size:13px; color:#c9a45c; min-height:20px; margin:-8px 0 14px 2px; letter-spacing:.04em}
+#oordeel.fout{color:#d98a7a}
+@keyframes schud{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.schud{animation:schud .4s ease}
+/* overlays */
+.overlay{
+  position:fixed; inset:0; z-index:40; display:none; align-items:flex-end; justify-content:center;
+  background:rgba(4,6,10,.72); backdrop-filter:blur(2px);
+  padding:0; overscroll-behavior:contain;
+}
+.overlay.open{display:flex}
+.ovpaneel{
+  width:100%; max-width:680px; max-height:88%; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  background:linear-gradient(180deg,#1b2333,#131926); border:1px solid #36435e; border-bottom:none;
+  border-radius:18px 18px 0 0; padding:20px 18px calc(24px + env(safe-area-inset-bottom)) 18px;
+  animation:omhoog .3s ease;
+}
+@keyframes omhoog{from{transform:translateY(40px); opacity:0}to{transform:none; opacity:1}}
+.ovpaneel h3{font-family:Georgia,serif; font-weight:normal; font-size:21px; color:#efe8d6; margin:0 0 10px 0}
+.ovsluit{float:right; margin:-4px -4px 0 10px}
+.hulp h4{font-family:Georgia,serif; font-weight:normal; color:var(--goud); font-size:16px; margin:18px 0 6px 0; letter-spacing:.06em}
+.hulp p, .hulp li{font-size:14.5px; color:#c9c3b5}
+.hulp ul{margin:6px 0; padding-left:20px}
+.trefw{display:grid; grid-template-columns:1fr; gap:8px; margin-top:8px}
+.trefw .tw{background:rgba(233,223,201,.06); border:1px solid rgba(233,223,201,.12); border-radius:8px; padding:8px 12px; font-size:13.5px; color:#c9c3b5}
+.trefw .tw b{color:#e9dfc9; font-family:Georgia,serif; font-weight:normal}
+/* moordenaar-picker */
+.kieslijst{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:14px}
+/* bekentenis */
+.bekentenis{background:linear-gradient(180deg,#efe6d0,#e2d5b8); color:var(--inkt); border-radius:4px;
+  padding:18px 20px; font-family:"Courier New",monospace; font-size:14px; line-height:1.65;
+  box-shadow:0 12px 30px rgba(0,0,0,.5); transform:rotate(.35deg); margin:14px 0}
+.bekentenis .bk{letter-spacing:.14em; font-weight:bold; margin-bottom:8px; border-bottom:1px dashed rgba(43,38,32,.45); padding-bottom:6px}
+.groteStempel{
+  display:inline-block; border:3px solid var(--rood); color:var(--rood); border-radius:8px;
+  font-family:"Courier New",monospace; font-weight:bold; letter-spacing:.22em; font-size:15px;
+  padding:6px 16px; transform:rotate(-6deg); margin:6px 0 2px 0; background:rgba(168,58,43,.06);
+  animation:stempelval .45s cubic-bezier(.2,1.6,.4,1);
+}
+@keyframes stempelval{from{transform:rotate(-6deg) scale(2.2); opacity:0}to{transform:rotate(-6deg) scale(1); opacity:1}}
+/* conclusie */
+.vraagblok{border:1px solid #33405a; border-radius:12px; padding:14px 16px; margin:14px 0; background:#161d2b}
+.vraagblok .vk{font-family:Georgia,serif; color:#efe8d6; font-size:16.5px; margin-bottom:10px}
+.optie{display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:9px; cursor:pointer;
+  border:1px solid #2c374d; margin:7px 0; font-size:14.5px; color:#cfc9bb; background:#131a27}
+.optie.gekozen{border-color:var(--goud); background:#241f12; color:#eee4c9}
+.optie .bol{flex:0 0 16px; width:16px; height:16px; border-radius:50%; border:2px solid #5b6b8c; margin-top:2px}
+.optie.gekozen .bol{border-color:var(--goud); background:radial-gradient(circle at center, var(--goud) 0 45%, transparent 50%)}
+.optie.goedmark{border-color:#6f8f5c}
+.optie.foutmark{border-color:#a35142}
+/* footer klein */
+.voetnoot{margin-top:34px; text-align:center; font-size:11.5px; color:#6d7686; font-family:"Courier New",monospace; letter-spacing:.08em}
+/* grote plattegronden: horizontaal scrollen + zoom */
+#bordhoes{overflow-x:auto}
+#bord{min-width:100%}
+/* verklaringen als verhoorcitaten */
+.clue{display:block; padding:10px 14px; font-size:14px; line-height:1.5}
+.clue b{display:block; margin-bottom:3px; font-size:14.5px}
+.clue span b{display:inline; font-size:inherit; color:#ecd9a8; font-weight:normal; border-bottom:1px dotted rgba(201,164,92,.55)}
+.clue span{font-style:italic; color:#c9c3b5}
+.clue.v span{color:#d8b3a8}
+.clue.v span b{color:#e0a08f; border-bottom-color:rgba(224,160,143,.5)}
+/* bewijsmap */
+.bewijsstrook{display:flex; gap:10px; overflow-x:auto; padding:4px 2px 12px 2px; -webkit-overflow-scrolling:touch}
+.bewijskaart{flex:0 0 auto; width:132px; border-radius:10px; background:linear-gradient(180deg,#141b29,#101623);
+  border:1px solid #2c374d; padding:8px 8px 7px 8px; cursor:pointer; text-align:center; transition:border-color .15s}
+.bewijskaart:active{border-color:#5a6c94}
+.bewijskaart svg{width:100%; height:auto; display:block; border-radius:6px}
+.bewijskaart .bt{font-family:"Courier New",monospace; font-size:9.5px; color:#c9a45c; letter-spacing:.08em; margin-top:6px; min-height:24px; text-transform:uppercase}
+.bewijskaart.leeg{opacity:.45; cursor:default; min-height:128px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-family:"Courier New",monospace; font-size:10.5px; color:#7d8698; letter-spacing:.1em; border-style:dashed}
+.bewijskaart.leeg .vraagteken{font-size:26px; color:#4a5570; margin-bottom:8px; font-family:Georgia,serif}
+.bewijshoes{background:radial-gradient(120% 100% at 50% 0%, rgba(201,164,92,.08), transparent 60%), #0e131d;
+  border:1px solid #2b3549; border-radius:12px; padding:12px; margin:12px 0 8px 0; box-shadow:inset 0 0 34px rgba(0,0,0,.55)}
+.bewijshoes svg{width:100%; height:auto; display:block}
+.bewijsvondst{font-family:"Courier New",monospace; font-size:12px; color:#8b94a8; text-align:center; letter-spacing:.04em; margin:0 0 12px 0}
+#bewijsmuur{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0 4px 0}
+#bewijsmuur .bewijskaart{width:auto}
+@media (min-width:620px){
+  .overlay{align-items:center; padding:20px}
+  .ovpaneel{border-radius:16px; border-bottom:1px solid #36435e; max-height:86%}
+  .trefw{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="kop">
+    <div>
+      <div class="reeks">Enigma Mystery</div>
+      <div class="titel">The Night Porter</div>
+    </div>
+    <div class="vullen"></div>
+    <button class="kopknop" id="k-hulp" title="Rules &amp; keywords">?</button>
+    <button class="kopknop" id="k-geluid" title="Sound">♪</button>
+    <button class="kopknop" id="k-reset" title="Start over">↺</button>
+  </div>
+  <div id="inhoud">
+
+    <!-- INTRO -->
+    <section class="scherm" id="s-intro">
+      <h1 class="groot">The Night Porter</h1>
+      <div class="ondertitel">Drawer II · Floor Plans</div>
+      <div class="proza">
+        <p class="aanhef">Night duty archive — reopened, autumn 1958.</p>
+        <p><b>The Lime Tree</b>, a boarding house on the edge of town. Five deaths in five years.
+        Five full guest lists, five bodies, five times no conviction at all.
+        The files were shut, the house stayed open, and the lamp above the desk went on burning.</p>
+        <p>Tonight all five folders are on your desk. In each one: a plan of the scene and the statements
+        of everyone present. Where a person <i>was</i> is fixed — and so is where they <i>said</i> they were.
+        Your work: set out on each plan where everyone stood. The last free square is the victim's.
+        Whoever shares an area with the victim is the killer.</p>
+        <p>Five plans. Five killers. And one name that keeps coming back, in the margin of every file.
+        Watch for it. Write it down. You will need it.</p>
+      </div>
+      <div class="notitie">
+        <div class="kopje">MEMO — CHIEF INSPECTOR WILLIS</div>
+        Five cases, one address. That is not bad luck, that is a pattern.<br>
+        Work through the folders in order and build up an <b>evidence file</b>:
+        every case you close yields an exhibit. Five exhibits, one story.<br>
+        And a word from me — look at what the statements <u>don't</u> say as well.
+      </div>
+      <div class="knoprij">
+        <button class="knop goud" id="kn-start">Open the filing cabinet</button>
+        <button class="knop" id="kn-regels-intro">Rules &amp; keywords</button>
+      </div>
+    </section>
+
+    <!-- OVERZICHT -->
+    <section class="scherm" id="s-overzicht">
+      <h1 class="groot" style="font-size:26px">The Lime Tree</h1>
+      <div class="kastlabel">Five files · 1949 – 1954</div>
+      <div class="dossierlijst" id="dossierlijst"></div>
+      <div class="voortgang" id="voortgang"></div>
+      <div class="kastlabel" style="margin-top:26px">Evidence file</div>
+      <div class="bewijsstrook" id="bewijsstrook"></div>
+      <div class="knoprij" id="conclusieknoprij" style="display:none">
+        <button class="knop rood" id="kn-conclusie">To the final conclusion</button>
+      </div>
+    </section>
+
+    <!-- ZAAK -->
+    <section class="scherm" id="s-zaak">
+      <div class="zaakkop">
+        <div class="znr" id="z-nr"></div>
+        <h2 id="z-titel"></h2>
+        <div class="zmeta" id="z-meta"></div>
+      </div>
+      <div class="vondst" id="z-vondst"></div>
+      <div class="zaaktekst" id="z-tekst"></div>
+      <div class="portretstrook" id="z-portretten"></div>
+      <div class="cluelijst" id="z-clues"></div>
+      <div id="bordhoes"><svg id="bord" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div id="oordeel"></div>
+      <div class="bordtools">
+        <button class="tool hoofd" id="t-controleer">Check the plan</button>
+        <button class="tool" id="t-xmodus">✕ mode</button>
+        <button class="tool" id="t-zoom">Enlarge</button>
+        <button class="tool" id="t-wis">Wipe clean</button>
+        <button class="tool" id="t-bekentenis" style="display:none">Read the confession again</button>
+        <button class="tool" id="t-terug">← Cabinet</button>
+      </div>
+    </section>
+
+    <!-- CONCLUSIE -->
+    <section class="scherm" id="s-conclusie">
+      <h1 class="groot" style="font-size:26px">Final conclusion</h1>
+      <div class="kastlabel">Report to Chief Inspector Willis</div>
+      <div class="proza">
+        <p>Five plans, five killers — all of them guests, all of them convicted on your work.
+        But five different killers do not plan the same night five times over. Somebody gave them the keys,
+        the times, the names. Your evidence file lies open on the table: five exhibits, one small and tidy hand.
+        Lay them side by side and fill in the report.</p>
+      </div>
+      <div class="kastlabel" style="margin-top:22px">The evidence wall</div>
+      <div id="bewijsmuur"></div>
+      <div id="vragenhouder"></div>
+      <div class="knoprij">
+        <button class="knop goud" id="kn-rapport">File the report</button>
+      </div>
+      <div id="concl-oordeel" style="text-align:center; font-family:'Courier New',monospace; font-size:13px; color:#d98a7a; min-height:22px; margin-top:10px"></div>
+    </section>
+
+    <!-- EPILOOG -->
+    <section class="scherm" id="s-epiloog">
+      <div class="centrum" style="margin-top:10px"><span class="groteStempel">CASE CLOSED</span></div>
+      <h1 class="groot" style="font-size:26px">Epilogue</h1>
+      <div class="proza" id="epiloogtekst"></div>
+      <div class="knoprij">
+        <button class="knop" id="kn-epi-terug">Back to the filing cabinet</button>
+      </div>
+      <div class="voetnoot">THE GRAVEYARD FILES · THE NIGHT PORTER · END</div>
+    </section>
+
+  </div>
+</div>
+
+<!-- OVERLAY: HULP -->
+<div class="overlay" id="ov-hulp">
+  <div class="ovpaneel hulp">
+    <button class="knop klein ovsluit" data-sluit="ov-hulp">Close</button>
+    <h3>How a floor-plan file works</h3>
+    <h4>Your object</h4>
+    <p>Find the killer by working out who was in the same <b>area</b> as the victim.</p>
+    <h4>The rules</h4>
+    <ul>
+      <li>Every person stands in a <b>different row and a different column</b>.</li>
+      <li><b>Beds, chairs and rugs</b> can be occupied; other objects (trees, shrubs, tables, cabinets, crates, barrels, stones) cannot.</li>
+      <li>The <b>victim</b> occupies the last free square left over. The person in that same area is the killer.</li>
+    </ul>
+    <h4>Controls</h4>
+    <ul>
+      <li>Tap a <b>portrait</b> and then a square to place that person. Tap a placed person to take them off again.</li>
+      <li>Turn on <b>✕ mode</b> to pencil crosses into squares you have ruled out.</li>
+      <li>Row and column numbers run along the edge of the plan.</li>
+    </ul>
+    <h4>Keywords in the statements</h4>
+    <div class="trefw">
+      <div class="tw"><b>alone</b> — nobody else was in the area (not even the victim).</div>
+      <div class="tw"><b>together with</b> — these people were in the same area (possibly with others).</div>
+      <div class="tw"><b>alone with</b> — <em>only</em> these two people were in the area.</div>
+      <div class="tw"><b>beside</b> — directly above, below, left or right, <b>and</b> in the same area.</div>
+      <div class="tw" style="opacity:.75"><b>doorways</b> — the arches in the walls only show how the rooms connect. They play no part in the statements.</div>
+      <div class="tw"><b>corner</b> — a square where two boundaries of an area meet.</div>
+      <div class="tw"><b>row / column</b> — rows count from top to bottom, columns from left to right (see the numbers along the edge).</div>
+      <div class="tw"><b>left of / above</b> — somewhere in a column further left, or a row higher up; the area makes no difference.</div>
+      <div class="tw"><b>the only one on a chair</b> — nobody else was on a chair, the victim included. (The same goes for a rug or a bed.)</div>
+      <div class="tw"><b>exactly N columns/rows from</b> — precisely that distance, in that direction, measured across the whole grid (see the R and C numbers along the edge).</div>
+      <div class="tw"><b>in the [room]</b> — anywhere inside that named area.</div>
+      <div class="tw"><b>area</b> — any named zone with a heavy border round it.</div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY: MOORDENAAR -->
+<div class="overlay" id="ov-moord">
+  <div class="ovpaneel">
+    <h3 id="moordvraag">The plan is correct.</h3>
+    <p style="color:#c9c3b5; font-size:14.5px" id="moordsub"></p>
+    <div class="kieslijst" id="moordkeuzes"></div>
+    <div id="moordoordeel" style="text-align:center; font-family:'Courier New',monospace; font-size:13px; color:#d98a7a; min-height:20px; margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- OVERLAY: BEKENTENIS -->
+<div class="overlay" id="ov-bekentenis">
+  <div class="ovpaneel">
+    <div class="centrum"><span class="groteStempel">SOLVED</span></div>
+    <h3 id="bek-kop"></h3>
+    <div class="bekentenis"><div class="bk">FROM THE INTERROGATION</div><div id="bek-tekst"></div></div>
+    <div class="kastlabel" style="margin:16px 0 4px 0" id="bek-bewijskop"></div>
+    <div class="bewijshoes" id="bek-bewijs"></div>
+    <div class="bewijsvondst" id="bek-vondstregel"></div>
+    <div class="vondst" id="bek-draad"></div>
+    <div class="knoprij"><button class="knop goud" id="kn-bek-verder">Put the file away</button></div>
+  </div>
+</div>
+
+<!-- OVERLAY: BEWIJSSTUK -->
+<div class="overlay" id="ov-bewijs">
+  <div class="ovpaneel">
+    <button class="knop klein ovsluit" data-sluit="ov-bewijs">Close</button>
+    <h3 id="bw-titel"></h3>
+    <div class="bewijshoes" id="bw-svg"></div>
+    <div class="bewijsvondst" id="bw-vondst"></div>
+    <div class="vondst" id="bw-duiding"></div>
+    <p style="font-size:13px; color:#9aa3b5; font-family:'Courier New',monospace; margin:12px 2px 0 2px" id="bw-kantlijn"></p>
+  </div>
+</div>
+
+<!-- OVERLAY: RESET -->
+<div class="overlay" id="ov-reset">
+  <div class="ovpaneel">
+    <h3>Start over?</h3>
+    <p style="color:#c9c3b5; font-size:14.5px">This wipes all your progress: every plan, every solved file and the final report.</p>
+    <div class="knoprij">
+      <button class="knop rood" id="kn-reset-ja">Yes, wipe it all</button>
+      <button class="knop" data-sluit="ov-reset">No, go back</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================= GEGEVENS ================= */
+const CEL=84, MARGE=30;
+const BEZETBAAR={stoel:1,tapijt:1,bed:1};
+
+const ZDATA=[{"id": "z1", "nr": "FILE 49-XI", "titel": "The Commercial Traveller", "datum": "12 November 1949", "locatie": "west wing — five by five", "vondst": "Body found at 02:40 by L. Merton, night porter.", "tekst": "The first folder. Herbert Cooper, traveller in haberdashery, took a room for a single night on the 11th of November. Next morning his case was still packed by the door — and he himself was lying among the crates in the storeroom. Four people were in the west wing that night. Four statements, one floor plan. Work out where everyone stood; the last free square is Cooper's.", "N": 5, "gebieden": {"BEDROOM": [[0, 0], [0, 1], [1, 0], [1, 1]], "CORRIDOR": [[0, 2], [0, 3], [0, 4], [1, 2], [1, 3], [1, 4]], "DRAWING ROOM": [[2, 0], [2, 1], [3, 0], [3, 1], [4, 0]], "HALL": [[2, 2], [3, 2], [4, 1], [4, 2]], "STOREROOM": [[2, 3], [2, 4], [3, 3], [3, 4], [4, 3], [4, 4]]}, "labels": {"BEDROOM": [1, 0], "CORRIDOR": [1, 3], "DRAWING ROOM": [4, 0], "HALL": [4, 2], "STOREROOM": [4, 4]}, "buiten": [], "objecten": [{"t": "bed", "r": 0, "c": 0, "v": "L"}, {"t": "bed", "r": 0, "c": 1, "v": "R"}, {"t": "tapijt", "r": 1, "c": 2}, {"t": "kast", "r": 0, "c": 3}, {"t": "stoel", "r": 3, "c": 1}, {"t": "tafel", "r": 2, "c": 0}, {"t": "kist", "r": 2, "c": 4}, {"t": "ton", "r": 3, "c": 3}], "deuren": [], "personen": [{"k": "marie", "naam": "Marion Voyce", "rol": "guest, room 2", "clue": "I sat down at ten and never got up again. Ask whoever you like: I was the <b>only</b> one on a <b>chair</b> — the rest stayed on their feet, Mr Cooper included."}, {"k": "douwe", "naam": "Douglas Thorpe", "rol": "guest, room 5", "clue": "Marion was knitting below me; you hear that clicking through the floor. I was standing <b>exactly two rows above Marion</b>, not a step further."}, {"k": "rudolf", "naam": "Rudolph Black", "rol": "guest, room 1", "clue": "I was hunting for my sample case among the shelves, in a <b>corner</b> of the <b>storeroom</b> — where the two walls meet. Dusty in there; my handkerchief will bear me out."}, {"k": "lena", "naam": "Lena Brune", "rol": "hotel help", "clue": "I was on my last round with the lamps. When the clock struck I was standing <b>exactly two columns left of Rudolph</b>; I could just see his shoulder past the shelving."}, {"k": "herman", "naam": "Herbert Cooper", "rol": "commercial traveller", "clue": "Coroner's note: signs of a single struggle, no forced entry. Cooper <b>was alone with his murderer</b>.", "slachtoffer": true}], "sol": {"marie": [3, 1], "douwe": [1, 0], "rudolf": [4, 4], "lena": [0, 2], "herman": [2, 3]}, "moordenaar": "rudolf", "bekentenis": "“I never liked Cooper, but I should never have dared it — until a note came under my door. The pass key was with it. When the corridor would be empty, it said, to the minute. Signed with a single letter: L.”<br><span style=\"opacity:.75\">— R. Black, 14 November 1949</span>", "draad": "Note in the file margin: the note itself was never found. The pass key was hanging on the board behind the desk again the next morning, as usual."}, {"id": "z2", "nr": "FILE 50-IV", "titel": "The Conservatory", "datum": "3 April 1950", "locatie": "conservatory side and hall — six by six", "vondst": "Body found at 01:55 by L. Merton, night porter.", "tekst": "Agnes Rowlands, the widow in room 6, took a glass of port every evening at eleven. On the 3rd of April the glass stayed full. The garden doors stood open, the first spring air came through the hall — and five people were suddenly remarkably sure where they had been.", "N": 6, "gebieden": {"GARDEN": [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [2, 0]], "CONSERVATORY": [[0, 3], [0, 4], [0, 5], [1, 2], [1, 3]], "DRAWING ROOM": [[1, 4], [1, 5], [2, 4], [2, 5], [3, 4], [3, 5]], "KITCHEN": [[2, 1], [2, 2], [3, 0], [3, 1]], "HALL": [[2, 3], [3, 2], [3, 3], [4, 2]], "VERANDA": [[4, 0], [4, 1], [5, 0], [5, 1]], "DINING ROOM": [[4, 3], [4, 4], [4, 5], [5, 2], [5, 3], [5, 4], [5, 5]]}, "labels": {"GARDEN": [1, 0], "CONSERVATORY": [1, 3], "DRAWING ROOM": [3, 5], "KITCHEN": [3, 0], "HALL": [4, 2], "VERANDA": [5, 0], "DINING ROOM": [5, 4]}, "buiten": ["GARDEN"], "objecten": [{"t": "boom", "r": 0, "c": 0}, {"t": "boom", "r": 1, "c": 1}, {"t": "tapijt", "r": 1, "c": 3}, {"t": "tapijt", "r": 4, "c": 0}, {"t": "stoel", "r": 2, "c": 5}, {"t": "stoel", "r": 1, "c": 4}, {"t": "stoel", "r": 4, "c": 4}, {"t": "stoel", "r": 5, "c": 5}, {"t": "kast", "r": 3, "c": 1}, {"t": "kast", "r": 2, "c": 1}, {"t": "plant", "r": 0, "c": 4}, {"t": "tafel", "r": 3, "c": 5}], "deuren": [], "personen": [{"k": "sofie", "naam": "Sophie Alder", "rol": "guest, room 2", "clue": "I was waiting for post that never came, in a <b>corner</b> of the <b>hall</b>, against the panelling — where the two walls meet. My print is still there in the dust."}, {"k": "pieter", "naam": "Peter Wale", "rol": "gardener", "clue": "My clogs were outside, so yes: I was on a <b>chair</b>. In my stockinged feet, my back to the garden. I haven't had a rest like it in years."}, {"k": "gerrit", "naam": "Gerald Foss", "rol": "waiter", "clue": "The tray was still full when it happened. I was in the <b>dining room</b> — napkins don't fold themselves."}, {"k": "mina", "naam": "Mina Rust", "rol": "chambermaid", "clue": "I was polishing the silver, right <b>beside</b> a <b>table</b> — same room, hard up against it, or you get streaks on the top."}, {"k": "klaas", "naam": "Clarence Verrall", "rol": "guest, room 4", "clue": "I only watched, I swear it. From where I stood I could see them both: <b>exactly two columns left of Sophie</b>, and <b>exactly four columns left of Peter</b>. Work it out for yourself."}, {"k": "agnes", "naam": "Agnes Rowlands", "rol": "widow, room 6", "clue": "The glass of port untouched, the garden door locked. She <b>was alone with her murderer</b>.", "slachtoffer": true}], "sol": {"sofie": [3, 2], "pieter": [4, 4], "gerrit": [5, 3], "mina": [2, 5], "klaas": [1, 0], "agnes": [0, 1]}, "moordenaar": "klaas", "bekentenis": "“Somebody who walks the corridors at night knew exactly when the drawing room would be empty. All I had to do was what the note said — and burn it afterwards in the grate.”<br><span style=\"opacity:.75\">— C. Verrall, 6 April 1950</span>", "draad": "Margin: the conservatory key was missing from the ring that night. Only staff can get at the key cupboard. The night porter “had noticed nothing”."}, {"id": "z3", "nr": "FILE 51-IX", "titel": "The Ground Floor", "datum": "21 September 1951", "locatie": "ground floor — eight by eight", "vondst": "Body found at 03:15 by L. Merton, night porter.", "tekst": "Theodore Naylor, a solicitor's clerk, came every third Thursday of the month to do the books. That September night the porter found him in the drawing room, his pen still behind his ear. The side door stood ajar; nobody heard the bell that hangs there. Seven people present, a ground floor eight by eight — and seven statements that fit together just a little too neatly.", "N": 8, "gebieden": {"GARDEN": [[0, 0], [0, 1], [0, 2], [0, 3], [1, 0], [1, 1], [1, 2], [2, 0]], "VERANDA": [[0, 4], [0, 5], [1, 3], [1, 4], [2, 3]], "LIBRARY": [[0, 6], [0, 7], [1, 7], [2, 7]], "DINING HALL": [[1, 5], [1, 6], [2, 4], [2, 5], [2, 6], [3, 5], [3, 6]], "KITCHEN": [[2, 1], [2, 2], [3, 0], [3, 1], [3, 2]], "HALL": [[3, 3], [3, 4], [4, 2], [4, 3], [4, 4], [5, 3], [6, 3], [7, 2], [7, 3]], "DRAWING ROOM": [[3, 7], [4, 5], [4, 6], [4, 7], [5, 6], [5, 7], [6, 7]], "SCULLERY": [[4, 0], [4, 1], [5, 0]], "OFFICE": [[5, 1], [5, 2], [6, 0], [6, 1], [6, 2], [7, 0], [7, 1]], "GUEST ROOM": [[5, 4], [5, 5], [6, 4], [6, 5], [6, 6], [7, 4], [7, 5], [7, 6], [7, 7]]}, "labels": {"GARDEN": [1, 1], "VERANDA": [2, 3], "LIBRARY": [2, 7], "KITCHEN": [3, 1], "DINING HALL": [3, 5], "HALL": [7, 3], "SCULLERY": [4, 0], "OFFICE": [7, 0], "GUEST ROOM": [7, 5], "DRAWING ROOM": [5, 7]}, "buiten": ["GARDEN"], "objecten": [{"t": "boom", "r": 0, "c": 0}, {"t": "boom", "r": 1, "c": 0}, {"t": "boom", "r": 0, "c": 2}, {"t": "kast", "r": 0, "c": 7}, {"t": "kast", "r": 5, "c": 1}, {"t": "kast", "r": 6, "c": 4}, {"t": "stoel", "r": 2, "c": 4}, {"t": "stoel", "r": 3, "c": 7}, {"t": "stoel", "r": 1, "c": 5}, {"t": "stoel", "r": 6, "c": 6}, {"t": "tapijt", "r": 4, "c": 2}, {"t": "tapijt", "r": 6, "c": 0}, {"t": "tapijt", "r": 2, "c": 5}, {"t": "bed", "r": 6, "c": 5}, {"t": "bed", "r": 7, "c": 5}, {"t": "bed", "r": 5, "c": 4}, {"t": "bed", "r": 7, "c": 6}, {"t": "tafel", "r": 2, "c": 1}, {"t": "ton", "r": 3, "c": 2}, {"t": "plant", "r": 4, "c": 6}, {"t": "piano", "r": 5, "c": 7}, {"t": "plant", "r": 0, "c": 4}, {"t": "kist", "r": 7, "c": 0}], "deuren": [], "personen": [{"k": "jan", "naam": "John Rowe", "rol": "postman", "clue": "One letter too many and one hour too few. I was standing <b>beside</b> a <b>cabinet</b> — same room, shoulder against it — cursing an address I couldn't read."}, {"k": "willem", "naam": "William Drost", "rol": "guest, room 3", "clue": "John saw me standing there, well off to his left: <b>exactly five columns left of John</b>. The detective measured it afterwards."}, {"k": "els", "naam": "Elsie Damm", "rol": "cook", "clue": "The soup was down low and I had nothing on my hands for a moment. I stood <b>beside</b> a <b>rug</b>, toes on the edge — I daren't step on it in this greasy apron."}, {"k": "nora", "naam": "Nora Fisher", "rol": "chambermaid", "clue": "My feet, sir. I sat down on a <b>chair</b> for a moment. Surely that's allowed, after fourteen hours on duty?"}, {"k": "corrie", "naam": "Corrie Smith", "rol": "guest, room 7", "clue": "I was standing on a <b>rug</b> — and as far as I could see the <b>only</b> one in the whole house. Everyone was so peculiar about the carpets that evening."}, {"k": "henk", "naam": "Henry Milner", "rol": "chauffeur", "clue": "I smoke where madam can't see me: in a <b>corner</b> of the <b>scullery</b>. The stub is probably still lying there."}, {"k": "leendert", "naam": "Leonard Bosworth", "rol": "guest, room 9", "clue": "Doctor's orders, rest: I was the <b>only</b> one lying on a <b>bed</b>, and that bed stands <b>beside</b> a <b>cabinet</b> — I could hear the doors creaking in the draught."}, {"k": "theodoor", "naam": "Theodore Naylor", "rol": "solicitor's clerk", "clue": "One cup of coffee drunk, two cups set out. He <b>was alone with his murderer</b>.", "slachtoffer": true}], "sol": {"jan": [0, 6], "willem": [1, 1], "els": [2, 4], "nora": [3, 7], "corrie": [4, 2], "henk": [5, 0], "leendert": [6, 5], "theodoor": [7, 3]}, "moordenaar": "corrie", "bekentenis": "“The bell on the side door had been disconnected. He wrote that nobody would hear me. He was right. I never saw him — only his handwriting, small and neat, like a bookkeeper's.”<br><span style=\"opacity:.75\">— C. Smith, 25 September 1951</span>", "draad": "Margin: the night porter stated the bell had been “faulty for weeks”. The engineer found no wear at all — the wire had been cut."}, {"id": "z4", "nr": "FILE 53-II", "titel": "The East Wing", "datum": "14 February 1953", "locatie": "east wing — ten by ten", "vondst": "Body found at 02:05 by L. Merton, night porter.", "tekst": "St Valentine's night, 1953. Isabelle Crown played until a quarter past eleven; at five past two the night porter found her in the east wing corridor, the score still under her arm. Nine people “heard the piano fall”, the file says. A piano does not fall. Ten squares by ten; take your time over it.", "N": 10, "gebieden": {"LIBRARY": [[0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [2, 0], [2, 1]], "READING ROOM": [[0, 3], [0, 4], [1, 2], [1, 3], [1, 4], [2, 2]], "STUDY": [[0, 5], [0, 6], [0, 7], [1, 5], [1, 6], [2, 5], [2, 6]], "TERRACE": [[0, 8], [0, 9], [1, 7], [1, 8], [1, 9], [2, 7], [2, 8], [2, 9], [3, 8], [3, 9], [4, 8], [4, 9]], "CORRIDOR": [[2, 3], [2, 4], [3, 2], [3, 3], [3, 4], [3, 5], [4, 3], [4, 4], [5, 2], [5, 3], [5, 4], [5, 5], [6, 3], [7, 3], [8, 2], [8, 3], [8, 4], [9, 1], [9, 2], [9, 3], [9, 4]], "BEDROOM": [[3, 0], [3, 1], [4, 0], [4, 1], [4, 2], [5, 0], [5, 1]], "BATHROOM": [[3, 6], [3, 7], [4, 5], [4, 6], [4, 7]], "LINEN ROOM": [[5, 6], [5, 7], [6, 4], [6, 5], [6, 6], [7, 4], [7, 5], [8, 5], [9, 5], [9, 6]], "STUDIO": [[5, 8], [5, 9], [6, 7], [6, 8], [6, 9], [7, 6], [7, 7], [7, 8], [7, 9], [8, 6], [8, 7], [8, 8], [8, 9], [9, 7], [9, 8], [9, 9]], "MUSIC ROOM": [[6, 0], [6, 1], [6, 2], [7, 0], [7, 1], [7, 2], [8, 0], [8, 1], [9, 0]]}, "labels": {"LIBRARY": [2, 0], "READING ROOM": [2, 2], "STUDY": [2, 5], "TERRACE": [4, 9], "BEDROOM": [5, 0], "CORRIDOR": [9, 3], "BATHROOM": [4, 6], "LINEN ROOM": [9, 5], "STUDIO": [9, 8], "MUSIC ROOM": [9, 0]}, "buiten": ["TERRACE"], "objecten": [{"t": "stoel", "r": 0, "c": 2}, {"t": "stoel", "r": 1, "c": 4}, {"t": "stoel", "r": 3, "c": 6}, {"t": "stoel", "r": 6, "c": 8}, {"t": "stoel", "r": 8, "c": 6}, {"t": "stoel", "r": 9, "c": 7}, {"t": "bed", "r": 2, "c": 0}, {"t": "bed", "r": 2, "c": 1}, {"t": "bed", "r": 4, "c": 0}, {"t": "bed", "r": 5, "c": 0}, {"t": "tapijt", "r": 3, "c": 5}, {"t": "tapijt", "r": 7, "c": 1}, {"t": "tapijt", "r": 6, "c": 4}, {"t": "tapijt", "r": 8, "c": 3}, {"t": "plant", "r": 0, "c": 7}, {"t": "plant", "r": 2, "c": 8}, {"t": "plant", "r": 4, "c": 8}, {"t": "plant", "r": 6, "c": 7}, {"t": "kast", "r": 0, "c": 0}, {"t": "kast", "r": 5, "c": 6}, {"t": "kast", "r": 8, "c": 7}, {"t": "kast", "r": 9, "c": 5}, {"t": "piano", "r": 7, "c": 0}, {"t": "haard", "r": 9, "c": 3}, {"t": "lamp", "r": 2, "c": 3}, {"t": "tafel", "r": 4, "c": 6}, {"t": "beeld", "r": 5, "c": 9}, {"t": "tafel", "r": 0, "c": 5}], "deuren": [[[2, 6], [2, 7]], [[4, 7], [4, 8]]], "personen": [{"k": "ada", "naam": "Ada Barkham", "rol": "guest, room 1", "clue": "My ankle, you'll remember. I was sitting on a <b>chair</b> — and I was the <b>only</b> one sitting. The rest were pacing as though the news were already out."}, {"k": "frederik", "naam": "Frederick Laing", "rol": "guest, room 5", "clue": "The house steward was doing his round; I saw his lantern swinging. I stood <b>exactly five columns right of Gerald</b>. That is all I know."}, {"k": "otto", "naam": "Otto Finch", "rol": "guest, room 2", "clue": "I was the <b>only</b> one lying on a <b>bed</b>. Ask the music master: <b>exactly three rows above Simon</b> — he heard me coughing through the ceiling."}, {"k": "nel", "naam": "Nell Jarman", "rol": "laundress", "clue": "The runner had to be straightened; it always curls in that corner. I was standing on the <b>rug</b>, in the <b>corner</b> of the <b>corridor</b>, when the piano fell."}, {"k": "gerard", "naam": "Gerald Mayer", "rol": "house steward", "clue": "My round, the same as every evening at that hour. I was in the <b>corridor</b> — where else? That is my work."}, {"k": "mies", "naam": "Mabel Coster", "rol": "painter", "clue": "I was studying how the lamplight falls across the marble. I stood <b>beside</b> the <b>statue</b>, same room, nose nearly against it."}, {"k": "simon", "naam": "Simon White", "rol": "music master", "clue": "I was standing on a <b>rug</b>, listening to hear whether Isabelle would get through the andante. She did not."}, {"k": "roos", "naam": "Rose Leaford", "rol": "guest, room 8", "clue": "From where I stood I could just see Ada's chair: I was <b>exactly four columns right of Ada</b>."}, {"k": "bram", "naam": "Barnaby Keyes", "rol": "journalist", "clue": "Professional habit: I stood <b>beside</b> the <b>rug</b> — beside it, not on it. I didn't want to trample any traces. Rather ironic, in hindsight."}, {"k": "isabelle", "naam": "Isabelle Crown", "rol": "pianist", "clue": "No cry, no witnesses, the score still under her arm. She <b>was alone with her murderer</b>.", "slachtoffer": true}], "sol": {"ada": [0, 2], "frederik": [1, 8], "isabelle": [2, 7], "nel": [3, 5], "otto": [4, 0], "gerard": [5, 3], "mies": [6, 9], "simon": [7, 1], "bram": [8, 4], "roos": [9, 6]}, "moordenaar": "frederik", "bekentenis": "“The door was already off the latch when I came. There is only one man in this house who carries every key. Ask him where he was that night — though I know the answer already: everywhere and nowhere.”<br><span style=\"opacity:.75\">— F. Laing, 19 February 1953</span>", "draad": "Margin: the duty roster for that week is missing from the folder. Only the night man's initials survive: L.M."}, {"id": "z5", "nr": "FILE 54-X", "titel": "The Main Building", "datum": "31 October 1954", "locatie": "main building — twelve by twelve", "vondst": "Body found at 04:20 by L. Merton, night porter.", "tekst": "31 October 1954 — the last night of The Lime Tree. Edward Merriman, the proprietor himself, found in his own bedroom. The fullest guest list, the largest plan in the archive: twelve by twelve. Eleven witnesses, eleven statements — and somewhere in this house stood the one person who knew the proprietor meant to go to the police in the morning.", "N": 12, "gebieden": {"GARDEN": [[0, 0], [0, 1], [0, 2], [0, 3], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [3, 0]], "CONSERVATORY": [[0, 4], [0, 5], [0, 6], [1, 3], [1, 4], [1, 5], [2, 4]], "VESTIBULE": [[0, 7], [0, 8], [0, 9], [0, 10], [0, 11], [1, 7], [1, 8], [1, 9], [1, 10], [2, 8]], "DRAWING ROOM": [[1, 6], [2, 5], [2, 6], [2, 7], [3, 5], [3, 6], [3, 7], [4, 6]], "DINING HALL": [[1, 11], [2, 9], [2, 10], [2, 11], [3, 9], [3, 10], [3, 11], [4, 9], [4, 10], [5, 8], [5, 9]], "LIBRARY": [[2, 2], [2, 3], [3, 1], [3, 2], [3, 3], [3, 4], [4, 0], [4, 1], [4, 2], [4, 3], [5, 2]], "HALL": [[3, 8], [4, 4], [4, 5], [4, 7], [4, 8], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [6, 3], [6, 4], [6, 7], [7, 3], [8, 3], [9, 3], [9, 4], [10, 4], [11, 4], [11, 5]], "BEDROOM": [[4, 11], [5, 10], [5, 11], [6, 8], [6, 9], [6, 10], [6, 11], [7, 8], [7, 9]], "KITCHEN": [[5, 0], [5, 1], [6, 0], [6, 1], [6, 2], [7, 0], [7, 1], [7, 2], [8, 2]], "RECEPTION": [[6, 5], [6, 6], [7, 4], [7, 5], [7, 6], [7, 7], [8, 4], [8, 5], [8, 6], [9, 5], [10, 5], [10, 6], [11, 6], [11, 7]], "BATHROOM": [[7, 10], [7, 11], [8, 9], [8, 10], [8, 11], [9, 10], [9, 11]], "PRIVATE OFFICE": [[8, 0], [8, 1], [9, 0], [9, 1], [9, 2], [10, 0], [10, 1], [10, 2], [10, 3], [11, 0], [11, 1], [11, 2], [11, 3]], "WINTER GARDEN": [[8, 7], [8, 8], [9, 6], [9, 7], [9, 8], [9, 9], [10, 7], [10, 8], [10, 9], [10, 10], [10, 11], [11, 8], [11, 9], [11, 10], [11, 11]]}, "labels": {"GARDEN": [3, 0], "CONSERVATORY": [2, 4], "VESTIBULE": [2, 8], "LIBRARY": [5, 2], "DRAWING ROOM": [4, 6], "DINING HALL": [5, 8], "KITCHEN": [8, 0], "HALL": [11, 4], "RECEPTION": [11, 6], "BEDROOM": [7, 8], "BATHROOM": [9, 10], "PRIVATE OFFICE": [11, 1], "WINTER GARDEN": [11, 9]}, "buiten": ["GARDEN"], "objecten": [{"t": "stoel", "r": 1, "c": 9}, {"t": "stoel", "r": 3, "c": 6}, {"t": "stoel", "r": 4, "c": 7}, {"t": "stoel", "r": 8, "c": 9}, {"t": "stoel", "r": 10, "c": 10}, {"t": "stoel", "r": 6, "c": 5}, {"t": "bed", "r": 4, "c": 11}, {"t": "bed", "r": 5, "c": 10}, {"t": "bed", "r": 6, "c": 10}, {"t": "bed", "r": 7, "c": 9}, {"t": "tapijt", "r": 0, "c": 5}, {"t": "tapijt", "r": 6, "c": 6}, {"t": "tapijt", "r": 9, "c": 3}, {"t": "tapijt", "r": 10, "c": 8}, {"t": "tapijt", "r": 2, "c": 5}, {"t": "boom", "r": 1, "c": 1}, {"t": "boom", "r": 2, "c": 0}, {"t": "boom", "r": 0, "c": 2}, {"t": "boom", "r": 3, "c": 0}, {"t": "plant", "r": 0, "c": 3}, {"t": "plant", "r": 1, "c": 4}, {"t": "plant", "r": 9, "c": 8}, {"t": "plant", "r": 10, "c": 9}, {"t": "plant", "r": 11, "c": 10}, {"t": "kast", "r": 5, "c": 1}, {"t": "kast", "r": 5, "c": 3}, {"t": "kast", "r": 8, "c": 0}, {"t": "kast", "r": 10, "c": 3}, {"t": "kast", "r": 7, "c": 4}, {"t": "piano", "r": 3, "c": 5}, {"t": "balie", "r": 6, "c": 7}, {"t": "fornuis", "r": 7, "c": 1}, {"t": "bad", "r": 8, "c": 11}, {"t": "haard", "r": 9, "c": 4}, {"t": "fontein", "r": 10, "c": 7}, {"t": "lamp", "r": 1, "c": 7}, {"t": "tafel", "r": 2, "c": 10}, {"t": "tafel", "r": 4, "c": 9}, {"t": "beeld", "r": 5, "c": 8}, {"t": "tafel", "r": 11, "c": 7}], "deuren": [[[5, 6], [6, 6]], [[7, 7], [8, 7]], [[10, 4], [10, 5]]], "personen": [{"k": "truus", "naam": "Trudy Henderson", "rol": "guest, room 3", "clue": "I didn't dare stand still that night. When the clock struck half past three I was <b>beside</b> a <b>rug</b> — right next to it, same room. I can still see the fringe in front of my shoes."}, {"k": "bram", "naam": "Bertram Oakham", "rol": "guest, room 6", "clue": "Everyone else kept standing, so I took the chair. I sat on a <b>chair</b> — the <b>only</b> one in the whole house. Does that say something about me, or about them?"}, {"k": "dora", "naam": "Dora Fenn", "rol": "chambermaid", "clue": "Indoors was unbearable. I went out for air in the garden, <b>beside</b> a <b>tree</b>, my arm against the wet bark."}, {"k": "sjoerd", "naam": "Stuart Balk", "rol": "porter", "clue": "Nervous guests I keep an eye on; that is my trade. I stood <b>exactly three columns right of Trudy</b>."}, {"k": "lotte", "naam": "Lottie Ryland", "rol": "guest, room 10", "clue": "The doctor had given me a sleeping powder. I was the <b>only</b> one lying on a <b>bed</b> — the rest of the house was wide awake, I could hear it even through the powder."}, {"k": "izaak", "naam": "Isaac Meers", "rol": "antiquarian", "clue": "I was valuing the bindings by candlelight, in the <b>corner</b> of the <b>library</b> where the cases meet. The eighteenth-century work stands there."}, {"k": "mees", "naam": "Miles Dyke", "rol": "reception clerk", "clue": "A clerk belongs behind the desk, so that is where I was: on the <b>rug</b>, <b>beside</b> a <b>chair</b> I never once touched all night."}, {"k": "greet", "naam": "Greta Lambert", "rol": "cook", "clue": "At four I set the bread dough, war or murder. I stood <b>beside</b> the <b>range</b> — where else would a cook be standing?"}, {"k": "paul", "naam": "Paul Winter", "rol": "physician, room 4", "clue": "Professional habit: I was washing my hands. I stood <b>beside</b> the <b>bath</b> when I heard the first door go."}, {"k": "hugo", "naam": "Hugo Lynd", "rol": "guest, room 2", "clue": "Cold, that night. I went looking for the warmth and stood <b>beside</b> the <b>fireplace</b>. The fire was almost out. So was I."}, {"k": "cato", "naam": "Cora Venn", "rol": "singer, room 11", "clue": "I was practising softly, for the mirror of the night. I stood on a <b>rug</b> — a singer spares her feet."}, {"k": "eduard", "naam": "Edward Merriman", "rol": "proprietor", "clue": "The owner himself, in his own house. The keys still on his belt. He <b>was alone with his murderer</b>.", "slachtoffer": true}], "sol": {"truus": [0, 4], "bram": [1, 9], "dora": [2, 1], "sjoerd": [3, 7], "lotte": [4, 11], "izaak": [5, 2], "mees": [6, 6], "greet": [7, 0], "paul": [8, 10], "hugo": [9, 3], "cato": [10, 8], "eduard": [11, 5]}, "moordenaar": "hugo", "bekentenis": "“Merriman had worked it out, months ago. He was going to the police on Monday. I was given the pass key and a reason — my debts, in black and white, in that small, neat hand. Go to the desk and see who sits there at night. Then you will know who you are looking for.”<br><span style=\"opacity:.75\">— H. Lynd, 2 November 1954</span>", "draad": "In Merriman's diary, 30 October: “Speak to M. about the keys. Then: police.”"}];
+
+const CONCLUSIE=[
+ {vraag:'One name comes back in all five files — first on the scene every time, above suspicion every time. Who?',
+  opties:['E. Merriman — proprietor','L. Merton — night porter','P. Wale — gardener','A. Barkham — guest, file 53-II'],
+  goed:1},
+ {vraag:'What was his real part in it?',
+  opties:['A chance witness: he simply always had the night shift',
+          'He carried out all five murders with his own hands',
+          'He staged them: he chose the victims and gave the killers keys, times and instructions',
+          'He worked out who the killers were afterwards, and kept quiet out of fear'],
+  goed:2},
+ {vraag:'Why did Edward Merriman have to die last?',
+  opties:['He refused to sell the house to the night porter',
+          'He had seen the pattern and meant to inform the police',
+          'He owed gambling debts to his own guests',
+          'It was chance — he happened to be alone that night'],
+  goed:1}
+];
+
+const EPILOOG='<p class="aanhef">From the report to Chief Inspector Willis, 4 December 1958.</p>'+
+'<p>Lucas Merton was arrested behind his own desk, at twenty to three in the morning, the hour at which he always began his round. He asked only whether he might put out the lamps first.</p>'+
+'<p>In his rooms: a ring of his own with duplicate keys to every bedroom, a folder of IOUs and buried disgraces gathered from years of guest lists — and rough drafts of five notes, in a small, tidy hand, signed with a single letter.</p>'+
+'<p>He never committed a single murder. He <i>wrote</i> five. Five guests with a weak spot, five victims who stood in his way or knew too much — and last of all the man who had found the pattern: his own employer, Edward Merriman.</p>'+
+'<p>The Lime Tree stands empty. The lamp above the desk is out. The five plans go back into the cabinet — Drawer II, bottom shelf — with, at long last, a name on every folder.</p>';
+
+const BEWIJS=[
+ {titel:'The burnt note',
+  vondst:'Found half burnt in the grate of room 1.',
+  duiding:'A small, tidy hand. Who knows the walking routes of the night corridor to the minute — and can hang a pass key back before morning?'},
+ {titel:'The key register',
+  vondst:'Card from the key cupboard behind the desk.',
+  duiding:'The conservatory key did leave the cupboard that night — but off the register. Only the night man carries the key to the cupboard itself.'},
+ {titel:'The cut wire',
+  vondst:'Secured at the side door; engineer\'s docket attached.',
+  duiding:'Not a fault but a preparation. The killer <i>knew</i> the bell would stay silent — somebody had seen to that days beforehand.'},
+ {titel:'The torn roster',
+  vondst:'Loose sheet from the staff folder; one week torn out.',
+  duiding:'The only week missing is the week of the murder. And who keeps the staff folder? The night man himself.'},
+ {titel:'Merriman\'s diary',
+  vondst:'The proprietor\'s pocket diary, found in the private office.',
+  duiding:'Merriman already had the "M." of his own night porter written in his diary. He was exactly one night too late for the police.'}
+];
+</script>
+<script>
+"use strict";
+/* ================= HULPFUNCTIES ================= */
+const $=id=>document.getElementById(id);
+const sleutel=(r,c)=>r+','+c;
+function celVrij(z,r,c){
+  const o=z.objecten.find(o=>o.r===r&&o.c===c);
+  return !o || !!BEZETBAAR[o.t];
+}
+function gebiedVan(z,r,c){
+  for(const g in z.gebieden) if(z.gebieden[g].some(([a,b])=>a===r&&b===c)) return g;
+  return null;
+}
+
+/* ---------- toestand ---------- */
+const OPSLAGKEY='nachtportier_v1';
+let ST={borden:{},klaar:{},concl:false,stil:true,gezien:false};
+function laad(){
+  try{const j=localStorage.getItem(OPSLAGKEY); if(j){const d=JSON.parse(j); if(d&&typeof d==='object') ST=Object.assign(ST,d);}}catch(e){}
+}
+function bewaar(){ try{localStorage.setItem(OPSLAGKEY,JSON.stringify(ST));}catch(e){} }
+function bord(zid){ if(!ST.borden[zid]) ST.borden[zid]={p:{},x:[]}; return ST.borden[zid]; }
+function aantalKlaar(){ return ZDATA.filter(z=>ST.klaar[z.id]).length; }
+
+/* ---------- geluid ---------- */
+let AC=null;
+function toon(f,d,type,vol,start){
+  if(ST.stil) return;
+  try{
+    if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+    const t=AC.currentTime+(start||0);
+    const o=AC.createOscillator(), g=AC.createGain();
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.12,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+    o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+d+0.05);
+  }catch(e){}
+}
+const klikGeluid=()=>toon(660,0.06,'triangle',0.07);
+const zetGeluid =()=>{toon(440,0.09,'triangle',0.09);toon(660,0.07,'triangle',0.05,0.05);};
+const foutGeluid=()=>{toon(180,0.18,'sawtooth',0.06);toon(140,0.22,'sawtooth',0.05,0.08);};
+const goedGeluid=()=>{[523,659,784].forEach((f,i)=>toon(f,0.16,'triangle',0.09,i*0.09));};
+const stempelGeluid=()=>{toon(110,0.16,'square',0.10);toon(70,0.22,'sine',0.12,0.02);};
+
+/* ================= GEZICHTEN ================= */
+function hashNaam(s){let h=7;for(let i=0;i<s.length;i++)h=((h*131+s.charCodeAt(i)*17)^(h>>>3))>>>0;return h;}
+function gezichtSVG(p){
+  const h=hashNaam(p.naam);
+  const bgs=['#5b7a94','#7a6a8e','#6f8a6a','#a08258','#8a6a72','#5f8a8a','#946a5b','#6a7a9e'];
+  const huiden=['#e8c39a','#d9a97c','#c68e5f','#b07a4f'];
+  const haren=['#2e2a26','#5b4632','#8a7a5a','#43434c','#6e3a2a','#9a9a94'];
+  const bg=bgs[h%bgs.length], huid=huiden[(h>>3)%huiden.length], haar=haren[(h>>6)%haren.length];
+  const stijl=(h>>9)%4;
+  let haarS='';
+  if(stijl===0) haarS='<path d="M14 26 Q32 6 50 26 L50 34 Q32 20 14 34 Z" fill="'+haar+'"/>';
+  else if(stijl===1) haarS='<path d="M14 28 Q32 4 50 28 L52 44 Q46 30 32 30 Q18 30 12 44 Z" fill="'+haar+'"/>';
+  else if(stijl===2) haarS='<path d="M14 26 Q32 8 50 26 L50 30 Q40 22 32 22 Q24 22 14 30 Z" fill="'+haar+'"/><circle cx="32" cy="12" r="7" fill="'+haar+'"/>';
+  else haarS='<path d="M14 27 Q32 7 50 27 L50 31 Q32 17 14 31 Z" fill="'+haar+'"/><rect x="12" y="27" width="6" height="12" rx="3" fill="'+haar+'"/><rect x="46" y="27" width="6" height="12" rx="3" fill="'+haar+'"/>';
+  const kraag=p.slachtoffer?'#7e2b20':'#2c3446';
+  const kruis=p.slachtoffer?'<g stroke="#a83a2b" stroke-width="4.5" stroke-linecap="round" opacity="0.9"><line x1="8" y1="8" x2="56" y2="56"/><line x1="56" y1="8" x2="8" y2="56"/></g>':'';
+  return '<svg class="gezicht" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+    '<rect width="64" height="64" rx="5" fill="'+bg+'"/>'+
+    '<path d="M10 64 Q10 46 32 46 Q54 46 54 64 Z" fill="'+kraag+'"/>'+
+    '<rect x="27" y="36" width="10" height="12" rx="4" fill="'+huid+'"/>'+
+    '<circle cx="32" cy="28" r="13" fill="'+huid+'" stroke="rgba(20,16,10,0.25)" stroke-width="1.4"/>'+
+    haarS+
+    '<path d="M26 52 L32 46 L38 52 L32 58 Z" fill="#e9dfc9" opacity="0.85"/>'+
+    kruis+'</svg>';
+}
+
+/* ================= OBJECT-ICONEN (inkt-stijl, met schaduw) ================= */
+function icoonSVG(t,v){
+  const K='#2b2620';
+  const SCH='<ellipse cx="44" cy="66" rx="27" ry="7" fill="#000" opacity="0.13"/>';
+  switch(t){
+  case 'stoel': return '<g>'+SCH+
+    '<rect x="18" y="24" width="48" height="42" rx="10" fill="#f0e9d7" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="24" y="12" width="36" height="17" rx="8" fill="#ddd0b2" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="10" y="27" width="12" height="35" rx="6" fill="#ddd0b2" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="62" y="27" width="12" height="35" rx="6" fill="#ddd0b2" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<path d="M26 34 Q42 41 58 34" fill="none" stroke="'+K+'" stroke-width="1.5" opacity="0.45"/>'+
+    '<path d="M25 50 Q42 55 59 50" fill="none" stroke="'+K+'" stroke-width="1.3" opacity="0.3"/></g>';
+  case 'tapijt': return '<g>'+
+    '<rect x="10" y="14" width="64" height="56" rx="4" fill="#c08552" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="16" y="20" width="52" height="44" rx="3" fill="#cf9a66"/>'+
+    '<rect x="21" y="25" width="42" height="34" rx="3" fill="none" stroke="#7a4426" stroke-width="2" stroke-dasharray="5 4"/>'+
+    '<path d="M42 34 L50 42 L42 50 L34 42 Z" fill="none" stroke="#7a4426" stroke-width="2"/>'+
+    '<circle cx="42" cy="42" r="3.2" fill="#7a4426"/>'+
+    '<g stroke="'+K+'" stroke-width="1.5" opacity="0.65">'+
+    '<line x1="15" y1="9" x2="15" y2="14"/><line x1="27" y1="9" x2="27" y2="14"/><line x1="39" y1="9" x2="39" y2="14"/><line x1="51" y1="9" x2="51" y2="14"/><line x1="63" y1="9" x2="63" y2="14"/>'+
+    '<line x1="15" y1="70" x2="15" y2="75"/><line x1="27" y1="70" x2="27" y2="75"/><line x1="39" y1="70" x2="39" y2="75"/><line x1="51" y1="70" x2="51" y2="75"/><line x1="63" y1="70" x2="63" y2="75"/></g></g>';
+  case 'bed': if(v==='L') return '<g>'+
+    '<path d="M14 12 Q7 12 7 19 L7 65 Q7 72 14 72 L84 72 L84 12 Z" fill="#f2ece0" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<rect x="13" y="20" width="21" height="44" rx="8" fill="#fbf8f0" stroke="'+K+'" stroke-width="2.2"/>'+
+    '<path d="M42 12 L42 72" stroke="'+K+'" stroke-width="1.8" opacity="0.5"/>'+
+    '<path d="M42 22 Q62 27 84 22 M42 42 Q62 46 84 42 M42 62 Q62 57 84 62" fill="none" stroke="#93a3b4" stroke-width="2" opacity="0.85"/>'+
+    '<path d="M50 12 L84 12 L84 26 Q66 30 50 26 Z" fill="#a8b8c6" opacity="0.35"/></g>';
+    return '<g>'+
+    '<path d="M0 12 L70 12 Q77 12 77 19 L77 65 Q77 72 70 72 L0 72 Z" fill="#dde5ec" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<path d="M0 24 Q28 29 60 24 M0 42 Q30 47 60 42 M0 60 Q28 55 60 60" fill="none" stroke="#93a3b4" stroke-width="2" opacity="0.9"/>'+
+    '<path d="M60 12 L60 72" stroke="'+K+'" stroke-width="1.8" opacity="0.35"/>'+
+    '<path d="M0 12 L34 12 Q34 28 0 26 Z" fill="#a8b8c6" opacity="0.3"/></g>';
+  case 'kast': return '<g>'+SCH+
+    '<rect x="12" y="14" width="60" height="52" rx="3" fill="#b0844f" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="16" y="18" width="52" height="44" rx="2" fill="#c19159"/>'+
+    '<line x1="42" y1="14" x2="42" y2="66" stroke="'+K+'" stroke-width="2.2"/>'+
+    '<path d="M16 18 L26 18 L26 62 L16 62 Z" fill="#8f6a3f" opacity="0.35"/>'+
+    '<line x1="12" y1="31" x2="72" y2="31" stroke="'+K+'" stroke-width="1.4" opacity="0.45"/>'+
+    '<line x1="12" y1="48" x2="72" y2="48" stroke="'+K+'" stroke-width="1.4" opacity="0.45"/>'+
+    '<circle cx="37" cy="40" r="2.6" fill="'+K+'"/><circle cx="47" cy="40" r="2.6" fill="'+K+'"/></g>';
+  case 'tafel': return '<g>'+SCH+
+    '<rect x="11" y="19" width="62" height="46" rx="9" fill="#caa872" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="17" y="25" width="50" height="34" rx="6" fill="#d9ba85"/>'+
+    '<path d="M20 32 Q42 28 64 32 M20 42 Q42 38 64 42 M20 52 Q42 48 64 52" fill="none" stroke="#8f6a3f" stroke-width="1.4" opacity="0.6"/>'+
+    '<rect x="17" y="25" width="50" height="34" rx="6" fill="none" stroke="'+K+'" stroke-width="1.2" opacity="0.35"/></g>';
+  case 'boom': return '<g>'+
+    '<ellipse cx="46" cy="50" rx="30" ry="24" fill="#000" opacity="0.12"/>'+
+    '<path d="M42 10 Q52 6 58 14 Q70 12 72 24 Q82 28 76 39 Q82 50 72 55 Q72 67 60 66 Q54 76 43 72 Q32 78 26 68 Q13 68 14 56 Q4 50 10 40 Q5 29 16 25 Q17 13 29 14 Q34 6 42 10 Z" fill="#5f7a44" stroke="'+K+'" stroke-width="2.8" stroke-linejoin="round"/>'+
+    '<path d="M42 20 Q50 17 55 23 Q64 23 65 32 Q72 37 66 44 Q69 53 60 55 Q57 63 48 61 Q41 66 35 60 Q26 61 25 52 Q18 47 23 40 Q20 31 29 29 Q31 21 42 20 Z" fill="#79955a"/>'+
+    '<path d="M42 30 Q49 28 52 34 Q58 36 55 43 Q57 50 49 50 Q44 55 38 50 Q31 50 32 43 Q28 37 35 34 Q36 29 42 30 Z" fill="#93ad72"/>'+
+    '<g stroke="#3f5530" stroke-width="1.6" fill="none" opacity="0.7">'+
+    '<path d="M43 41 Q52 36 62 36"/><path d="M43 41 Q38 30 40 20"/><path d="M43 41 Q32 44 22 42"/><path d="M43 41 Q48 52 56 58"/><path d="M43 41 Q34 52 28 60"/></g>'+
+    '<circle cx="43" cy="41" r="4.6" fill="#6d5238" stroke="'+K+'" stroke-width="2"/>'+
+    '<circle cx="43" cy="41" r="1.6" fill="#4a3626"/></g>';
+  case 'struik': return '<g>'+
+    '<ellipse cx="43" cy="55" rx="24" ry="10" fill="#000" opacity="0.12"/>'+
+    '<path d="M28 30 Q34 20 43 26 Q52 19 58 29 Q68 30 64 41 Q70 50 59 53 Q56 62 45 58 Q35 63 30 54 Q19 52 23 42 Q18 33 28 30 Z" fill="#7d9a5c" stroke="'+K+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+    '<path d="M34 36 Q42 31 50 36 Q56 40 51 47 Q44 52 37 47 Q31 42 34 36 Z" fill="#96b072"/>'+
+    '<g stroke="#4d6338" stroke-width="1.4" opacity="0.7" fill="none"><path d="M43 44 Q40 36 43 29"/><path d="M43 44 Q50 40 57 40"/><path d="M43 44 Q35 42 28 44"/></g></g>';
+  case 'plant': return '<g>'+
+    '<ellipse cx="42" cy="62" rx="16" ry="5" fill="#000" opacity="0.14"/>'+
+    '<circle cx="42" cy="52" r="13" fill="#b9744a" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<circle cx="42" cy="52" r="8" fill="#a05f3a"/>'+
+    '<g stroke="'+K+'" stroke-width="2" fill="#7fa05c" stroke-linejoin="round">'+
+    '<path d="M42 50 Q30 44 24 28 Q38 32 42 46 Z"/><path d="M42 50 Q54 44 60 28 Q46 32 42 46 Z"/>'+
+    '<path d="M42 48 Q40 30 42 16 Q46 32 43 48 Z"/><path d="M42 50 Q28 52 18 44 Q32 42 40 48 Z"/>'+
+    '<path d="M42 50 Q56 52 66 44 Q52 42 44 48 Z"/></g></g>';
+  case 'piano': return '<g>'+
+    '<ellipse cx="44" cy="62" rx="30" ry="8" fill="#000" opacity="0.15"/>'+
+    '<path d="M16 14 L64 14 Q74 14 74 26 Q74 40 62 46 Q56 62 38 62 L16 62 Z" fill="#241f1d" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<path d="M22 20 L60 20 Q67 20 67 27 Q67 37 57 41 Q52 55 38 55 L22 55 Z" fill="#3a322e"/>'+
+    '<rect x="8" y="18" width="10" height="42" rx="2" fill="#f4efe2" stroke="'+K+'" stroke-width="2.2"/>'+
+    '<g stroke="'+K+'" stroke-width="1.4"><line x1="8" y1="26" x2="18" y2="26"/><line x1="8" y1="34" x2="18" y2="34"/><line x1="8" y1="42" x2="18" y2="42"/><line x1="8" y1="50" x2="18" y2="50"/></g>'+
+    '<path d="M30 24 Q48 26 58 34" stroke="#6b6154" stroke-width="1.4" fill="none" opacity="0.7"/></g>';
+  case 'balie': return '<g>'+SCH+
+    '<path d="M12 18 L72 18 L72 34 L28 34 L28 66 L12 66 Z" fill="#8f6a3f" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<path d="M15 21 L69 21 L69 31 L25 31 L25 63 L15 63 Z" fill="#a67c49"/>'+
+    '<g stroke="#6d5230" stroke-width="1.3" opacity="0.7"><line x1="18" y1="24" x2="66" y2="24"/><line x1="18" y1="28" x2="66" y2="28"/><line x1="19" y1="36" x2="19" y2="60"/><line x1="23" y1="36" x2="23" y2="60"/></g>'+
+    '<rect x="44" y="10" width="14" height="8" rx="2" fill="#c9a45c" stroke="'+K+'" stroke-width="1.8"/></g>';
+  case 'fornuis': return '<g>'+SCH+
+    '<rect x="14" y="16" width="56" height="52" rx="4" fill="#3d4248" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="18" y="20" width="48" height="44" rx="3" fill="#565e66"/>'+
+    '<g stroke="'+K+'" stroke-width="2.2" fill="#2c3136">'+
+    '<circle cx="31" cy="33" r="8"/><circle cx="53" cy="33" r="8"/><circle cx="31" cy="53" r="8"/><circle cx="53" cy="53" r="8"/></g>'+
+    '<g stroke="#8a929b" stroke-width="1.6" fill="none">'+
+    '<circle cx="31" cy="33" r="4"/><circle cx="53" cy="33" r="4"/><circle cx="31" cy="53" r="4"/><circle cx="53" cy="53" r="4"/></g>'+
+    '<rect x="36" y="10" width="12" height="6" rx="2" fill="#c9a45c" stroke="'+K+'" stroke-width="1.6"/></g>';
+  case 'bad': return '<g>'+SCH+
+    '<rect x="10" y="20" width="64" height="44" rx="18" fill="#eef1ee" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="17" y="27" width="50" height="30" rx="12" fill="#a9cfdd"/>'+
+    '<path d="M22 34 Q34 30 46 34 Q58 38 62 34" stroke="#7fb3c6" stroke-width="2.2" fill="none"/>'+
+    '<path d="M24 46 Q36 42 50 46" stroke="#7fb3c6" stroke-width="2" fill="none" opacity="0.8"/>'+
+    '<circle cx="66" cy="42" r="3.4" fill="#c9a45c" stroke="'+K+'" stroke-width="1.8"/></g>';
+  case 'haard': return '<g>'+SCH+
+    '<rect x="12" y="14" width="60" height="54" rx="3" fill="#8a8378" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<path d="M12 14 h60 v10 h-60 Z M12 58 h60 v10 h-60 Z" fill="#736c62"/>'+
+    '<g stroke="'+K+'" stroke-width="1.2" opacity="0.5"><line x1="24" y1="14" x2="24" y2="24"/><line x1="40" y1="14" x2="40" y2="24"/><line x1="56" y1="14" x2="56" y2="24"/><line x1="30" y1="58" x2="30" y2="68"/><line x1="50" y1="58" x2="50" y2="68"/></g>'+
+    '<path d="M20 26 L64 26 Q64 52 42 56 Q20 52 20 26 Z" fill="#2a211c" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M36 50 Q30 42 36 35 Q36 41 40 42 Q38 33 45 27 Q44 36 49 39 Q52 33 54 36 Q57 44 49 50 Q43 54 36 50 Z" fill="#d98f3e" stroke="#8a4a1e" stroke-width="1.6"/>'+
+    '<path d="M40 48 Q37 43 42 38 Q42 43 46 44 Q48 41 49 43 Q50 47 45 49 Q42 50 40 48 Z" fill="#f0c060"/></g>';
+  case 'fontein': return '<g>'+
+    '<ellipse cx="42" cy="60" rx="30" ry="9" fill="#000" opacity="0.12"/>'+
+    '<circle cx="42" cy="42" r="30" fill="#b6b0a2" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<circle cx="42" cy="42" r="24" fill="#a9cfdd" stroke="'+K+'" stroke-width="1.8"/>'+
+    '<circle cx="42" cy="42" r="14" fill="#bcdae6"/>'+
+    '<path d="M24 40 Q33 36 42 40 Q51 44 60 40" stroke="#7fb3c6" stroke-width="2" fill="none"/>'+
+    '<circle cx="42" cy="42" r="6" fill="#8f887b" stroke="'+K+'" stroke-width="1.8"/>'+
+    '<g fill="#dcedf3"><circle cx="42" cy="31" r="2.2"/><circle cx="50" cy="35" r="1.7"/><circle cx="34" cy="35" r="1.7"/><circle cx="46" cy="52" r="1.7"/><circle cx="37" cy="51" r="1.6"/></g></g>';
+  case 'lamp': return '<g>'+
+    '<circle cx="42" cy="42" r="26" fill="#f2d489" opacity="0.28"/>'+
+    '<circle cx="42" cy="42" r="17" fill="#efc766" stroke="'+K+'" stroke-width="2.6"/>'+
+    '<circle cx="42" cy="42" r="11" fill="#f6dd9a"/>'+
+    '<g stroke="'+K+'" stroke-width="1.3" opacity="0.55"><line x1="42" y1="25" x2="42" y2="59"/><line x1="25" y1="42" x2="59" y2="42"/><line x1="30" y1="30" x2="54" y2="54"/><line x1="54" y1="30" x2="30" y2="54"/></g>'+
+    '<circle cx="42" cy="42" r="3.4" fill="#8a6f3a" stroke="'+K+'" stroke-width="1.6"/></g>';
+  case 'beeld': return '<g>'+SCH+
+    '<rect x="20" y="20" width="44" height="44" rx="4" fill="#c9c2b2" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="26" y="26" width="32" height="32" rx="3" fill="#dcd5c4"/>'+
+    '<circle cx="42" cy="36" r="7" fill="#b6ae9c" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M30 56 Q30 44 42 44 Q54 44 54 56 Z" fill="#b6ae9c" stroke="'+K+'" stroke-width="2"/>'+
+    '<path d="M36 33 Q42 29 48 33" stroke="'+K+'" stroke-width="1.2" fill="none" opacity="0.5"/></g>';
+  case 'kist': return '<g>'+SCH+
+    '<rect x="14" y="20" width="56" height="44" rx="4" fill="#ad8757" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<rect x="18" y="24" width="48" height="36" rx="3" fill="#c09a64"/>'+
+    '<line x1="14" y1="34" x2="70" y2="34" stroke="'+K+'" stroke-width="2"/>'+
+    '<line x1="14" y1="50" x2="70" y2="50" stroke="'+K+'" stroke-width="2"/>'+
+    '<line x1="21" y1="23" x2="63" y2="61" stroke="'+K+'" stroke-width="2.2" opacity="0.7"/>'+
+    '<line x1="63" y1="23" x2="21" y2="61" stroke="'+K+'" stroke-width="2.2" opacity="0.7"/>'+
+    '<rect x="38" y="38" width="8" height="8" rx="1.5" fill="#8a6f3a" stroke="'+K+'" stroke-width="1.6"/></g>';
+  case 'ton': return '<g>'+
+    '<ellipse cx="42" cy="60" rx="26" ry="8" fill="#000" opacity="0.13"/>'+
+    '<circle cx="42" cy="42" r="25" fill="#b8955e" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<circle cx="42" cy="42" r="19" fill="#c8a76e"/>'+
+    '<circle cx="42" cy="42" r="17" fill="none" stroke="'+K+'" stroke-width="1.8" opacity="0.55"/>'+
+    '<circle cx="42" cy="42" r="7" fill="#a3824e" stroke="'+K+'" stroke-width="1.6"/>'+
+    '<g stroke="'+K+'" stroke-width="1.4" opacity="0.45"><line x1="42" y1="17" x2="42" y2="25"/><line x1="42" y1="59" x2="42" y2="67"/><line x1="17" y1="42" x2="25" y2="42"/><line x1="59" y1="42" x2="67" y2="42"/><line x1="25" y1="25" x2="30" y2="30"/><line x1="59" y1="25" x2="54" y2="30"/><line x1="25" y1="59" x2="30" y2="54"/><line x1="59" y1="59" x2="54" y2="54"/></g></g>';
+  case 'kei': return '<g>'+
+    '<ellipse cx="42" cy="58" rx="26" ry="8" fill="#000" opacity="0.12"/>'+
+    '<path d="M20 52 Q14 36 28 26 Q44 16 58 26 Q70 34 64 50 Q56 66 38 64 Q24 62 20 52 Z" fill="#a8a496" stroke="'+K+'" stroke-width="2.8"/>'+
+    '<path d="M26 40 Q34 28 50 28 Q60 32 60 42 Q52 34 40 34 Q31 35 26 40 Z" fill="#bcb8ab"/>'+
+    '<path d="M30 50 Q42 56 54 50" fill="none" stroke="'+K+'" stroke-width="1.4" opacity="0.4"/></g>';
+  }
+  return '';
+}
+</script>
+<script>
+"use strict";
+/* ================= BORDRENDERING ================= */
+const GEBIEDTINTEN=['#e7dcc0','#ddd0b4','#e9e1cb','#d9cdb9','#e3d5ae','#dbd6c2'];
+const TUINTINT='#c6d2a8', TERRASTINT='#d4cfae';
+
+function bordSVG(z){
+  const N=z.N, B=MARGE+N*CEL, H=MARGE+N*CEL+64;
+  const gebNamen=Object.keys(z.gebieden);
+  const tint={};
+  gebNamen.forEach((g,i)=>{
+    if(z.buiten.includes(g)) tint[g]= g==='TERRACE'?TERRASTINT:TUINTINT;
+    else tint[g]=GEBIEDTINTEN[i%GEBIEDTINTEN.length];
+  });
+  let s='<defs>'+
+    '<pattern id="gras" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'+
+      '<line x1="0" y1="0" x2="0" y2="12" stroke="#93a877" stroke-width="2.4"/></pattern>'+
+    '<pattern id="tegels" width="21" height="21" patternUnits="userSpaceOnUse">'+
+      '<path d="M0 0 H21 V21" fill="none" stroke="#b3ad8c" stroke-width="1.2"/></pattern>'+
+    '<pattern id="parket" width="26" height="13" patternUnits="userSpaceOnUse">'+
+      '<path d="M0 6.5 H26 M13 0 V6.5 M0 6.5 V13 M26 6.5 V13" fill="none" stroke="#8d8064" stroke-width="0.8" opacity="0.35"/></pattern>'+
+    '<filter id="tokschaduw" x="-40%" y="-40%" width="180%" height="180%">'+
+      '<feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#000" flood-opacity="0.45"/></filter>'+
+    '<radialGradient id="papierglans" cx="50%" cy="0%" r="120%">'+
+      '<stop offset="0%" stop-color="#fff8e6" stop-opacity="0.5"/><stop offset="55%" stop-color="#fff" stop-opacity="0"/></radialGradient>'+
+    '</defs>';
+  // papier
+  s+='<rect x="2" y="2" width="'+(B+8)+'" height="'+(H+4)+'" rx="6" fill="#e9dfc9"/>';
+  s+='<rect x="2" y="2" width="'+(B+8)+'" height="'+(H+4)+'" rx="6" fill="url(#papierglans)"/>';
+  // rij- en kolomnummering in boekstijl (R1.., K1..)
+  for(let i=0;i<N;i++){
+    s+='<text x="'+(MARGE+i*CEL+CEL/2)+'" y="'+(MARGE-8)+'" text-anchor="middle" font-family="Courier New,monospace" font-weight="bold" font-size="13" fill="#8d8064">C'+(i+1)+'</text>';
+    s+='<text x="'+(MARGE-15)+'" y="'+(MARGE+i*CEL+CEL/2+4)+'" text-anchor="middle" font-family="Courier New,monospace" font-weight="bold" font-size="13" fill="#8d8064">R'+(i+1)+'</text>';
+  }
+  // celvullingen
+  for(const g of gebNamen){
+    for(const [r,c] of z.gebieden[g]){
+      const x=MARGE+c*CEL, y=MARGE+r*CEL;
+      s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="'+tint[g]+'"/>';
+      const gl=g.toLowerCase();
+      if(z.buiten.includes(g))
+        s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="url(#'+(g==='TERRACE'?'tegels':'gras')+')" opacity="0.5"/>';
+      else if(gl.includes('kitchen')||gl.includes('scullery')||gl.includes('bathroom')||gl.includes('vestibule')||gl.includes('hall'))
+        s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="url(#tegels)" opacity="0.45"/>';
+      else
+        s+='<rect x="'+x+'" y="'+y+'" width="'+CEL+'" height="'+CEL+'" fill="url(#parket)"/>';
+    }
+  }
+  // dunne binnenlijnen
+  s+='<g stroke="#8d8064" stroke-width="1" opacity="0.4">';
+  for(let i=1;i<N;i++){
+    s+='<line x1="'+(MARGE+i*CEL)+'" y1="'+MARGE+'" x2="'+(MARGE+i*CEL)+'" y2="'+(MARGE+N*CEL)+'"/>';
+    s+='<line x1="'+MARGE+'" y1="'+(MARGE+i*CEL)+'" x2="'+(MARGE+N*CEL)+'" y2="'+(MARGE+i*CEL)+'"/>';
+  }
+  s+='</g>';
+  // objecten
+  for(const o of z.objecten){
+    s+='<g transform="translate('+(MARGE+o.c*CEL)+','+(MARGE+o.r*CEL)+')">'+icoonSVG(o.t,o.v)+'</g>';
+  }
+  // dikke gebiedsgrenzen
+  const geb=(r,c)=>gebiedVan(z,r,c);
+  s+='<g stroke="#3a332a" stroke-width="5" stroke-linecap="square">';
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+    const g0=geb(r,c), x=MARGE+c*CEL, y=MARGE+r*CEL;
+    if(r===0||geb(r-1,c)!==g0) s+='<line x1="'+x+'" y1="'+y+'" x2="'+(x+CEL)+'" y2="'+y+'"/>';
+    if(c===0||geb(r,c-1)!==g0) s+='<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="'+(y+CEL)+'"/>';
+    if(r===N-1) s+='<line x1="'+x+'" y1="'+(y+CEL)+'" x2="'+(x+CEL)+'" y2="'+(y+CEL)+'"/>';
+    if(c===N-1) s+='<line x1="'+(x+CEL)+'" y1="'+y+'" x2="'+(x+CEL)+'" y2="'+(y+CEL)+'"/>';
+  }
+  s+='</g>';
+  // deuren: opening in de muur + deurblad met boog
+  for(const [[r1,c1],[r2,c2]] of z.deuren){
+    let x,y,horiz;
+    if(r1===r2){ // verticale muur tussen (r1,c1) en (r1,c2)
+      const c=Math.max(c1,c2); x=MARGE+c*CEL; y=MARGE+r1*CEL; horiz=false;
+    } else { // horizontale muur
+      const r=Math.max(r1,r2); x=MARGE+c1*CEL; y=MARGE+r*CEL; horiz=true;
+    }
+    if(horiz){
+      s+='<line x1="'+(x+20)+'" y1="'+y+'" x2="'+(x+CEL-20)+'" y2="'+y+'" stroke="#e9dfc9" stroke-width="7"/>';
+      s+='<path d="M '+(x+20)+' '+y+' A 44 44 0 0 1 '+(x+CEL-20)+' '+(y+0.01)+'" fill="none" stroke="#3a332a" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.7"/>';
+      s+='<line x1="'+(x+20)+'" y1="'+y+'" x2="'+(x+20)+'" y2="'+(y+30)+'" stroke="#3a332a" stroke-width="3"/>';
+    } else {
+      s+='<line x1="'+x+'" y1="'+(y+20)+'" x2="'+x+'" y2="'+(y+CEL-20)+'" stroke="#e9dfc9" stroke-width="7"/>';
+      s+='<path d="M '+x+' '+(y+20)+' A 44 44 0 0 1 '+(x+0.01)+' '+(y+CEL-20)+'" fill="none" stroke="#3a332a" stroke-width="1.6" stroke-dasharray="4 3" opacity="0.7"/>';
+      s+='<line x1="'+x+'" y1="'+(y+20)+'" x2="'+(x+30)+'" y2="'+(y+20)+'" stroke="#3a332a" stroke-width="3"/>';
+    }
+  }
+  // gebiedslabels
+  for(const g of gebNamen){
+    const [lr,lc]=z.labels[g];
+    const cx=MARGE+lc*CEL+CEL/2, cy=MARGE+(lr+1)*CEL;
+    const w=g.length*8.2+18;
+    s+='<g transform="translate('+cx+','+cy+')">'+
+       '<rect x="'+(-w/2)+'" y="-11" width="'+w+'" height="20" rx="10" fill="#f2ead6" stroke="#3a332a" stroke-width="2"/>'+
+       '<text x="0" y="4.5" text-anchor="middle" font-family="Courier New,monospace" font-weight="bold" font-size="11.5" letter-spacing="1" fill="#3a332a">'+g+'</text></g>';
+  }
+  // cartouche (titelblok) + kompas, als op een architectentekening
+  const cy=MARGE+N*CEL+12;
+  const blad={z1:'I',z2:'II',z3:'III',z4:'IV',z5:'V'}[z.id]||'—';
+  s+='<g font-family="Courier New,monospace" fill="#6b5f4c">'+
+     '<rect x="'+MARGE+'" y="'+cy+'" width="'+(N*CEL)+'" height="40" fill="none" stroke="#8d8064" stroke-width="1.6"/>'+
+     '<text x="'+(MARGE+12)+'" y="'+(cy+17)+'" font-size="12.5" font-weight="bold" letter-spacing="2">THE LIME TREE</text>'+
+     '<text x="'+(MARGE+12)+'" y="'+(cy+32)+'" font-size="10.5" letter-spacing="1">'+((N>=8?(z.locatie||'')+' · '+(z.datum||''):(z.locatie||''))).toUpperCase()+'</text>';
+  if(N>=8){
+    s+='<line x1="'+(MARGE+N*CEL-150)+'" y1="'+cy+'" x2="'+(MARGE+N*CEL-150)+'" y2="'+(cy+40)+'" stroke="#8d8064" stroke-width="1.2"/>'+
+       '<text x="'+(MARGE+N*CEL-138)+'" y="'+(cy+17)+'" font-size="9.5">SCALE 1:50</text>'+
+       '<text x="'+(MARGE+N*CEL-138)+'" y="'+(cy+31)+'" font-size="9.5">SHEET '+blad+' / V</text>'+
+       '</g>'+
+       '<g transform="translate('+(MARGE+N*CEL-32)+','+(cy+20)+')">'+
+       '<circle r="13" fill="none" stroke="#8d8064" stroke-width="1.6"/>'+
+       '<path d="M0 -11 L4 4 L0 1 L-4 4 Z" fill="#a83a2b" stroke="#6b5f4c" stroke-width="0.8"/>'+
+       '<text y="4" x="0" text-anchor="middle" font-family="Courier New,monospace" font-size="0" fill="#6b5f4c"></text>'+
+       '</g>';
+  } else {
+    s+='<text x="'+(MARGE+N*CEL-12)+'" y="'+(cy+17)+'" text-anchor="end" font-size="9.5">SHEET '+blad+' / V</text>'+
+       '<text x="'+(MARGE+N*CEL-12)+'" y="'+(cy+31)+'" text-anchor="end" font-size="9.5">SCALE 1:50</text>'+
+       '</g>';
+  }
+  // lagen voor kruisjes, tokens en klikvlakken
+  s+='<g id="laag-x"></g><g id="laag-tokens"></g><g id="laag-klik"></g>';
+  return {svg:s, w:B+12, h:H+8};
+}
+
+const PKLEUREN=['#356b8c','#7a5a8e','#5f7d4a','#a07838','#8c4a56','#4a7d78'];
+function tokenSVG(z,p,idx,r,c){
+  const x=MARGE+c*CEL+CEL/2, y=MARGE+r*CEL+CEL/2;
+  const init=p.naam.split(' ').map(w=>w[0]).slice(0,2).join('');
+  const vul=p.slachtoffer?'#7e2b20':PKLEUREN[idx%PKLEUREN.length];
+  return '<g class="token" data-k="'+p.k+'" transform="translate('+x+','+y+')" filter="url(#tokschaduw)" style="cursor:pointer">'+
+    '<circle r="27" fill="'+vul+'" stroke="#f2ead6" stroke-width="3"/>'+
+    '<circle r="27" fill="none" stroke="#2b2620" stroke-width="1.4" opacity="0.6"/>'+
+    (p.slachtoffer
+      ?'<text y="9" text-anchor="middle" font-family="Georgia,serif" font-size="26" fill="#f2ead6">†</text>'
+      :'<text y="7" text-anchor="middle" font-family="Georgia,serif" font-size="20" fill="#f2ead6">'+init+'</text>')+
+    '</g>';
+}
+function kruisSVG(r,c){
+  const x=MARGE+c*CEL, y=MARGE+r*CEL;
+  return '<g class="kruis" opacity="0.75">'+
+    '<line x1="'+(x+24)+'" y1="'+(y+24)+'" x2="'+(x+CEL-24)+'" y2="'+(y+CEL-24)+'" stroke="#6b6154" stroke-width="5.5" stroke-linecap="round"/>'+
+    '<line x1="'+(x+CEL-24)+'" y1="'+(y+24)+'" x2="'+(x+24)+'" y2="'+(y+CEL-24)+'" stroke="#6b6154" stroke-width="5.5" stroke-linecap="round"/></g>';
+}
+
+/* ================= BEWIJSSTUKKEN ================= */
+function bewijsSVG(i){
+  const K='#2b2620', PAP='#efe6d0', TIK='font-family="Courier New,monospace"', HAND='font-family="Georgia,serif" font-style="italic"';
+  if(i===0) return '<g transform="rotate(-2.5 150 105)">'+
+    '<path d="M52 32 L240 24 L248 116 L212 176 L60 182 Z" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<path d="M248 116 L212 176 L128 180 Q160 162 192 150 Q226 138 248 116 Z" fill="#221a12"/>'+
+    '<path d="M248 116 Q226 138 192 150 Q160 162 128 180" fill="none" stroke="#8a4a22" stroke-width="3" opacity="0.85"/>'+
+    '<path d="M244 100 Q220 128 186 142" fill="none" stroke="#b06c2a" stroke-width="1.6" opacity="0.5"/>'+
+    '<text x="70" y="66" '+TIK+' font-size="13.5" fill="'+K+'">the corridor is empty</text>'+
+    '<text x="70" y="88" '+TIK+' font-size="13.5" fill="'+K+'">between 02.30 and 02.45.</text>'+
+    '<text x="70" y="110" '+TIK+' font-size="13.5" fill="'+K+'">key goes back</text>'+
+    '<text x="70" y="132" '+TIK+' font-size="13.5" fill="'+K+'">under the mat.</text>'+
+    '<text x="82" y="160" '+HAND+' font-size="18" fill="'+K+'">— L.</text></g>';
+  if(i===1) return '<g>'+
+    '<g transform="rotate(-1.5 116 106)">'+
+    '<rect x="26" y="36" width="182" height="142" rx="3" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<text x="40" y="60" '+TIK+' font-size="12.5" font-weight="bold" letter-spacing="1" fill="'+K+'">KEY REGISTER</text>'+
+    '<line x1="40" y1="68" x2="194" y2="68" stroke="'+K+'" stroke-width="1.6"/>'+
+    '<text x="40" y="90" '+TIK+' font-size="10.5" fill="'+K+'">28 MAR — GARDEN GATE — returned</text>'+
+    '<text x="40" y="110" '+TIK+' font-size="10.5" fill="'+K+'">30 MAR — CELLAR — returned</text>'+
+    '<text x="40" y="130" '+TIK+' font-size="10.5" fill="#7e2b20">2 APR — CONSERVATORY — not</text>'+
+    '<text x="40" y="144" '+TIK+' font-size="10.5" fill="#7e2b20">issued</text>'+
+    '<text x="40" y="166" '+HAND+' font-size="12" fill="'+K+'">initialled, night duty: L.M.</text></g>'+
+    '<line x1="252" y1="56" x2="266" y2="32" stroke="'+K+'" stroke-width="1.6"/>'+
+    '<rect x="242" y="12" width="50" height="23" rx="3" fill="#f2ead6" stroke="'+K+'" stroke-width="2"/>'+
+    '<text x="267" y="27" '+TIK+' font-size="9.5" text-anchor="middle" fill="'+K+'">CONSERVATORY</text>'+
+    '<circle cx="252" cy="72" r="16" fill="none" stroke="'+K+'" stroke-width="5.5"/>'+
+    '<rect x="247" y="88" width="10" height="58" fill="#c9b48c" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<rect x="257" y="126" width="15" height="8" fill="#c9b48c" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<rect x="257" y="139" width="10" height="7" fill="#c9b48c" stroke="'+K+'" stroke-width="2.4"/></g>';
+  if(i===2) return '<g>'+
+    '<g transform="rotate(1.5 212 90)">'+
+    '<rect x="146" y="28" width="134" height="122" rx="3" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<text x="158" y="52" '+TIK+' font-size="11.5" font-weight="bold" letter-spacing="1" fill="'+K+'">ENGINEER’S DOCKET</text>'+
+    '<line x1="158" y1="60" x2="268" y2="60" stroke="'+K+'" stroke-width="1.4"/>'+
+    '<text x="158" y="80" '+TIK+' font-size="10.5" fill="'+K+'">side-door bell —</text>'+
+    '<text x="158" y="98" '+TIK+' font-size="10.5" fill="'+K+'">no wear at all.</text>'+
+    '<text x="158" y="116" '+TIK+' font-size="10.5" fill="#7e2b20">wire cut through.</text>'+
+    '<text x="158" y="138" '+HAND+' font-size="11" fill="'+K+'">Sept. 1951</text></g>'+
+    '<path d="M18 172 C 58 150 92 188 122 166" fill="none" stroke="#5a4632" stroke-width="8" stroke-linecap="round"/>'+
+    '<path d="M142 160 C 176 140 214 186 268 170" fill="none" stroke="#5a4632" stroke-width="8" stroke-linecap="round"/>'+
+    '<g stroke="#b9762e" stroke-width="2.6" stroke-linecap="round">'+
+    '<line x1="122" y1="166" x2="132" y2="158"/><line x1="122" y1="166" x2="133" y2="166"/><line x1="122" y1="166" x2="130" y2="173"/>'+
+    '<line x1="142" y1="160" x2="132" y2="153"/><line x1="142" y1="160" x2="131" y2="161"/><line x1="142" y1="160" x2="134" y2="168"/></g></g>';
+  if(i===3) return '<g transform="rotate(-1.2 150 105)">'+
+    '<path d="M42 26 L236 26 L236 92 L214 100 L192 90 L168 100 L146 90 L122 100 L98 90 L74 100 L42 94 Z" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<path d="M42 128 L66 118 L90 130 L114 118 L138 130 L162 118 L186 130 L210 118 L236 126 L236 186 L42 186 Z" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<text x="56" y="50" '+TIK+' font-size="12.5" font-weight="bold" letter-spacing="1" fill="'+K+'">DUTY ROSTER</text>'+
+    '<text x="56" y="66" '+TIK+' font-size="10.5" fill="'+K+'">FEBRUARY 1953</text>'+
+    '<line x1="56" y1="76" x2="222" y2="76" stroke="'+K+'" stroke-width="1.3" opacity="0.6"/>'+
+    '<text x="58" y="114" '+TIK+' font-size="11.5" font-weight="bold" fill="#d98a7a" letter-spacing="2">— WEEK 7 MISSING —</text>'+
+    '<text x="56" y="150" '+TIK+' font-size="10.5" fill="'+K+'">week 8 — night duty</text>'+
+    '<text x="56" y="172" '+HAND+' font-size="12" fill="'+K+'">initialled: L.M.</text></g>';
+  return '<g transform="rotate(1.5 150 105)">'+
+    '<rect x="60" y="22" width="180" height="168" rx="6" fill="'+PAP+'" stroke="'+K+'" stroke-width="2.4"/>'+
+    '<path d="M60 28 Q60 22 66 22 L234 22 Q240 22 240 28 L240 52 L60 52 Z" fill="#a83a2b"/>'+
+    '<text x="150" y="41" '+TIK+' font-size="10.5" font-weight="bold" letter-spacing="1.5" text-anchor="middle" fill="#f2ead6">SATURDAY 30 OCTOBER</text>'+
+    '<g stroke="#9db4c9" stroke-width="1" opacity="0.7">'+
+    '<line x1="72" y1="90" x2="228" y2="90"/><line x1="72" y1="110" x2="228" y2="110"/>'+
+    '<line x1="72" y1="130" x2="228" y2="130"/><line x1="72" y1="150" x2="228" y2="150"/></g>'+
+    '<text x="76" y="84" '+HAND+' font-size="14.5" fill="#243447">Speak to M. about</text>'+
+    '<text x="76" y="104" '+HAND+' font-size="14.5" fill="#243447">the keys.</text>'+
+    '<text x="76" y="142" '+HAND+' font-size="14.5" fill="#243447">Then: police.</text>'+
+    '<text x="206" y="178" '+HAND+' font-size="11" fill="#243447">E.M.</text></g>';
+}
+function bewijsWrap(i){
+  return '<svg viewBox="0 0 300 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+BEWIJS[i].titel+'">'+bewijsSVG(i)+'</svg>';
+}
+</script>
+<script>
+"use strict";
+/* ================= SPELLOGICA ================= */
+let huidigeZaak=null, gekozenPersoon=null, xModus=false, bordZoom=false;
+
+function zetBordBreedte(z){
+  const svg=$('bord');
+  const celpx = bordZoom ? 72 : (z.N>=10 ? 52 : (z.N>=8 ? 46 : 0));
+  if(celpx===0){ svg.style.minWidth='100%'; }
+  else {
+    const px=Math.round((MARGE+z.N*CEL+12)*(celpx/CEL));
+    svg.style.minWidth=px+'px';
+  }
+}
+
+function naarScherm(id){
+  document.querySelectorAll('.scherm').forEach(s=>s.classList.remove('actief'));
+  $(id).classList.add('actief');
+  $('inhoud').scrollTop=0;
+}
+function openOverlay(id){ $(id).classList.add('open'); }
+function sluitOverlay(id){ $(id).classList.remove('open'); }
+function sluitAlleOverlays(){ document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open')); }
+
+/* ---------- overzicht ---------- */
+function renderBewijsstrook(houderId, klikbaarAltijd){
+  const romein=['I','II','III','IV','V'];
+  const h=$(houderId); h.innerHTML='';
+  ZDATA.forEach((z,i)=>{
+    const heeft=!!ST.klaar[z.id];
+    const d=document.createElement('div');
+    if(heeft){
+      d.className='bewijskaart';
+      d.innerHTML=bewijsWrap(i)+'<div class="bt">'+romein[i]+' · '+BEWIJS[i].titel+'</div>';
+      d.addEventListener('click',()=>{klikGeluid();toonBewijs(i);});
+    } else {
+      d.className='bewijskaart leeg';
+      d.innerHTML='<div class="vraagteken">?</div>EXHIBIT '+romein[i]+'<br>not yet<br>secured';
+    }
+    h.appendChild(d);
+  });
+}
+function toonBewijs(i){
+  $('bw-titel').textContent='Bewijsstuk '+['I','II','III','IV','V'][i]+' — '+BEWIJS[i].titel;
+  $('bw-svg').innerHTML=bewijsWrap(i);
+  $('bw-vondst').textContent=BEWIJS[i].vondst;
+  $('bw-duiding').textContent=BEWIJS[i].duiding;
+  $('bw-kantlijn').textContent='File margin: '+ZDATA[i].draad;
+  openOverlay('ov-bewijs');
+}
+
+function renderOverzicht(){
+  const romein=['I','II','III','IV','V'];
+  const lijst=$('dossierlijst'); lijst.innerHTML='';
+  const open=aantalKlaar();
+  ZDATA.forEach((z,i)=>{
+    const klaar=!!ST.klaar[z.id];
+    const beschikbaar=i<=open;
+    const d=document.createElement('div');
+    d.className='dossier'+(beschikbaar?'':' dicht');
+    let binnen='<div class="dnr">FOLDER '+romein[i]+' · '+z.nr+'</div>'+
+      '<div class="dtitel">'+z.titel+'</div>'+
+      '<div class="dmeta">'+z.datum+' · '+z.locatie+'</div>';
+    if(klaar){
+      const m=z.personen.find(p=>p.k===z.moordenaar);
+      binnen+='<div class="stempel">SOLVED</div>'+
+        '<div class="dmeta" style="margin-top:6px;color:#c9a45c">Killer: '+m.naam+'</div>';
+    } else if(!beschikbaar){
+      binnen+='<div class="slot">🔒</div>';
+    }
+    d.innerHTML=binnen;
+    if(beschikbaar) d.addEventListener('click',()=>{klikGeluid();openZaak(i);});
+    lijst.appendChild(d);
+  });
+  $('voortgang').textContent=open+' OF 5 FILES CLOSED';
+  renderBewijsstrook('bewijsstrook');
+  $('conclusieknoprij').style.display = open>=5 && !ST.concl ? 'flex':'none';
+  if(ST.concl){
+    $('conclusieknoprij').style.display='flex';
+    $('kn-conclusie').textContent='Read the report again';
+  }
+}
+
+/* ---------- zaak ---------- */
+function openZaak(i){
+  huidigeZaak=i; gekozenPersoon=null; xModus=false;
+  const z=ZDATA[i];
+  const romein=['I','II','III','IV','V'];
+  $('z-nr').textContent='MAP '+romein[i]+' · '+z.nr;
+  $('z-titel').textContent=z.titel;
+  $('z-meta').textContent=z.datum+' · '+z.locatie;
+  $('z-vondst').textContent=z.vondst;
+  $('z-tekst').textContent=z.tekst;
+  const b=bordSVG(z);
+  const svg=$('bord');
+  svg.setAttribute('viewBox','0 0 '+b.w+' '+b.h);
+  svg.innerHTML=b.svg;
+  zetBordBreedte(z);
+  bouwKlikvlakken(z);
+  renderPortretten(z);
+  renderClues(z);
+  renderMarkeringen(z);
+  werkToolsBij(z);
+  $('oordeel').textContent=''; $('oordeel').className='';
+  naarScherm('s-zaak');
+}
+function bouwKlikvlakken(z){
+  const laag=$('bord').querySelector('#laag-klik');
+  let s='';
+  for(let r=0;r<z.N;r++)for(let c=0;c<z.N;c++){
+    s+='<rect class="klikcel" data-r="'+r+'" data-c="'+c+'" x="'+(MARGE+c*CEL)+'" y="'+(MARGE+r*CEL)+
+       '" width="'+CEL+'" height="'+CEL+'" fill="transparent" style="cursor:pointer"/>';
+  }
+  laag.innerHTML=s;
+  laag.querySelectorAll('.klikcel').forEach(el=>{
+    el.addEventListener('click',()=>celKlik(z,+el.dataset.r,+el.dataset.c));
+  });
+}
+function renderPortretten(z){
+  const st=bord(z.id), strook=$('z-portretten'); strook.innerHTML='';
+  z.personen.forEach((p,idx)=>{
+    const d=document.createElement('div');
+    d.className='portret'+(p.slachtoffer?' slachtoffer':'')+
+      (gekozenPersoon===p.k?' gekozen':'')+(st.p[p.k]?' geplaatst':'');
+    d.innerHTML=gezichtSVG(p)+'<div class="pnaam">'+p.naam+'</div>'+
+      '<div class="prol">'+p.rol+(p.slachtoffer?' · victim':'')+'</div>';
+    d.addEventListener('click',()=>{
+      klikGeluid();
+      gekozenPersoon = gekozenPersoon===p.k ? null : p.k;
+      renderPortretten(z); renderClues(z);
+    });
+    strook.appendChild(d);
+  });
+}
+function renderClues(z){
+  const el=$('z-clues'); el.innerHTML='';
+  z.personen.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='clue'+(p.slachtoffer?' v':'')+(gekozenPersoon===p.k?' actief':'');
+    d.innerHTML='<b>'+p.naam+(p.slachtoffer?' †':'')+' <span style="font-style:normal;font-family:Courier New,monospace;font-size:10px;color:#8b94a8;letter-spacing:.06em">— '+p.rol.toUpperCase()+'</span></b><span>&ldquo;'+p.clue+'&rdquo;</span>';
+    el.appendChild(d);
+  });
+}
+function renderMarkeringen(z){
+  const st=bord(z.id);
+  const lx=$('bord').querySelector('#laag-x');
+  const lt=$('bord').querySelector('#laag-tokens');
+  lx.innerHTML=st.x.map(k=>{const [r,c]=k.split(',').map(Number);return kruisSVG(r,c);}).join('');
+  let s='';
+  z.personen.forEach((p,idx)=>{
+    const pos=st.p[p.k];
+    if(pos){const [r,c]=pos.split(',').map(Number); s+=tokenSVG(z,p,idx,r,c);}
+  });
+  lt.innerHTML=s;
+  lt.querySelectorAll('.token').forEach(el=>{
+    el.addEventListener('click',ev=>{
+      ev.stopPropagation();
+      if(ST.klaar[z.id]) return;
+      const k=el.dataset.k;
+      delete st.p[k]; bewaar();
+      gekozenPersoon=k; klikGeluid();
+      renderPortretten(z); renderClues(z); renderMarkeringen(z);
+    });
+  });
+}
+function celKlik(z,r,c){
+  if(ST.klaar[z.id]) return;
+  const st=bord(z.id), k=sleutel(r,c);
+  const bezetDoor=Object.keys(st.p).find(pk=>st.p[pk]===k);
+  if(xModus){
+    if(bezetDoor) return;
+    const i=st.x.indexOf(k);
+    if(i>=0) st.x.splice(i,1); else { if(!celVrij(z,r,c)) return; st.x.push(k); }
+    bewaar(); klikGeluid(); renderMarkeringen(z);
+    return;
+  }
+  if(bezetDoor) return; // token-klik regelt verwijderen
+  if(!gekozenPersoon){ $('oordeel').textContent='Choose a portrait first, then tap a square.'; $('oordeel').className=''; return; }
+  if(!celVrij(z,r,c)){ foutGeluid(); $('oordeel').textContent='That object cannot be occupied.'; $('oordeel').className='fout'; return; }
+  const xi=st.x.indexOf(k); if(xi>=0) st.x.splice(xi,1);
+  st.p[gekozenPersoon]=k; bewaar(); zetGeluid();
+  // kies automatisch de volgende niet-geplaatste persoon
+  const volgende=z.personen.find(p=>!st.p[p.k]);
+  gekozenPersoon=volgende?volgende.k:null;
+  $('oordeel').textContent='';
+  renderPortretten(z); renderClues(z); renderMarkeringen(z);
+}
+function werkToolsBij(z){
+  const klaar=!!ST.klaar[z.id];
+  $('t-controleer').style.display=klaar?'none':'';
+  $('t-xmodus').style.display=klaar?'none':'';
+  $('t-wis').style.display=klaar?'none':'';
+  $('t-bekentenis').style.display=klaar?'':'none';
+  $('t-xmodus').classList.toggle('aan',xModus);
+  if(klaar){
+    const m=z.personen.find(p=>p.k===z.moordenaar);
+    $('oordeel').textContent='SOLVED — killer: '+m.naam;
+    $('oordeel').className='';
+  }
+}
+
+/* ---------- controleren ---------- */
+function controleer(){
+  const z=ZDATA[huidigeZaak], st=bord(z.id);
+  const totaal=z.personen.length;
+  const geplaatst=z.personen.filter(p=>st.p[p.k]).length;
+  if(geplaatst<totaal){
+    foutGeluid();
+    $('oordeel').textContent='Place everyone on the plan first ('+geplaatst+' of '+totaal+' placed).';
+    $('oordeel').className='fout';
+    return;
+  }
+  let goed=0;
+  z.personen.forEach(p=>{ if(st.p[p.k]===z.sol[p.k].join(',')) goed++; });
+  if(goed===totaal){
+    goedGeluid();
+    openMoordPicker(z);
+  } else {
+    foutGeluid();
+    $('bordhoes').classList.remove('schud'); void $('bordhoes').offsetWidth; $('bordhoes').classList.add('schud');
+    $('oordeel').textContent=goed+' of '+totaal+' people are in the right square. Read the statements again.';
+    $('oordeel').className='fout';
+  }
+}
+function openMoordPicker(z){
+  $('moordvraag').textContent='The plan is correct.';
+  const slachtoffer=z.personen.find(p=>p.slachtoffer);
+  $('moordsub').textContent='Who was in the same area as '+slachtoffer.naam+'? Name the killer.';
+  const lijst=$('moordkeuzes'); lijst.innerHTML=''; $('moordoordeel').textContent='';
+  z.personen.filter(p=>!p.slachtoffer).forEach(p=>{
+    const d=document.createElement('div');
+    d.className='portret';
+    d.innerHTML=gezichtSVG(p)+'<div class="pnaam">'+p.naam+'</div><div class="prol">'+p.rol+'</div>';
+    d.addEventListener('click',()=>kiesMoordenaar(z,p));
+    lijst.appendChild(d);
+  });
+  openOverlay('ov-moord');
+}
+function kiesMoordenaar(z,p){
+  if(p.k===z.moordenaar){
+    stempelGeluid();
+    ST.klaar[z.id]=true; bewaar();
+    sluitOverlay('ov-moord');
+    toonBekentenis(z);
+    werkToolsBij(z);
+  } else {
+    foutGeluid();
+    const slachtoffer=z.personen.find(q=>q.slachtoffer);
+    $('moordoordeel').textContent=p.naam+' was not in the same area as '+slachtoffer.naam+'. Look again.';
+  }
+}
+function toonBekentenis(z){
+  const i=ZDATA.indexOf(z);
+  const m=z.personen.find(p=>p.k===z.moordenaar);
+  $('bek-kop').textContent=z.titel+' — killer: '+m.naam;
+  $('bek-tekst').innerHTML=z.bekentenis;
+  $('bek-bewijskop').textContent='Exhibit '+['I','II','III','IV','V'][i]+' secured — '+BEWIJS[i].titel;
+  $('bek-bewijs').innerHTML=bewijsWrap(i);
+  $('bek-vondstregel').textContent=BEWIJS[i].vondst;
+  $('bek-draad').textContent=BEWIJS[i].duiding+' — Kantlijn: '+z.draad;
+  openOverlay('ov-bekentenis');
+}
+
+/* ---------- conclusie ---------- */
+let conclKeuzes=[null,null,null];
+function renderConclusie(){
+  renderBewijsstrook('bewijsmuur');
+  const h=$('vragenhouder'); h.innerHTML='';
+  CONCLUSIE.forEach((v,i)=>{
+    const blok=document.createElement('div');
+    blok.className='vraagblok';
+    let s='<div class="vk">'+(i+1)+'. '+v.vraag+'</div>';
+    v.opties.forEach((o,j)=>{
+      s+='<div class="optie'+(conclKeuzes[i]===j?' gekozen':'')+'" data-v="'+i+'" data-o="'+j+'"><span class="bol"></span><span>'+o+'</span></div>';
+    });
+    blok.innerHTML=s; h.appendChild(blok);
+  });
+  h.querySelectorAll('.optie').forEach(el=>{
+    el.addEventListener('click',()=>{
+      if(ST.concl) return;
+      klikGeluid();
+      conclKeuzes[+el.dataset.v]=+el.dataset.o;
+      renderConclusie();
+    });
+  });
+  if(ST.concl){
+    conclKeuzes=CONCLUSIE.map(v=>v.goed);
+    h.querySelectorAll('.optie').forEach(el=>{
+      if(CONCLUSIE[+el.dataset.v].goed===+el.dataset.o) el.classList.add('gekozen','goedmark');
+    });
+    $('kn-rapport').style.display='none';
+    $('concl-oordeel').textContent='';
+  } else {
+    $('kn-rapport').style.display='';
+  }
+}
+function dienRapportIn(){
+  if(conclKeuzes.some(k=>k===null)){
+    foutGeluid();
+    $('concl-oordeel').textContent='Answer all three questions first.';
+    return;
+  }
+  const fouten=CONCLUSIE.filter((v,i)=>conclKeuzes[i]!==v.goed).length;
+  if(fouten===0){
+    ST.concl=true; bewaar();
+    stempelGeluid();
+    $('epiloogtekst').innerHTML=EPILOOG;
+    naarScherm('s-epiloog');
+  } else {
+    foutGeluid();
+    $('concl-oordeel').textContent='The report does not hold up yet ('+fouten+' of the 3 conclusions fail). Read back the margins of your files.';
+    document.querySelectorAll('#vragenhouder .optie.gekozen').forEach(el=>{
+      if(CONCLUSIE[+el.dataset.v].goed!==+el.dataset.o){
+        el.classList.add('foutmark');
+        setTimeout(()=>el.classList.remove('foutmark'),1400);
+      }
+    });
+  }
+}
+</script>
+<script>
+"use strict";
+/* ================= KOPPELINGEN & INIT ================= */
+function koppel(){
+  $('kn-start').addEventListener('click',()=>{klikGeluid();ST.gezien=true;bewaar();renderOverzicht();naarScherm('s-overzicht');});
+  $('kn-regels-intro').addEventListener('click',()=>{klikGeluid();openOverlay('ov-hulp');});
+  $('k-hulp').addEventListener('click',()=>{klikGeluid();openOverlay('ov-hulp');});
+  $('k-reset').addEventListener('click',()=>{klikGeluid();openOverlay('ov-reset');});
+  $('k-geluid').addEventListener('click',()=>{
+    ST.stil=!ST.stil; bewaar();
+    $('k-geluid').textContent=ST.stil?'♪̸':'♪';
+    $('k-geluid').style.opacity=ST.stil?0.45:1;
+    if(!ST.stil) klikGeluid();
+  });
+  $('kn-reset-ja').addEventListener('click',()=>{
+    try{localStorage.removeItem(OPSLAGKEY);}catch(e){}
+    ST={borden:{},klaar:{},concl:false,stil:ST.stil,gezien:false};
+    conclKeuzes=[null,null,null];
+    sluitAlleOverlays();
+    naarScherm('s-intro');
+  });
+  document.querySelectorAll('[data-sluit]').forEach(el=>{
+    el.addEventListener('click',()=>{klikGeluid();sluitOverlay(el.dataset.sluit);});
+  });
+  document.querySelectorAll('.overlay').forEach(ov=>{
+    ov.addEventListener('click',ev=>{ if(ev.target===ov && ov.id!=='ov-moord') sluitOverlay(ov.id); });
+  });
+  $('t-controleer').addEventListener('click',()=>{klikGeluid();controleer();});
+  $('t-xmodus').addEventListener('click',()=>{
+    xModus=!xModus; klikGeluid();
+    $('t-xmodus').classList.toggle('aan',xModus);
+  });
+  $('t-zoom').addEventListener('click',()=>{
+    bordZoom=!bordZoom; klikGeluid();
+    $('t-zoom').classList.toggle('aan',bordZoom);
+    $('t-zoom').textContent=bordZoom?'Verklein':'Vergroot';
+    if(huidigeZaak!==null) zetBordBreedte(ZDATA[huidigeZaak]);
+  });
+  $('t-wis').addEventListener('click',()=>{
+    const z=ZDATA[huidigeZaak];
+    if(ST.klaar[z.id]) return;
+    ST.borden[z.id]={p:{},x:[]}; bewaar(); klikGeluid();
+    gekozenPersoon=null;
+    renderPortretten(z); renderClues(z); renderMarkeringen(z);
+    $('oordeel').textContent='';
+  });
+  $('t-bekentenis').addEventListener('click',()=>{klikGeluid();toonBekentenis(ZDATA[huidigeZaak]);});
+  $('t-terug').addEventListener('click',()=>{klikGeluid();renderOverzicht();naarScherm('s-overzicht');});
+  $('kn-bek-verder').addEventListener('click',()=>{
+    klikGeluid(); sluitOverlay('ov-bekentenis');
+    renderOverzicht(); naarScherm('s-overzicht');
+  });
+  $('kn-conclusie').addEventListener('click',()=>{klikGeluid();renderConclusie();naarScherm('s-conclusie');});
+  $('kn-rapport').addEventListener('click',()=>{dienRapportIn();});
+  $('kn-epi-terug').addEventListener('click',()=>{klikGeluid();renderOverzicht();naarScherm('s-overzicht');});
+  // terugknop van het toestel: overlays sluiten of terug naar de kast
+  try{
+    history.pushState({nd:1},'');
+    window.addEventListener('popstate',()=>{
+      const open=document.querySelector('.overlay.open');
+      if(open && open.id!=='ov-moord'){ sluitOverlay(open.id); }
+      else if($('s-zaak').classList.contains('actief')||$('s-conclusie').classList.contains('actief')||$('s-epiloog').classList.contains('actief')){
+        renderOverzicht(); naarScherm('s-overzicht');
+      }
+      try{history.pushState({nd:1},'');}catch(e){}
+    });
+  }catch(e){}
+}
+
+function init(){
+  laad();
+  koppel();
+  if(ST.stil){ $('k-geluid').textContent='♪̸'; $('k-geluid').style.opacity=0.45; }
+  if(ST.concl){
+    $('epiloogtekst').innerHTML=EPILOOG;
+  }
+  if(ST.gezien){ renderOverzicht(); naarScherm('s-overzicht'); }
+  else naarScherm('s-intro');
+}
+init();
+</script>
+</body>
+</html>

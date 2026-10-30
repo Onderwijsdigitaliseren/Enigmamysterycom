@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hotel Winterlight · Hotel Winterlicht | Enigma Mystery</title>
+<meta name="description" content="Hotel Winterlight: eleven rooms of murder puzzles on one floor. Solve rooms, earn keys, open the next door. Free to play; the whole hotel (floors 7–13) is a book by Enigma Mystery.">
+<meta property="og:title" content="Hotel Winterlight · Floor 7">
+<meta property="og:description" content="Eleven rooms, eleven murder puzzles, one lift that does not stop at thirteen. Play the free sample floor.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.enigmamystery.com/spel/hotel-winterlight.html">
+<meta property="og:site_name" content="Enigma Mystery">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://www.enigmamystery.com/spel/hotel-winterlight.html">
+<link rel="alternate" hreflang="en" href="https://www.enigmamystery.com/spel/hotel-winterlight.html#en">
+<link rel="alternate" hreflang="nl" href="https://www.enigmamystery.com/spel/hotel-winterlight.html#nl">
+<link rel="alternate" hreflang="x-default" href="https://www.enigmamystery.com/spel/hotel-winterlight.html">
+<style>
+:root{--bg:#0b1020;--bg2:#141b31;--paper:#f4efe3;--ink:#171717;--cream:#efe8d3;--gold:#d9ad4f;--gold2:#f6d88a;--red:#c9302c;--dim:#7c8598;--line:#26304c;--green:#4caf50}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--cream);font-family:Georgia,"Times New Roman",serif;min-height:100vh;overflow-x:hidden}
+/* ---------- hemel + sneeuw ---------- */
+#sky{position:fixed;inset:0;z-index:-1;background:radial-gradient(1400px 700px at 50% -20%,#1d2747,#0b1020 60%)}
+.flake{position:absolute;top:-10px;color:#fff;opacity:.55;font-size:10px;animation:fall linear infinite;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) translateX(20px)}}
+header{padding:18px 22px 8px;display:flex;justify-content:space-between;align-items:flex-end}
+header h1{margin:0;font-size:30px;letter-spacing:1px;color:var(--gold2);text-shadow:0 0 30px rgba(217,173,79,.25)}
+header h1 small{display:block;font-size:11px;letter-spacing:4px;color:var(--gold);font-family:"Courier New",monospace;margin-top:5px}
+.tools{display:flex;gap:8px;align-items:center}
+button{font:inherit;cursor:pointer;border:1px solid var(--gold);background:transparent;color:var(--cream);padding:6px 12px;border-radius:3px;transition:background .15s}
+button:hover{background:rgba(217,173,79,.12)}
+button.primary{background:var(--gold);color:#1a1a1a;border-color:var(--gold);font-weight:bold}
+button.primary:hover{background:var(--gold2)}
+button.small{padding:3px 8px;font-size:13px}
+main{max-width:1120px;margin:0 auto;padding:10px 16px 40px}
+.intro{font-style:italic;color:#cfc7ad;line-height:1.55;margin:6px 0 14px;max-width:900px}
+.progress{display:flex;align-items:center;gap:12px;font-family:"Courier New",monospace;font-size:12px;letter-spacing:2px;color:var(--dim);margin:6px 0 10px}
+.bar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0;transition:width .6s}
+/* ---------- gevel ---------- */
+#facade{width:100%;height:auto;display:block;border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.door{cursor:pointer}
+.door rect.body{fill:#2b2118;stroke:#5a4632;stroke-width:1.2;transition:fill .3s}
+.door.avail rect.body{fill:#3a2c1e}
+.door.avail .light{opacity:1}
+.door.locked rect.body{fill:#1a1512}
+.door.locked .lock{opacity:1}
+.door.solved rect.body{fill:#5b4327}
+.door.solved rect.win{fill:var(--gold2);filter:url(#glow)}
+.door .light{opacity:0;fill:#f6d88a;transition:opacity .3s}
+.door .lock{opacity:0}
+.door:hover rect.body{stroke:var(--gold);stroke-width:2}
+.door text{font-family:"Courier New",monospace;fill:#e9dcb8;font-size:9px;letter-spacing:1px;pointer-events:none}
+.door text.nm{font-family:Georgia,serif;font-size:10px;fill:#cdbf9a}
+#lift{transition:transform 1.2s cubic-bezier(.4,0,.2,1)}
+#secretband{cursor:pointer}
+/* ---------- sleutels ---------- */
+#keys{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 22px}
+.key{position:relative;background:linear-gradient(#e6c574,#b98a2f);color:#2a1e08;border-radius:16px 4px 4px 16px;padding:5px 10px 5px 22px;font-family:"Courier New",monospace;font-size:13px;min-width:88px;box-shadow:0 2px 6px rgba(0,0,0,.5);animation:pop .4s}
+.key:before{content:"";position:absolute;left:7px;top:9px;width:8px;height:8px;border-radius:50%;background:var(--bg)}
+.key span{display:block;font-size:9px;letter-spacing:1px;color:#5a4210}
+.key.empty{background:transparent;color:var(--dim);border:1px dashed var(--line);box-shadow:none;animation:none}
+.key.empty:before{background:var(--line)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+/* ---------- toast ---------- */
+#toast:empty{display:none}
+#toast{position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-80px);background:var(--gold);color:#1a1a1a;padding:10px 18px;border-radius:4px;font-weight:bold;box-shadow:0 10px 40px rgba(0,0,0,.6);transition:transform .4s;z-index:10}
+#toast.show{transform:translateX(-50%) translateY(0)}
+/* ---------- kamerpaneel ---------- */
+#panel{display:none;background:var(--paper);color:var(--ink);border-radius:6px;padding:0 0 26px;margin-top:14px;box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden;animation:slide .35s}
+#panel.open{display:block}
+@keyframes slide{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.pbar{height:8px;background:var(--accent,#333)}
+.pin{padding:18px 26px 0}
+.phead{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #222;padding-bottom:6px}
+.phead .no{font-family:"Courier New",monospace;letter-spacing:2px;font-size:13px}
+.phead .lk{font-family:"Courier New",monospace;font-size:11px;color:var(--red)}
+#panel h2{margin:12px 0 6px;font-size:30px}
+#panel .intro{color:#444;max-width:none}
+#panel .rules{font-size:14px;line-height:1.45;color:#222;border-left:3px solid var(--accent,#999);padding-left:10px;margin:10px 0 16px}
+#panel button{color:#171717;border-color:#333}
+#panel button.primary{background:var(--gold);border-color:var(--gold)}
+#panel .answer button.small{color:#f3ead2;border-color:#8a8f9b}
+#chips{display:none;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{padding:5px 9px;font-size:12px;font-family:"Courier New",monospace;letter-spacing:1px;border-color:#4a5068;color:var(--dim)}
+.chip small{font-family:Georgia,serif;letter-spacing:0;font-size:11px}
+.chip.avail{border-color:var(--gold);color:var(--cream)}.chip.done{border-color:#5fa36a;color:#9fd6a6}
+@media (max-width:700px){#chips{display:flex}}
+#panel .rules button.rk{color:#f3ead2;border-color:#ff8a86;margin:0 4px}.rules .rv b{color:#ffb3b0}
+#panel .answer button.small:hover{background:rgba(255,255,255,.08)}
+.cast{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px;font-size:13px;margin:6px 0 14px}
+.cast b{display:inline-block;width:20px;height:20px;border-radius:50%;background:#171717;color:#fff;text-align:center;line-height:20px;font-size:11px;margin-right:6px}
+.cast i{color:#777}
+.puz{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+.clues{flex:1;min-width:260px;font-size:14.5px;line-height:1.4}
+.clues ol{padding-left:22px;margin:4px 0}
+.clues li{margin-bottom:6px}
+.clues li.k{color:var(--red)}
+.clues li.k span{color:#222}
+table.grid{border-collapse:collapse;background:#fff}
+table.grid th{background:#171717;color:#fff;font-size:11px;padding:4px 2px;font-weight:normal}
+table.grid td{border:1px solid #333;width:44px;height:38px;text-align:center;font-family:"Courier New",monospace;font-size:19px;cursor:pointer;user-select:none}
+table.grid td.hour{font-family:Georgia,serif;font-size:12px;width:56px;cursor:default;background:#f7f7f7}
+table.grid td.given{background:#eee;cursor:default;font-weight:bold}
+table.grid td.skull{background:#ddd}
+.hint{font-size:12px;color:#666;margin-top:6px}
+.answer{margin:18px 26px 0;padding-top:12px;border-top:1px solid #bbb;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.answer label{font-family:"Courier New",monospace;font-size:12px;letter-spacing:1px}
+.answer select,.answer input{font:inherit;padding:5px 8px;border:1px solid #444;border-radius:3px;background:#fff;color:#111}
+.answer input.code{width:80px;font-family:"Courier New",monospace;letter-spacing:6px;text-align:center;font-size:18px}
+.msg{font-size:14px;margin-left:6px}
+.msg.ok{color:#2e7d32;font-weight:bold}.msg.no{color:var(--red)}
+.keytext{margin:8px 26px 0;font-size:12px;color:#666}
+/* notitie */
+.note{margin:18px 26px 0;background:#fff8dc;border:1px solid #d9c98a;padding:12px 16px;font-family:"Courier New",monospace;font-size:13px;line-height:1.5;color:#3a2f10;box-shadow:2px 3px 0 rgba(0,0,0,.08);transform:rotate(-.4deg);animation:slide .5s}
+.note b{display:block;font-size:10px;letter-spacing:2px;color:#8a6d1e;margin-bottom:6px}
+/* alibi */
+table.alibi{border-collapse:collapse;font-size:14px}
+table.alibi th,table.alibi td{border-bottom:1px solid #ccc;padding:5px 10px;text-align:left}
+table.alibi td.c{cursor:pointer}
+table.alibi td.c.x{text-decoration:line-through;color:#999}
+table.alibi td.c.v{color:#2e7d32;font-weight:bold}
+/* voetsporen */
+.fp{display:inline-grid;gap:0;border:2px solid #222;background:#fbfdff}
+.fp div{width:46px;height:46px;border:1px solid #d6dde8;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;user-select:none}
+.fp div.tree{background:#dfe6d8;cursor:default}
+.fp div.on{background:#bfd7ff}
+.fp div.given{font-weight:bold}
+.fpwrap{display:inline-block}
+.fprow{display:flex;align-items:center}
+.fpnum{width:24px;text-align:right;padding-right:6px;font-weight:bold;font-size:13px}
+.fpcols{display:flex;padding-left:30px}
+.fpcols div{width:46px;text-align:center;font-weight:bold;font-size:13px}
+.doors{display:flex;padding-left:30px;margin-bottom:4px}
+.doors div{width:46px;text-align:center;font-size:11px}
+.doors div b{background:#171717;color:#fff;padding:1px 4px;border-radius:2px}
+.gates{display:flex;padding-left:30px;margin-top:4px}
+.gates div{width:46px;text-align:center;font-size:11px;color:#555}
+/* tafel */
+.table{position:relative;width:260px;height:260px;margin:10px auto}
+.table .disc{position:absolute;left:70px;top:70px;width:120px;height:120px;border-radius:50%;border:2px solid #222;background:radial-gradient(#fff,#f1e8d2)}
+.chair{position:absolute;width:40px;height:32px;border:1px solid #222;background:#fff;text-align:center;line-height:32px;font-weight:bold;cursor:pointer;font-size:15px}
+.chair small{position:absolute;top:-14px;left:0;right:0;font-size:9px;color:#777;font-weight:normal;line-height:1}
+.chair.poison:before{content:"";position:absolute;right:3px;bottom:3px;width:7px;height:7px;border-radius:50%;background:var(--red)}
+.chair.sel{outline:2px solid var(--gold)}
+.pick{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pick button{padding:3px 9px}
+/* keuken */
+.ev{display:inline-grid;grid-template-columns:repeat(6,44px);border:2px solid #222;background:#fff}
+.ev div{width:44px;height:44px;border:1px solid #ddd;display:flex;align-items:center;justify-content:center;font-family:"Courier New",monospace;font-size:18px;cursor:pointer;position:relative;user-select:none}
+.ev div.n{cursor:default}
+.ev div.br{border-right:2.5px solid #222}.ev div.bb{border-bottom:2.5px solid #222}
+.ev div.z0{background:#eef5ea}.ev div.z1{background:#fdf1e3}.ev div.z2{background:#e9f0fb}.ev div.z3{background:#f8e9ef}.ev div.z4{background:#f3f0e0}
+.ev div.x:after{content:"✕";color:var(--red);font-size:20px;position:absolute}
+.ev div.s:after{content:"·";color:#999;font-size:24px;position:absolute}
+.ev div small{position:absolute;bottom:1px;left:1px;right:1px;font-size:7.5px;color:#555;font-style:italic;font-family:Georgia,serif;line-height:1}
+.zones{margin-top:6px;font-size:12px}
+.zl{display:inline-block;padding:1px 7px;border:1px solid #999;border-radius:3px;margin:2px 2px 0 0}
+.zl.z0{background:#eef5ea}.zl.z1{background:#fdf1e3}.zl.z2{background:#e9f0fb}.zl.z3{background:#f8e9ef}.zl.z4{background:#f3f0e0}
+/* tijdlijn */
+.tl{list-style:none;padding:0;margin:0;max-width:380px}
+.tl li{display:flex;align-items:center;gap:10px;padding:6px 8px;border:1px solid #ccc;background:#fff;margin-bottom:4px;cursor:pointer;user-select:none}
+.tl li b{width:26px;height:26px;border:1px solid #222;display:inline-flex;align-items:center;justify-content:center;font-family:"Courier New",monospace}
+.tl li.done{background:#fff3d6}
+/* logicarooster */
+.zb{display:grid;grid-template-columns:auto auto;gap:14px;align-items:start}
+.zg{border-collapse:collapse}
+.zg td,.zg th{width:30px;height:30px;border:1px solid #bbb;text-align:center;font-size:11px}
+.zg th{font-weight:normal;color:#333;background:#f5f5f5}
+.zg th.rot{height:70px;vertical-align:bottom;font-size:10px}
+.zg th.rot span{display:inline-block;transform:rotate(-60deg);transform-origin:left bottom;white-space:nowrap;margin-left:14px}
+.zg td.cell{cursor:pointer;font-family:"Courier New",monospace;font-size:16px}
+.zg td.cell.X{color:var(--red);font-weight:bold}.zg td.cell.o{color:#999}
+/* bar */
+.st{list-style:none;padding:0;margin:0}
+.st li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid #ddd;font-size:14px}
+.st li b{display:inline-block;width:22px;height:22px;border-radius:50%;background:#171717;color:#fff;text-align:center;line-height:22px;font-size:11px}
+.st li i{flex:1}
+.st li label{font-size:11px;font-family:"Courier New",monospace;display:flex;align-items:center;gap:4px}
+/* geheim */
+#secret{display:none;background:#0a0a0c;color:var(--cream);padding:28px 30px;border:1px solid var(--gold);border-radius:6px;margin-top:16px;line-height:1.65;box-shadow:0 0 60px rgba(217,173,79,.15)}
+#secret.open{display:block;animation:slide .6s}
+#secret h2{color:var(--gold2);margin-top:0;font-size:34px}
+
+/* ---------- neon + gevel 3D ---------- */
+header h1{color:#ffd98a;text-shadow:0 0 6px #ffb347,0 0 18px #ff8c1a,0 0 40px rgba(255,120,0,.5);animation:neon 6s infinite}
+@keyframes neon{0%,93%,100%{opacity:1}94%{opacity:.55}95%{opacity:1}97%{opacity:.7}98%{opacity:1}}
+#map{perspective:1400px}
+#facade{transform:rotateX(7deg) translateZ(0);transform-origin:50% 100%;box-shadow:0 40px 90px rgba(0,0,0,.75),0 0 0 1px #2a3350}
+#mapwrap{position:relative}
+#fog{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(11,16,32,0) 60%,rgba(11,16,32,.55) 100%),radial-gradient(600px 200px at 50% 100%,rgba(217,173,79,.10),transparent 70%)}
+.door.opening rect.body{transform-box:fill-box;transform-origin:left center;animation:swing .55s forwards}
+@keyframes swing{to{transform:scaleX(.12) skewY(-6deg)}}
+.door rect.win{transition:fill .4s}
+.door.avail rect.win{fill:#3b3a58}
+/* ---------- kijkdoos ---------- */
+#panel{background:transparent;box-shadow:none;padding:0;overflow:visible}
+.room3d{position:relative;border-radius:8px;overflow:hidden;background:var(--wall,#2b2b33);box-shadow:0 30px 80px rgba(0,0,0,.7),inset 0 0 120px rgba(0,0,0,.6);perspective:1100px}
+.room3d:before{content:"";position:absolute;inset:0;background:radial-gradient(700px 400px at 50% 0%,var(--lamp,rgba(255,220,150,.35)),transparent 70%);pointer-events:none}
+.floor3d{z-index:0;position:absolute;left:-10%;right:-10%;bottom:0;height:46%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 60px),repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 2px,transparent 2px 44px),var(--floor,#3a3128);transform:rotateX(62deg);transform-origin:50% 100%;pointer-events:none;opacity:.9}
+.props{position:absolute;left:0;right:0;top:0;height:170px;pointer-events:none}
+.props svg{width:100%;height:170px;display:block}
+.pin{position:relative;z-index:1;padding:150px 26px 0}
+.plate{display:inline-block;background:linear-gradient(#e8cf8a,#b08a3a);color:#2a1d07;font-family:"Courier New",monospace;letter-spacing:3px;font-size:13px;padding:6px 14px;border-radius:3px;box-shadow:0 2px 0 #6b5220,0 6px 16px rgba(0,0,0,.5);margin-bottom:10px}
+.plate.red{background:linear-gradient(#e26b66,#9c2622);color:#fff}
+.plate.grey{background:linear-gradient(#cfd3dc,#8a8f9b);color:#111}
+#panel h2{color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6);font-size:34px;margin:6px 0 4px}
+#panel .intro{color:#e6dcc2;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+#panel .rules{color:#f1e9d2;background:rgba(0,0,0,.35);border-left:3px solid var(--accent,#999);padding:8px 12px;border-radius:0 4px 4px 0}
+.stage{position:relative;background:var(--paper);color:var(--ink);border-radius:6px;padding:18px 20px;margin:12px 0 0;box-shadow:0 30px 40px -20px rgba(0,0,0,.8),0 2px 0 #c9bf9f;transform:rotateX(4deg);transform-origin:50% 0;transition:transform .5s}
+.stage:hover{transform:rotateX(0)}
+.stage:after{content:"";position:absolute;inset:0;border-radius:6px;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+.answer{position:relative;z-index:2;margin:14px 26px 0;padding:12px 16px;border-top:none;background:rgba(8,10,18,.82);border:1px solid rgba(217,173,79,.35);border-radius:6px;color:#f3ead2;backdrop-filter:blur(3px)}
+.answer label{color:#f6d88a}
+.msg.ok{color:#9be29b}.msg.no{color:#ff8a86}
+.keytext{position:relative;z-index:2;color:#e6dcc2;margin:8px 26px 18px;text-shadow:0 1px 3px #000}
+.note{position:relative;z-index:2;margin:14px 26px 18px}
+.stage .cast{color:#171717}.stage .cast i{color:#666}.stage .cast b{background:#171717;color:#fff}
+/* 3D voetsporen */
+.fpscene{perspective:900px}
+.fpwrap{transform:rotateX(30deg) rotateZ(-2deg);transform-origin:50% 100%;transition:transform .5s}
+.fpscene:hover .fpwrap{transform:rotateX(12deg) rotateZ(0)}
+.fp{background:linear-gradient(#ffffff,#eef3fb);box-shadow:0 20px 30px rgba(0,0,0,.35)}
+.fp div.tree{background:radial-gradient(circle at 50% 70%,#5b7a53,#33502e)}
+/* doka */
+.room3d.zebra{--wall:#3a0f0f;--lamp:rgba(255,40,40,.35);--floor:#2a0b0b}
+.room3d.zebra .stage{background:#fbe9e3}
+/* keuken */
+.room3d.evidence{--wall:#233a25;--lamp:rgba(200,255,200,.25);--floor:#1f2d20}
+.room3d.footprints{--wall:#152238;--lamp:rgba(180,210,255,.35);--floor:#1a2a44}
+.room3d.alibi{--wall:#1e2a44;--floor:#24304a}
+.room3d.timeline{--wall:#3a2a12;--lamp:rgba(255,200,120,.35);--floor:#2c2010}
+.room3d.seating{--wall:#3a1420;--lamp:rgba(255,190,150,.35);--floor:#2c0f18}
+.room3d.liars{--wall:#2e1e12;--lamp:rgba(255,170,80,.35);--floor:#241609}
+.room3d.gongoku{--wall:#23252c;--floor:#2b2620}
+.room3d.final{--wall:#1c2126;--lamp:rgba(200,220,255,.25);--floor:#15191d}
+
+footer{text-align:center;color:var(--dim);font-size:12px;padding:30px 16px 40px;line-height:1.6}footer a{color:var(--gold)}
+.bookbox{margin:26px auto 0;max-width:560px;border:1px solid var(--gold);border-radius:6px;padding:16px 20px;background:rgba(217,173,79,.06);text-align:left}
+.bookbox b{color:var(--gold2);font-family:"Courier New",monospace;letter-spacing:2px;font-size:12px}.bookbox p{margin:8px 0 12px;font-size:15px;line-height:1.5}
+.bookbox a.primary{display:inline-block;text-decoration:none;background:var(--gold);color:#2a1e08;padding:8px 14px;border-radius:3px;font-weight:bold}
+@media (max-width:700px){
+  header{flex-wrap:wrap}header h1{font-size:22px}header h1 small{font-size:9px;letter-spacing:3px}
+  .stage{padding:12px 10px;transform:none}.pin{padding:12px 10px 0}.answer,.note,.keytext{margin-left:6px;margin-right:6px}
+  #panel h2{font-size:26px}.puz{flex-direction:column}.clues{min-width:0;font-size:14px}
+  table.grid td{width:30px;height:30px;font-size:15px}table.grid td.hour{width:40px;font-size:10px}
+  .fp div,.fpcols div,.doors div,.gates div{width:34px}.fp div{height:34px;font-size:15px}
+  .ev div{width:36px;height:36px;font-size:15px}.ev div small{font-size:6.5px}
+  .zg td,.zg th{width:24px;height:24px;font-size:10px}.zg th.rot{height:56px}.zg th.rot span{margin-left:10px}.zb{grid-template-columns:1fr}.zb .zg{margin-bottom:8px}
+  .clues li span{word-break:break-word}.clues ol{padding-left:18px}
+  .cast{grid-template-columns:1fr}.answer{flex-wrap:wrap;gap:6px}
+  .props{transform:scale(.7);transform-origin:right top}
+  .room3d{perspective:none}.floor3d{display:none}
+  .fpwrap,.fpscene{transform:none}
+}
+.stage,.puz,.pin{max-width:100%;overflow-x:auto}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="toast"></div>
+<header>
+  <h1><span id="ttl">HOTEL WINTERLICHT</span><small id="sub">VERDIEPING 7 · EEN PUZZELCAMPAGNE</small></h1>
+  <div class="tools">
+    <button class="small" id="freebtn" title="vrije toegang">🔒</button>
+    <button class="small" id="sndbtn" title="geluid">🔔</button>
+    <button class="small" id="langbtn">EN</button>
+    <button class="small" id="resetbtn">Reset</button>
+  </div>
+</header>
+<main>
+  <p class="intro" id="story"></p>
+  <div class="progress"><span id="prog"></span><div class="bar"><i id="progbar"></i></div></div>
+  <div id="mapwrap"><div id="map"></div><div id="fog"></div></div>
+  <div id="chips"></div>
+  <div id="keys"></div>
+  <div id="panel"></div>
+  <div id="secret"></div>
+</main>
+<footer id="foot"></footer>
+<script>
+const DATA = {"cast": ["L", "I", "F", "T", "O", "S", "M", "E"], "roles": {"L": ["de zangeres van het hotelorkest", "the hotel band's singer"], "I": ["de gouvernante van kamer 712", "the governess from room 712"], "F": ["de handelsreiziger, al drie weken te gast", "the travelling salesman, three weeks a guest"], "T": ["de weduwe op de bel-etage", "the widow on the first floor"], "O": ["de antiquair die de klokken kwam taxeren", "the antiques dealer here to value the clocks"], "S": ["de nachtportier", "the night porter"], "M": ["de journalist van De Avondster", "the journalist from The Evening Star"], "E": ["de directrice van het hotel", "the hotel's manageress"]}, "staff": ["B", "G", "J", "K", "W"], "staff_roles": {"B": ["de barman", "the barman"], "G": ["de kokkin", "the cook"], "J": ["de tuinman", "the gardener"], "K": ["de boekhouder", "the bookkeeper"], "W": ["de conciërge", "the caretaker"]}, "rooms": {"700": {"type": "gongoku", "puzzle": {"level": 1, "seed": 7000, "N": 4, "W": 3, "H": 3, "owner": {"2,0": 0, "0,2": 1, "2,2": 2, "1,0": 3, "1,1": 3, "2,1": 2, "0,1": 1, "1,2": 1, "0,0": 3}, "adj": [[2, 3], [2, 3], [0, 1, 3], [0, 1, 2]], "doors": [[1, 2, [1, 2], [2, 2]], [0, 3, [1, 0], [2, 0]], [2, 3, [1, 1], [2, 1]], [0, 2, [2, 0], [2, 1]], [1, 3, [0, 1], [1, 1]]], "sol": [[2, 1, 3, 0], [3, 0, 2, 1], [0, 3, 1, 2], [1, 2, 0, 3]], "killer": 0, "t_m": 2, "room_m": 3, "clues": [["at", 3, 2, 1], ["not", 2, 1, 0], ["same", 0, 0, 2, 2], ["follows", 1, 2, 2]], "stats": {"basic": 3, "rel": 2, "path": 0, "rounds": 3}, "npaths": 12, "initials": ["L", "T", "E", "O"], "rooms": [7, 1, 12, 3], "param": {}}, "key": {"letter": "L", "hour": 23}, "clues": {"nl": [{"text": "Om 21.00 was Elsa niet in de Keuken."}, {"text": "Toen Lotte in de Leeszaal was, stond Elsa in de Biljartkamer."}, {"text": "Precies één gongslag nadat Truus de Biljartkamer verliet, stapte Elsa er binnen."}], "en": [{"text": "At 9 pm, Edith was not in the Kitchen."}, {"text": "While Lydia was in the Library, Edith was in the Billiard Room."}, {"text": "One gong after Tessa left the Billiard Room, Edith walked in."}]}}, "701": {"type": "alibi", "puzzle": {"claims": [[["with", 1], ["with", 5], ["with", 5]], [["alone"], ["alone"], ["alone"]], [["alone"], ["with", 4], ["with", 7]], [["alone"], ["alone"], ["alone"]], [["with", 6], ["with", 2], ["with", 6]], [["with", 7], ["with", 0], ["with", 0]], [["with", 4], ["with", 7], ["with", 4]], [["with", 5], ["with", 6], ["with", 2]]], "killer": 1, "world": [[1, 0, null, null, 6, 7, 4, 5], [5, null, 4, null, 2, 0, 7, 6], [5, null, 7, null, 6, 0, 4, 2]], "cands": [0, 1], "lie_h": 0, "order": ["L", "I", "F", "T", "O", "S", "M", "E"]}, "key": {"letter": "I"}, "needs": ["700"]}, "702": {"type": "footprints", "puzzle": {"W": 7, "H": 7, "start": [2, 6], "doors": [1, 3, 5], "blocked": [[0, 1], [0, 3], [1, 4], [4, 2], [5, 2], [6, 5]], "rows": [1, 2, 2, 3, 2, 3, 3], "cols": [0, 2, 5, 6, 3, 0, 0], "given": [[3, 6], [1, 3], [4, 4]], "path": [[2, 6], [2, 5], [3, 5], [3, 6], [4, 6], [4, 5], [4, 4], [3, 4], [3, 3], [2, 3], [1, 3], [1, 2], [2, 2], [2, 1], [3, 1], [3, 0]], "hidden_row": null, "end_door": 1}, "key": {"door": "B", "number": 5}, "needs": ["700"], "gate": 3, "door_numbers": [2, 5, 8]}, "703": {"type": "timeline", "puzzle": {"order": [5, 1, 0, 2, 7, 3, 6, 4], "clues": [["first", 5], ["before", 0, 4], ["gap", 0, 5, 1], ["between", 5, 0, 7], ["before", 2, 3], ["between", 0, 7, 6], ["gap", 0, 3, 2], ["between", 2, 6, 4]], "keyclue": ["right_after", 0, 2]}, "key": {"position": 8}, "needs": ["702"], "events": [["de gong van elf uur", "the eleven o'clock gong"], ["de bel bij deur A", "the bell at door A"], ["het piepen van deur B", "the creak of door B"], ["de ketting van deur C", "the chain on door C"], ["de gil", "the scream"], ["het licht ging uit", "the lights went out"], ["de hond blafte", "the dog barked"], ["de lift kwam boven", "the lift arrived"]]}, "704": {"type": "seating", "puzzle": {"N": 8, "perm": [0, 4, 5, 6, 2, 3, 7, 1], "clues": [["notnext", 1, 6], ["chair", 1, 7], ["even", 4], ["left", 4, 5], ["chair", 3, 5]], "keyclue": ["opp", 2, 0], "poison_chair": 5, "guest_at_poison": 3, "order": ["E", "L", "I", "F", "T", "O", "S", "M"]}, "key": {"letter": "F", "chair": 6}, "needs": ["701"]}, "705": {"type": "gongoku", "puzzle": {"level": 2, "seed": 7050, "N": 5, "W": 4, "H": 3, "owner": {"2,2": 0, "1,1": 1, "1,0": 2, "2,0": 3, "0,2": 4, "1,2": 0, "2,1": 3, "0,1": 1, "0,0": 2, "3,1": 3, "3,2": 0, "3,0": 3}, "adj": [[1, 3, 4], [0, 2, 3, 4], [1, 3], [0, 1, 2], [0, 1]], "doors": [[0, 1, [1, 1], [1, 2]], [1, 2, [0, 0], [0, 1]], [0, 4, [0, 2], [1, 2]], [0, 3, [2, 1], [2, 2]], [1, 4, [0, 1], [0, 2]], [2, 3, [1, 0], [2, 0]], [1, 3, [1, 1], [2, 1]]], "sol": [[4, 1, 2, 3, 0], [1, 2, 3, 0, 4], [3, 0, 4, 1, 2], [2, 3, 0, 4, 1], [0, 4, 1, 2, 3]], "killer": 0, "t_m": 1, "room_m": 1, "clues": [["follows", 1, 0, 0], ["not", 2, 2, 2], ["same", 4, 4, 2, 0], ["at", 2, 1, 3], ["same", 1, 1, 3, 2], ["early", 4, 0, 3]], "stats": {"basic": 3, "rel": 2, "path": 0, "rounds": 3}, "npaths": 20, "initials": ["O", "M", "F", "I", "T"], "rooms": [2, 7, 13, 3, 6], "param": {"key704": ["at", 2, 1, 3]}}, "key": {"letter": "O", "room": 7}, "needs": ["703", "704"], "clues": {"nl": [{"text": "Precies één gongslag nadat Max de Salon verliet, stapte Otto er binnen."}, {"text": "Om 23.00 was Frits niet in de Badkamer."}, {"text": "Toen Truus in de Eetzaal was, stond Frits in de Salon."}, {"text": "Om 00.00 stond de gast uit sleutel 704 in de Leeszaal.", "key": "704"}, {"text": "Toen Max in de Leeszaal was, stond Ida in de Badkamer."}, {"text": "Truus was vóór 00.00 al in de Salon geweest."}], "en": [{"text": "One gong after Miles left the Parlour, Oscar walked in."}, {"text": "At 11 pm, Felix was not in the Bathroom."}, {"text": "While Tessa was in the Dining Room, Felix was in the Parlour."}, {"text": "At midnight, the guest from key 704 was in the Library.", "key": "704"}, {"text": "While Miles was in the Library, Iris was in the Bathroom."}, {"text": "Tessa had already been in the Parlour before midnight."}]}}, "710": {"type": "liars", "puzzle": {"liars": [0, 3], "statements": [["lies", 1, 6], ["truth", 4, 7], ["lies", 3, 7], ["lies", 4, 2], ["truth", 1, 7]], "room": 7, "order": ["B", "G", "J", "K", "W"]}, "key": {"room": 7}, "needs": [], "shortcut": true}, "706": {"type": "evidence", "puzzle": {"W": 6, "H": 6, "evidence": [[0, 2], [0, 3], [0, 5], [1, 5], [4, 4], [5, 2], [5, 4]], "numbers": {"5,3": 3, "3,4": 1, "4,2": 1, "3,1": 0, "4,1": 1, "1,1": 1, "5,5": 2, "5,1": 1, "1,0": 0, "2,2": 0, "0,1": 1, "2,3": 0}, "keycell": [0, 4], "total": 7, "zones": {"0,5": 0, "0,0": 1, "2,0": 2, "4,1": 3, "4,2": 4, "5,2": 4, "0,4": 0, "0,1": 1, "4,0": 3, "1,0": 2, "0,2": 1, "1,5": 0, "3,0": 2, "4,3": 4, "3,1": 3, "1,1": 2, "3,3": 4, "0,3": 1, "1,4": 0, "5,1": 3, "1,2": 1, "3,2": 3, "4,4": 4, "2,1": 2, "1,3": 0, "5,3": 4, "2,4": 0, "2,2": 3, "2,3": 3, "3,4": 4, "2,5": 0, "5,4": 4, "5,5": 4, "3,5": 0, "5,0": 3, "4,5": 0}, "zone_counts": [2, 2, 0, 0, 3], "best_zone": 4, "zone_rooms": [13, 1, 3, 12, 2], "hatch_room": 7}, "key": {"room": 2, "count": 3}, "needs_any": ["705", "710"], "needs": ["705"]}, "707": {"type": "zebra", "puzzle": {"sol": {"0": [0, 2, 0], "1": [1, 0, 2], "2": [2, 3, 1], "3": [3, 1, 3]}, "clues": [["is", "p", 3, "r", 1], ["not", "h", 2, "p", 2], ["is", "h", 0, "p", 0], ["not", "h", 3, "r", 3], ["not", "p", 2, "r", 2]], "keyclue": ["is", "r", 0, "h", 2], "persons": ["O", "S", "M", "N"], "rooms": [2, 1, 3, 12]}, "key": {"letter": "N"}, "needs": ["706"]}, "708": {"type": "gongoku", "puzzle": {"level": 3, "seed": 7081, "N": 6, "W": 4, "H": 4, "owner": {"0,3": 0, "1,1": 1, "0,2": 2, "3,1": 3, "3,2": 4, "3,3": 5, "3,0": 3, "2,2": 4, "1,3": 0, "1,2": 2, "2,1": 1, "2,3": 5, "2,0": 3, "0,1": 2, "1,0": 1, "0,0": 1}, "adj": [[2, 5], [2, 3, 4], [0, 1, 4], [1, 4], [1, 2, 3, 5], [0, 4]], "doors": [[2, 4, [1, 2], [2, 2]], [1, 2, [0, 0], [0, 1]], [3, 4, [3, 1], [3, 2]], [1, 4, [2, 1], [2, 2]], [0, 2, [1, 2], [1, 3]], [4, 5, [3, 2], [3, 3]], [0, 5, [1, 3], [2, 3]], [1, 3, [1, 0], [2, 0]]], "sol": [[3, 1, 2, 0, 5, 4], [2, 0, 5, 4, 3, 1], [1, 3, 4, 5, 0, 2], [5, 4, 3, 1, 2, 0], [0, 2, 1, 3, 4, 5], [4, 5, 0, 2, 1, 3]], "killer": 0, "t_m": 4, "room_m": 5, "clues": [["same", 3, 3, 0, 2], ["not", 2, 3, 4], ["before", 5, 0, 5], ["same", 5, 1, 3, 2], ["not", 4, 3, 1], ["same", 0, 3, 5, 4], ["route", 4, 0, 2], ["at", 3, 3, 2]], "stats": {"basic": 3, "rel": 2, "path": 0, "rounds": 3}, "npaths": 22, "initials": ["T", "S", "N", "M", "E", "L"], "rooms": [7, 2, 0, 1, 13, 3], "param": {"key707": ["not", 2, 3, 4]}}, "key": {"letter": "T"}, "needs": ["707"], "clues": {"nl": [{"text": "Toen Max in de Keuken was, stond Truus in de Hal."}, {"text": "Om 01.00 was de gast uit sleutel 707 niet in de Keuken.", "key": "707"}, {"text": "Lotte was eerder in de Serre dan Truus."}, {"text": "Toen Lotte in de Salon was, stond Max in de Hal."}, {"text": "Om 22.00 was Elsa niet in de Keuken."}, {"text": "Toen Truus in de Keuken was, stond Lotte in de Badkamer."}, {"text": "Elsa liep ergens die avond rechtstreeks van de Leeszaal naar de Hal."}], "en": [{"text": "While Miles was in the Kitchen, Tessa was in the Hall."}, {"text": "At 1 am, the guest from key 707 was not in the Kitchen.", "key": "707"}, {"text": "Lydia was in the Orangery before Tessa was."}, {"text": "While Lydia was in the Parlour, Miles was in the Hall."}, {"text": "At 10 pm, Edith was not in the Kitchen."}, {"text": "While Tessa was in the Kitchen, Lydia was in the Bathroom."}, {"text": "At some point, Edith went straight from the Library into the Hall."}]}}, "709": {"type": "final", "key": {"code": "5638", "word": "LIFT"}, "needs": ["708", "702", "704", "706", "703"]}}, "hotel_rooms": [0, 2, 3, 6, 7, 12, 17, 10, 13, 1]};
+const TX = {"nl": {"title": "HOTEL WINTERLICHT", "sub": "Verdieping 7 · een puzzelcampagne", "series": "Een Enigma Mystery-prototype", "floor": "VERDIEPING 7", "room": "KAMER", "opens": "OPENT MET SLEUTEL", "opens_many": "OPENT MET SLEUTELS", "key": "SLEUTEL", "nokey": "GEEN SLEUTEL NODIG", "map_title": "PLATTEGROND VAN DE ZEVENDE VERDIEPING", "keys_title": "SLEUTELREGISTER", "how_title": "Hoe werkt het hotel?", "how": ["Elke kamer is een puzzel. Los je hem op, dan levert de kamer een sleutel op: een letter, een cijfer, een deur, een kamer. Noteer die in het sleutelregister.", "Sommige kamers zitten op slot. Bovenaan de pagina staat welke sleutel je nodig hebt. Die sleutel is geen wachtwoord: het is een ontbrekend stuk van de puzzel in die kamer. Zonder de sleutel heeft die puzzel meer dan één oplossing – met de sleutel precies één.", "Je kiest je eigen route. Vanuit de receptie kun je twee kanten op, en de bar is altijd open. Wie de bar oplost, hoeft de lift niet te nemen: er zijn twee wegen naar de keuken.", "Alle verklaringen in het hotel zijn waar, behalve waar de regels van een kamer anders zeggen. Elke puzzel is gecertificeerd: precies één oplossing, zonder gokken.", "Aan het eind van de gang is het trappenhuis. Daar wacht een cijferslot met vier cijfers, en een vraag die niemand in het hotel wil beantwoorden: waarom stopt de lift niet op dertien?", "Zit je vast? Achterin hangt de sleutelkast: alle sleutels, in spiegelschrift, zonder de oplossingen. Zo kun je één kamer overslaan zonder de rest te bederven. Werk met potlood, dan kun je een kamer altijd blanco opnieuw beginnen."], "intro_story": "Hotel Winterlicht, winter 1934. Twaalf verdiepingen, honderdtwintig kamers, één lift die op elke verdieping stopt behalve één. Commissaris Vermeer neemt zijn intrek op de zevende, omdat daar in één week meer doden zijn gevallen dan in de rest van de stad. De directrice zegt dat het toeval is. De nachtportier zegt niets. De gasten zeggen allemaal iets anders.", "rooms": {"700": {"name": "Receptie", "intro": "Het begint bij de balie. De receptionist ligt achter zijn eigen gastenboek, de pen nog in de hand. Vier gasten stonden die avond in de lobby en de aangrenzende zalen; bij elke gongslag verhuisden ze, zoals de huisregel wil.", "rules": "Gongoku: elk uur staat in elke kamer één gast; elke gast bezoekt elke kamer één keer; bij elke gongslag door één deur naar een aangrenzende kamer. Wie in het doodshoofdvakje stond, is de dader.", "keytext": "Sleutel 700 = de beginletter van de dader én het uur van de moord."}, "701": {"name": "Kamer 701", "intro": "De gast van 701 is dood, en acht mensen zeggen waar ze om negen, tien en elf uur waren. Zeven van hen spreken de waarheid. De dader liegt precies één keer.", "rules": "Alibi-net: een alibi telt alleen als beide gasten het bevestigen. Wie 'alleen' zegt, kan door niemand geclaimd worden. Zoek de ene verklaring die niet klopt – maar let op: één tegenspraak wijst twee mensen aan. De sleutel van de receptie beslist: wie daar al is gearresteerd, kan hier niet de dader zijn.", "keytext": "Sleutel 701 = de beginletter van de dader."}, "702": {"name": "De tuin", "intro": "Sneeuw in de hoteltuin, en één spoor: van een van de zeven poorten in de tuinmuur naar een van de drie deuren van het hotel. De tuinman heeft per rij en kolom geteld hoeveel afdrukken er stonden voordat het ging waaien.", "rules": "Voetsporen: één ononderbroken pad, stap voor stap, alleen horizontaal en verticaal, nooit twee keer door hetzelfde vak, niet door de bomen. De cijfers naast het rooster tellen de vakken met sporen per rij en kolom. Drie afdrukken zijn nog zichtbaar. De poort: sleutel 700 (het uur van de moord) min twintig.", "keytext": "Sleutel 702 = de deur waar het spoor eindigt (A, B of C) en het nummer op die deur."}, "703": {"name": "Nachtwacht", "intro": "De nachtportier hield een logboek bij, maar de bladzijde van die nacht is uit het boek gescheurd. Acht dingen gebeurden; hij weet nog hoe ze zich tot elkaar verhielden, niet in welke volgorde. Deur A heeft een bel, deur B piept, deur C rammelt met een ketting.", "rules": "Nachtwacht: zet de acht gebeurtenissen in de juiste volgorde. 'Direct na' betekent zonder iets ertussen. 'Precies één ertussen' betekent één gebeurtenis ertussen. Sleutel 702 zegt welke deur openging: het geluid van díe deur klonk direct na de gong van elf uur.", "keytext": "Sleutel 703 = de positie van de gil (1 t/m 8)."}, "704": {"name": "Eetzaal", "intro": "Het diner van dinsdag. Acht gasten aan de ronde tafel, de directrice als gastvrouw op stoel 1. Het vergiftigde glas stond op stoel 6. Wie zat daar? Het personeel herinnert zich flarden.", "rules": "Gastenboek: stoelen 1 tot 8 met de klok mee. 'Links van' betekent direct naast, met de klok mee. 'Tegenover' is vier stoelen verder. De sleutel van 701 vertelt wie er tegenover de gastvrouw zat.", "keytext": "Sleutel 704 = de beginletter van de gast op stoel 6, en het stoelnummer 6."}, "705": {"name": "De lift", "intro": "De liftjongen is gevonden in de schacht. Vijf gasten gebruikten de lift die nacht, en de liftboeken van elke verdieping noteren wie waar was. Wie de bar heeft opgelost, weet al waar hij lag en kan de lift laten voor wat hij is – maar de lift weet meer dan de bar.", "rules": "Gongoku, 5 × 5. Zelfde regels als in de receptie.", "keytext": "Sleutel 705 = de beginletter van de dader en de kamer waar het lichaam lag. (Dezelfde kamer als sleutel 710.)"}, "706": {"name": "De keuken", "intro": "De keuken is verdeeld in vijf werkplekken, elk met een luik naar een zaal. Ergens liggen zeven bewijsstukken. Het personeel zegt per plek hoeveel bewijs er in de aangrenzende vakken ligt, ook schuin. Bij het luik naar de zaal waar het lichaam lag, is alles al opgeruimd.", "rules": "Kruisverhoor: een cijfer telt de bewijsstukken in de acht omliggende vakken; genummerde vakken bevatten zelf niets. Precies zeven stuks. Het vak met het luik naar de zaal uit sleutel 705 (of 710) is leeg. Tel daarna per werkplek hoeveel bewijs er ligt.", "keytext": "Sleutel 706 = de werkplek (zaal) met het meeste bewijs, en hoeveel stuks daar liggen."}, "707": {"name": "Donkere kamer", "intro": "Vier foto's hangen te drogen. Op elke foto staat één persoon, in één zaal, op één uur. Drie van hen ken je. De vierde is een vrouw die niemand in het hotel heeft opgemerkt: een verpleegster, zegt de fotograaf. Ze staat op de foto die als laatste is genomen.", "rules": "Logicarooster: vier personen, vier zalen, vier uren – elk precies één keer. Sleutel 706 vertelt om hoe laat de foto in de drukste werkplek-zaal is genomen. Wie staat op de foto van middernacht?", "keytext": "Sleutel 707 = de beginletter van de persoon op de foto van 00.00."}, "708": {"name": "De suite", "intro": "De suite op de hoek, waar de weduwe woont. Zes gasten waren die nacht op de verdieping. Sleutel 707 wijst een zevende aan: de verpleegster van de foto. Niemand had haar gezien, maar het liftboek noteert haar.", "rules": "Gongoku, 6 × 6. Zelfde regels.", "keytext": "Sleutel 708 = de beginletter van de dader."}, "709": {"name": "Trappenhuis", "intro": "Aan het eind van de gang: een stalen deur met een cijferslot van vier cijfers. Op de muur ernaast, in krijt, de vier vragen. En onder de vragen staat, in een ander handschrift: LEES DE DADERS.", "rules": "Cijfer 1: het nummer op de deur uit sleutel 702. Cijfer 2: het stoelnummer uit sleutel 704. Cijfer 3: het aantal bewijsstukken op de drukste werkplek (706). Cijfer 4: de positie van de gil (703). Schrijf daarna de beginletters van de daders van 700, 701, 704 en 708 achter elkaar.", "keytext": "De code opent de bladzijde die niet in de inhoudsopgave staat."}, "710": {"name": "De bar", "intro": "De bar is altijd open, ook voor rechercheurs. Vijf personeelsleden hebben hun verhaal; twee van hen liegen, in álles wat ze zeggen. De anderen spreken in álles de waarheid. Het gaat om één vraag: waar lag de liftjongen?", "rules": "Wie liegt: precies twee leugenaars. Een leugenaar liegt in beide zinnen, een eerlijk personeelslid spreekt in beide de waarheid. Vind de leugenaars; de eerlijke antwoorden wijzen de kamer aan. Deze kamer is een kortere weg: hij vervangt de lift als toegang tot de keuken.", "keytext": "Sleutel 710 = de kamer waar het lichaam lag."}}, "secret_title": "Verdieping 13", "secret_lock": "DEZE BLADZIJDE OPENT MET DE CODE UIT HET TRAPPENHUIS", "secret": "De lift stopt niet op dertien. Dat wist iedereen in het hotel, en niemand vroeg waarom. De daders van de zevende verdieping spelden het antwoord: L-I-F-T. Vier moordenaars die elkaar niet kenden, allemaal met een sleutel van dezelfde liftschacht.\n\nAchter de stalen deur van het trappenhuis loopt de trap door. Eén verdieping hoger dan het hotel toegeeft, ligt een gang met kamers zonder nummers. In de eerste staat een gong.\n\nVermeer noteerde het in zijn dossier: 'Verdieping 13 bestaat. De vraag is niet wie er woont. De vraag is wie de sleutels uitdeelt.'\n\nWordt vervolgd op de achtste verdieping – in het boek.", "solutions": "OPLOSSINGEN", "register_hint": "Noteer hier elke sleutel zodra je hem hebt.", "alibi_hours": ["21.00", "22.00", "23.00"], "alibi_with": "met", "alibi_alone": "alleen", "alibi_hdr": "Gast", "statements": "VERKLARINGEN", "fp_gates": "POORTEN", "fp_doors": "DEUREN", "lock_tries": "POGINGEN VAN DE NACHTPORTIER", "seat_glass": "gif", "cipher_note": "BRIEFJE", "cipher_alpha": "ALFABET", "final_boxes": ["deur (702)", "stoel (704)", "bewijs (706)", "laatste cijfer (703)"], "final_word": "DE DADERS VAN 700 · 701 · 704 · 708", "suspects": "GASTEN", "clues": "VERKLARINGEN", "plan": "PLATTEGROND", "hostess": "gastvrouw", "keybox_title": "De sleutelkast", "keybox_sub": "Alle sleutels van verdieping 7 – in spiegelschrift. Houd de pagina voor een spiegel, of lees van rechts naar links. Alleen kijken bij de kamer waar je vastzit.", "keybox_of": "sleutel van kamer", "notes_title": "Het dossier van Vermeer", "note_label": "NOTITIE VAN VERMEER", "shortcut": "kortere weg", "or_": "of", "events": "DE GEBEURTENISSEN VAN DIE NACHT", "order_hint": "Zet ze in volgorde: 1 = eerst, 8 = laatst.", "photos": "DE VIER FOTO'S", "photo": "Foto", "person": "persoon", "room_": "kamer", "hour_": "uur", "staff": "HET PERSONEEL ACHTER DE BAR"}, "en": {"title": "HOTEL WINTERLIGHT", "sub": "Floor 7 · a puzzle campaign", "series": "A Enigma Mystery prototype", "floor": "FLOOR 7", "room": "ROOM", "opens": "OPENS WITH KEY", "opens_many": "OPENS WITH KEYS", "key": "KEY", "nokey": "NO KEY NEEDED", "map_title": "PLAN OF THE SEVENTH FLOOR", "keys_title": "KEY REGISTER", "how_title": "How the hotel works", "how": ["Every room is a puzzle. Solve it and the room yields a key: a letter, a digit, a door, a room. Write it in the key register.", "Some rooms are locked. The top of the page says which key you need. That key is not a password: it is a missing piece of that room's puzzle. Without the key that puzzle has more than one solution – with it, exactly one.", "You choose your own route. From reception you can go two ways, and the bar is always open. Whoever solves the bar need not take the lift: there are two ways into the kitchen.", "Every statement in the hotel is true, except where a room's rules say otherwise. Every puzzle is certified: exactly one solution, no guessing.", "At the end of the corridor is the stairwell. A four-digit lock waits there, and a question nobody in the hotel wants to answer: why does the lift not stop at thirteen?", "Stuck? The key cabinet hangs at the back: every key, in mirror writing, without the solutions. That way you can skip one room without spoiling the rest. Work in pencil, so you can always start a room again from blank."], "intro_story": "Hotel Winterlight, winter 1934. Twelve floors, a hundred and twenty rooms, one lift that stops at every floor but one. Superintendent Vane takes a room on the seventh, because more people have died there in a week than in the rest of the city. The manageress says it is coincidence. The night porter says nothing. The guests all say something different.", "rooms": {"700": {"name": "Reception", "intro": "It begins at the desk. The receptionist lies behind his own guest book, pen still in hand. Four guests were in the lobby and the adjoining rooms that evening; at every gong they moved, as the house rule demands.", "rules": "Gongoku: every hour, one guest per room; every guest visits every room once; at each gong, through one door into a neighbouring room. Whoever stood in the skull square is the killer.", "keytext": "Key 700 = the killer's initial and the hour of the murder."}, "701": {"name": "Room 701", "intro": "The guest in 701 is dead, and eight people say where they were at nine, ten and eleven. Seven of them tell the truth. The killer lies exactly once.", "rules": "Alibi web: an alibi only counts if both guests confirm it. Whoever says 'alone' can be claimed by nobody. Find the one statement that does not fit – but beware: one contradiction points at two people. The key from reception decides: whoever is already under arrest there cannot be the killer here.", "keytext": "Key 701 = the killer's initial."}, "702": {"name": "The garden", "intro": "Snow in the hotel garden, and one trail: from one of the seven gates in the garden wall to one of the three doors of the hotel. The gardener counted the prints in every row and column before the wind came.", "rules": "Footprints: one unbroken path, step by step, only horizontal and vertical, never through the same square twice, never through the trees. The numbers beside the grid count the squares with prints per row and column. Three prints are still visible. The gate: key 700 (the hour of the murder) minus twenty.", "keytext": "Key 702 = the door where the trail ends (A, B or C) and the number on that door."}, "703": {"name": "Night watch", "intro": "The night porter kept a log, but the page for that night has been torn out. Eight things happened; he remembers how they related to each other, not the order. Door A has a bell, door B creaks, door C rattles a chain.", "rules": "Night watch: put the eight events in the right order. 'Right after' means nothing in between. 'Exactly one between' means one event in between. Key 702 says which door was opened: the sound of that door came right after the eleven o'clock gong.", "keytext": "Key 703 = the position of the scream (1 to 8)."}, "704": {"name": "Dining room", "intro": "Tuesday's dinner. Eight guests at the round table, the manageress as hostess in chair 1. The poisoned glass stood at chair 6. Who sat there? The staff remember fragments.", "rules": "Guest book: chairs 1 to 8 clockwise. 'Left of' means directly beside, clockwise. 'Opposite' is four chairs on. The key from 701 tells you who sat opposite the hostess.", "keytext": "Key 704 = the initial of the guest in chair 6, and the chair number 6."}, "705": {"name": "The lift", "intro": "The lift boy was found in the shaft. Five guests used the lift that night, and the lift books on every floor record who was where. Whoever has solved the bar already knows where he lay and may skip the lift – but the lift knows more than the bar.", "rules": "Gongoku, 5 × 5. Same rules as in reception.", "keytext": "Key 705 = the killer's initial and the room where the body lay. (The same room as key 710.)"}, "706": {"name": "The kitchen", "intro": "The kitchen is divided into five stations, each with a hatch to a room. Seven pieces of evidence lie somewhere. For each spot the staff say how much evidence lies in the neighbouring squares, diagonals included. At the hatch to the room where the body lay, everything has already been cleared away.", "rules": "Cross-examination: a number counts the evidence in the eight surrounding squares; numbered squares hold nothing themselves. Exactly seven pieces. The square with the hatch to the room from key 705 (or 710) is empty. Then count the evidence per station.", "keytext": "Key 706 = the station (room) with the most evidence, and how many pieces lie there."}, "707": {"name": "Darkroom", "intro": "Four photographs hang drying. Each shows one person, in one room, at one hour. Three of them you know. The fourth is a woman nobody in the hotel noticed: a nurse, says the photographer. She is on the photograph taken last.", "rules": "Logic grid: four people, four rooms, four hours – each exactly once. Key 706 tells you at what hour the photograph in the busiest station's room was taken. Who is on the midnight photograph?", "keytext": "Key 707 = the initial of the person on the midnight photograph."}, "708": {"name": "The suite", "intro": "The corner suite, where the widow lives. Six guests were on the floor that night. Key 707 points to a seventh: the nurse from the photograph. Nobody had seen her, but the lift book records her.", "rules": "Gongoku, 6 × 6. Same rules.", "keytext": "Key 708 = the killer's initial."}, "709": {"name": "Stairwell", "intro": "At the end of the corridor: a steel door with a four-digit lock. On the wall beside it, in chalk, the four questions. And under the questions, in a different hand: READ THE KILLERS.", "rules": "Digit 1: the number on the door from key 702. Digit 2: the chair number from key 704. Digit 3: the number of pieces at the busiest station (706). Digit 4: the position of the scream (703). Then write the initials of the killers of 700, 701, 704 and 708 in a row.", "keytext": "The code opens the page that is not in the table of contents."}, "710": {"name": "The bar", "intro": "The bar is always open, even to detectives. Five members of staff have their story; two of them lie in everything they say. The others tell the truth in everything. One question matters: where did the lift boy lie?", "rules": "Who lies: exactly two liars. A liar lies in both sentences; an honest member of staff tells the truth in both. Find the liars; the honest answers name the room. This room is a short cut: it replaces the lift as the way into the kitchen.", "keytext": "Key 710 = the room where the body lay."}}, "secret_title": "Floor 13", "secret_lock": "THIS PAGE OPENS WITH THE CODE FROM THE STAIRWELL", "secret": "The lift does not stop at thirteen. Everyone in the hotel knew that, and nobody asked why. The killers of the seventh floor spell the answer: L-I-F-T. Four murderers who did not know each other, all holding a key to the same lift shaft.\n\nBehind the steel door of the stairwell, the stairs go on. One floor higher than the hotel admits to, there is a corridor of rooms without numbers. In the first one stands a gong.\n\nVane wrote it in his file: 'Floor 13 exists. The question is not who lives there. The question is who hands out the keys.'\n\nTo be continued on the eighth floor – in the book.", "solutions": "SOLUTIONS", "register_hint": "Write down every key as soon as you have it.", "alibi_hours": ["9 pm", "10 pm", "11 pm"], "alibi_with": "with", "alibi_alone": "alone", "alibi_hdr": "Guest", "statements": "STATEMENTS", "fp_gates": "GATES", "fp_doors": "DOORS", "lock_tries": "THE NIGHT PORTER'S ATTEMPTS", "seat_glass": "poison", "cipher_note": "NOTE", "cipher_alpha": "ALPHABET", "final_boxes": ["door (702)", "chair (704)", "evidence (706)", "last digit (703)"], "final_word": "THE KILLERS OF 700 · 701 · 704 · 708", "suspects": "GUESTS", "clues": "STATEMENTS", "plan": "FLOOR PLAN", "hostess": "hostess", "keybox_title": "The key cabinet", "keybox_sub": "Every key on floor 7 – in mirror writing. Hold the page to a mirror, or read right to left. Look only at the room you are stuck in.", "keybox_of": "key of room", "notes_title": "Vane's case file", "note_label": "VANE'S NOTE", "shortcut": "short cut", "or_": "or", "events": "THE EVENTS OF THAT NIGHT", "order_hint": "Put them in order: 1 = first, 8 = last.", "photos": "THE FOUR PHOTOGRAPHS", "photo": "Photo", "person": "person", "room_": "room", "hour_": "hour", "staff": "THE STAFF BEHIND THE BAR"}};
+const NOTES = {"nl": {"700": "Lotte Zwart, de zangeres. Ze zingt elke avond om elf uur – behalve die avond. De receptionist had haar contract in de la. Getekend door iemand die niet in het hotel woont.", "701": "Ida Klaassen zei dat ze alleen was. Lotte zei dat ze bij Ida was. Eén van beiden loog, en Lotte zat al vast. Ida is gouvernante van kamer 712. Kamer 712 bestaat niet: de zevende verdieping eindigt bij 711.", "702": "Deur B piept. Dat weet iedereen op de verdieping, en toch koos de dader die deur. Alsof hij wílde dat het gehoord werd.", "703": "De gil kwam na de gong. Iedereen zegt dat ze de gil hoorden. Niemand zegt dat ze de gong hoorden. In een hotel dat elk uur op de gong slaat, is dat vreemd.", "704": "Frits Beukema, drie weken te gast, betaalt contant. Het vergiftigde glas stond op zijn stoel, maar hij dronk niet. Hij wist het. Of iemand had het hem verteld.", "705": "Otto Veenstra taxeerde de klokken. Alle klokken in het hotel lopen een kwartier achter. Hij heeft er geen één gelijkgezet.", "710": "Twee leugenaars achter de bar, en beiden logen over dezelfde zaal. Ze hebben het niet afgesproken. Iemand heeft ze hetzelfde verteld.", "706": "Het meeste bewijs lag bij het luik naar {best}. Het luik naar de zaal waar de jongen lag, was schoon. Schoon is verdachter dan vuil.", "707": "De verpleegster. Op de foto van middernacht, in een zaal die om die tijd op slot zit. Ze heet Nel Dijkhuis, zegt het liftboek. Het liftboek noteert ook waar ze uitstapte: dertien.", "708": "Truus Wiegman, de weduwe op de bel-etage. Ze wist dat er een verpleegster was. Ze had haar zelf laten komen. 'Voor mijn man,' zei ze. Haar man is in 1929 begraven.", "709": "Vier daders. Ze kenden elkaar niet. Ze hadden alle vier een sleutel van de liftschacht, en geen van hen wist waarvoor. Ik denk dat ik het weet."}, "en": {"700": "Lotte Zwart, the singer. She sings every night at eleven – except that night. The receptionist had her contract in his drawer. Signed by someone who does not live in the hotel.", "701": "Ida Klaassen said she was alone. Lotte said she was with Ida. One of them lied, and Lotte was already under arrest. Ida is governess to room 712. Room 712 does not exist: the seventh floor ends at 711.", "702": "Door B creaks. Everyone on the floor knows it, and still the killer chose that door. As if he wanted to be heard.", "703": "The scream came after the gong. Everyone says they heard the scream. Nobody says they heard the gong. In a hotel that strikes the gong every hour, that is strange.", "704": "Felix Grange, three weeks a guest, pays cash. The poisoned glass stood at his chair, but he did not drink. He knew. Or someone had told him.", "705": "Oscar Lindell valued the clocks. Every clock in the hotel runs a quarter of an hour slow. He did not set a single one right.", "710": "Two liars behind the bar, and both lied about the same room. They had not agreed on it. Someone told them the same thing.", "706": "Most of the evidence lay by the hatch to {best}. The hatch to the room where the boy lay was clean. Clean is more suspicious than dirty.", "707": "The nurse. On the midnight photograph, in a room that is locked at that hour. Her name is Nora Quill, says the lift book. The lift book also records where she got out: thirteen.", "708": "Tessa Greaves, the widow on the first floor. She knew there was a nurse. She had sent for her herself. 'For my husband,' she said. Her husband was buried in 1929.", "709": "Four killers. They did not know each other. All four had a key to the lift shaft, and none of them knew what for. I think I do."}};
+const NAMES = {"A": ["Agaath Verloop", "Agatha Pell"], "B": ["Bram Oudeman", "Basil Crane"], "C": ["Cornelia Stam", "Cora Blackwood"], "D": ["Dirk Wolters", "Dexter Hale"], "E": ["Elsa van Rijn", "Edith Marlowe"], "F": ["Frits Beukema", "Felix Grange"], "G": ["Greet Hofstede", "Grace Ashby"], "H": ["Hendrik Maas", "Hugo Pryce"], "I": ["Ida Klaassen", "Iris Vane"], "J": ["Jozef Brink", "Jasper Holt"], "K": ["Kees Roodhuis", "Kit Harrow"], "L": ["Lotte Zwart", "Lydia Moss"], "M": ["Max de Bruin", "Miles Carver"], "N": ["Nel Dijkhuis", "Nora Quill"], "O": ["Otto Veenstra", "Oscar Lindell"], "P": ["Pim Achterberg", "Percy Dunmore"], "R": ["Rosa Mulder", "Ruby Sterling"], "S": ["Sjaak Terpstra", "Silas Thorne"], "T": ["Truus Wiegman", "Tessa Greaves"], "V": ["Victor Lanting", "Victor Lomax"], "W": ["Wim Ketelaar", "Walter Brisk"], "Y": ["Yvonne Sluis", "Yvette Rook"]};
+const ROOMS = [["Hal", "de Hal", "Hall", "the Hall"], ["Keuken", "de Keuken", "Kitchen", "the Kitchen"], ["Salon", "de Salon", "Parlour", "the Parlour"], ["Serre", "de Serre", "Orangery", "the Orangery"], ["Kelder", "de Kelder", "Cellar", "the Cellar"], ["Zolder", "de Zolder", "Attic", "the Attic", "op de Zolder"], ["Eetzaal", "de Eetzaal", "Dining", "the Dining Room"], ["Leeszaal", "de Leeszaal", "Library", "the Library"], ["Werkkamer", "de Werkkamer", "Study", "the Study"], ["Kapel", "de Kapel", "Chapel", "the Chapel"], ["Balzaal", "de Balzaal", "Ballroom", "the Ballroom"], ["Toren", "de Toren", "Tower", "the Tower"], ["Biljart", "de Biljartkamer", "Billiards", "the Billiard Room"], ["Badkamer", "de Badkamer", "Bathroom", "the Bathroom"], ["Atelier", "het Atelier", "Studio", "the Studio"], ["Wapenzaal", "de Wapenzaal", "Armoury", "the Armoury"], ["Bijkeuken", "de Bijkeuken", "Scullery", "the Scullery"], ["Galerij", "de Galerij", "Gallery", "the Gallery"]];
+const BOOK_URL = {nl: 'https://www.enigmamystery.com/nl/puzzels/#hotel-winterlicht', en: 'https://www.enigmamystery.com/en/puzzles/#hotel-winterlight'};   // vervang door de Amazon-links
+const BOOK_TXT = {
+  nl: {foot: 'Enigma Mystery · Enigma Mystery · Gratis proefverdieping – het hele hotel (verdieping 7 t/m 13, 69 kamers) is een boek: ', link: 'Hotel Winterlicht, het boek',
+       box_t: 'Dit was de proefverdieping.', box: 'In het boek gaat de trap door: zes verdiepingen, 69 kamers, tien soorten moordpuzzels en de dertiende verdieping – met andere puzzels dan hier, ook op zeven. Zwart-wit, groot formaat, gemaakt voor potlood.', btn: 'Bekijk het boek'},
+  en: {foot: 'Enigma Mystery · Free sample floor – the whole hotel (floors 7 to 13, 69 rooms) is a book: ', link: 'Hotel Winterlight, the book',
+       box_t: 'This was the sample floor.', box: 'In the book the stairs go on: six floors, 69 rooms, ten kinds of murder puzzle and the thirteenth floor – with different puzzles from these, floor seven included. Black and white, large format, made for pencil.', btn: 'See the book'},
+};
+const ORDER = ['700','701','702','703','704','705','710','706','707','708','709'];
+const ACCENT = {gongoku:'#171717',alibi:'#2c4a7a',footprints:'#4c78b5',timeline:'#b07a1e',seating:'#7a2c3a',liars:'#5a3a22',evidence:'#3d6b3a',zebra:'#8a1c1c',final:'#444b55'};
+let lang = location.hash === '#nl' ? 'nl' : location.hash === '#en' ? 'en' : (localStorage.getItem('hm_lang') || localStorage.getItem('mm_lang') || 'en'); if (lang !== 'nl') lang = 'en';
+let state = JSON.parse(localStorage.getItem('hm2_state') || '{"solved":{},"keys":{},"secret":false,"scratch":{},"sound":false}');
+function save(){ localStorage.setItem('hm2_state', JSON.stringify(state)); localStorage.setItem('hm_lang', lang); }
+const t = () => TX[lang];
+const L = () => lang==='nl'?0:1;
+const nm = (l, first) => { const n = NAMES[l][L()]; return first ? n.split(' ')[0] : n; };
+const hour = (i) => { const h=(21+i)%24; if(lang==='nl') return String(h).padStart(2,'0')+'.00'; return h===0?'midnight':(h>12?(h-12)+' pm':h+' am'); };
+const roomName = (i) => ROOMS[i][lang==='nl'?0:2];
+const roomIn = (i) => { const r=ROOMS[i]; if(lang==='nl') return r.length>4?r[4]:'in '+r[1]; return 'in '+r[3]; };
+const F = DATA.rooms;
+function keyString(rid){ const k=F[rid].key; if(!k) return ''; const parts=[]; if(k.letter) parts.push(k.letter); if(k.hour!==undefined) parts.push(String(k.hour%24).padStart(2,'0')+'.00'); if(k.door) parts.push(k.door+' · '+k.number); if(k.position!==undefined) parts.push(String(k.position)); if(k.chair!==undefined) parts.push((lang==='nl'?'stoel ':'chair ')+k.chair); if(k.room!==undefined) parts.push(roomName(k.room)); if(k.count!==undefined) parts.push(String(k.count)); if(k.code) parts.push(k.code+' · '+k.word); return parts.join(' · '); }
+function roomChips(){ const el=document.getElementById('chips'); if(!el) return; el.innerHTML=Object.keys(F).map(rid=>{ const st=state.solved[rid]?'done':(unlocked(rid)?'avail':'locked'); return `<button class="chip ${st}" data-rid="${rid}">${rid} <small>${t().rooms[rid].name}</small></button>`; }).join(''); el.querySelectorAll('.chip').forEach(b=>{ b.onclick=()=>{ if(!unlocked(b.dataset.rid)){ toast(lockLabel(b.dataset.rid)); return; } click(); openRoom(b.dataset.rid); }; }); }
+function unlocked(rid){ if(state.free) return true; const r=F[rid]; if(r.needs_any) return r.needs_any.some(n=>state.solved[n]); return (r.needs||[]).every(n => state.solved[n]); }
+function lockLabel(rid){ const r=F[rid]; const na=r.needs_any, ne=r.needs||[]; if(!ne.length&&!na) return t().nokey; const list=na?na.join(' '+t().or_+' '):ne.join(' + '); return (ne.length===1&&!na?t().opens:t().opens_many)+' '+list; }
+// ---------- geluid (WebAudio gong)
+let actx=null;
+function gong(){ if(!state.sound) return; try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); const now=actx.currentTime; [196,294.5,392,587].forEach((f,i)=>{ const o=actx.createOscillator(), g=actx.createGain(); o.type='sine'; o.frequency.value=f*(1+i*0.002); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.18/(i+1),now+0.02); g.gain.exponentialRampToValueAtTime(0.0001,now+2.4-i*0.3); o.connect(g).connect(actx.destination); o.start(now); o.stop(now+2.6); }); }catch(e){} }
+function click(){ if(!state.sound) return; try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); const now=actx.currentTime; const o=actx.createOscillator(), g=actx.createGain(); o.type='square'; o.frequency.value=880; g.gain.setValueAtTime(0.03,now); g.gain.exponentialRampToValueAtTime(0.0001,now+0.06); o.connect(g).connect(actx.destination); o.start(now); o.stop(now+0.07);}catch(e){} }
+// ---------- sneeuw
+(function snow(){ const sky=document.getElementById('sky'); for(let i=0;i<60;i++){ const f=document.createElement('span'); f.className='flake'; f.textContent='•'; f.style.left=Math.random()*100+'vw'; f.style.animationDuration=(8+Math.random()*14)+'s'; f.style.animationDelay=(-Math.random()*20)+'s'; f.style.fontSize=(6+Math.random()*8)+'px'; f.style.opacity=.2+Math.random()*.5; sky.appendChild(f);} })();
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2600); }
+
+
+// ---------- taferelen per kamer (inline SVG, 1000x170)
+const PROPS = {
+ '700': ()=>`<svg viewBox="0 0 1000 170"><defs><linearGradient id="wd" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#6b4a2a"/><stop offset="1" stop-color="#3a2614"/></linearGradient></defs>
+  <rect x="120" y="95" width="760" height="75" fill="url(#wd)"/><rect x="120" y="90" width="760" height="8" fill="#8a6a3d"/>
+  <g transform="translate(300,60)"><ellipse cx="0" cy="30" rx="26" ry="6" fill="#0006"/><path d="M-22 28 Q0 -14 22 28 Z" fill="#d9ad4f"/><rect x="-26" y="26" width="52" height="5" fill="#b8892e"/><circle cx="0" cy="-12" r="4" fill="#f6d88a"/></g>
+  <g transform="translate(560,20)"><rect x="0" y="0" width="200" height="66" fill="#1c1410" stroke="#8a6a3d"/>${[0,1,2,3,4,5,6,7].map(i=>`<g transform="translate(${14+i*24},14)"><circle r="4" fill="#d9ad4f"/><rect x="-2" y="4" width="4" height="${14+((i*7)%9)}" fill="#c9a24a"/></g>`).join('')}<text x="100" y="60" text-anchor="middle" font-family="Courier New" font-size="9" fill="#d9ad4f">SLEUTELS</text></g>
+  <g transform="translate(720,45)"><rect x="0" y="0" width="70" height="46" fill="#f1e6c8" transform="rotate(-6)"/><line x1="8" y1="14" x2="60" y2="10" stroke="#999" transform="rotate(-6)"/><line x1="8" y1="24" x2="60" y2="20" stroke="#999" transform="rotate(-6)"/><line x1="8" y1="34" x2="40" y2="31" stroke="#999" transform="rotate(-6)"/></g></svg>`,
+ '701': ()=>`<svg viewBox="0 0 1000 170"><rect x="380" y="0" width="240" height="170" fill="#2a1b12" stroke="#6b4a2a" stroke-width="4"/><rect x="400" y="14" width="200" height="60" fill="#1f140d" stroke="#5a3d22"/><rect x="400" y="90" width="200" height="80" fill="#1f140d" stroke="#5a3d22"/>
+  <rect x="460" y="30" width="80" height="26" fill="#d9ad4f" rx="2"/><text x="500" y="49" text-anchor="middle" font-family="Courier New" font-size="18" font-weight="bold" fill="#2a1d07">701</text>
+  <circle cx="590" cy="120" r="6" fill="#d9ad4f"/><rect x="583" y="126" width="14" height="10" fill="#0a0a0a"/>
+  <g opacity=".5"><rect x="0" y="0" width="330" height="170" fill="#151a2c"/><rect x="670" y="0" width="330" height="170" fill="#151a2c"/></g>
+  <path d="M0 150 L1000 150" stroke="#5a3d22" stroke-width="3"/></svg>`,
+ '702': ()=>`<svg viewBox="0 0 1000 170"><circle cx="820" cy="40" r="26" fill="#f4ecd2"/><circle cx="832" cy="34" r="22" fill="#152238"/>
+  ${[0,1,2,3,4,5,6,7,8,9].map(i=>`<circle cx="${(i*97)%1000}" cy="${(i*37)%120}" r="1.5" fill="#fff" opacity=".7"/>`).join('')}
+  <rect x="0" y="120" width="1000" height="50" fill="#e9eef5"/><rect x="0" y="100" width="1000" height="22" fill="#4a3b2a"/>
+  ${[1,2,3,4,5,6,7].map(i=>`<rect x="${90+i*110}" y="92" width="14" height="36" fill="#2b2118"/><rect x="${104+i*110}" y="96" width="60" height="28" fill="#1a1512"/><text x="${134+i*110}" y="115" text-anchor="middle" font-family="Courier New" font-size="11" fill="#d9ad4f">${i}</text>`).join('')}
+  ${[60,300,700,940].map((x,i)=>`<g transform="translate(${x},${70+i%2*10})"><path d="M0 0 L-28 50 L28 50 Z" fill="#33502e"/><path d="M0 -20 L-22 20 L22 20 Z" fill="#3f6338"/><rect x="-4" y="50" width="8" height="12" fill="#2b2118"/></g>`).join('')}</svg>`,
+ '703': ()=>`<svg viewBox="0 0 1000 170"><g transform="translate(500,85)"><circle r="70" fill="#f4ecd2" stroke="#8a6a3d" stroke-width="6"/>${[...Array(12).keys()].map(i=>`<line x1="0" y1="-62" x2="0" y2="-54" stroke="#333" stroke-width="3" transform="rotate(${i*30})"/>`).join('')}<line x1="0" y1="0" x2="0" y2="-42" stroke="#222" stroke-width="5" transform="rotate(330)"/><line x1="0" y1="0" x2="0" y2="-56" stroke="#222" stroke-width="3"/><circle r="4" fill="#222"/></g>
+  <g transform="translate(150,60)"><rect x="0" y="0" width="150" height="90" fill="#1f140d" stroke="#8a6a3d"/><rect x="10" y="10" width="130" height="70" fill="#f1e6c8"/>${[0,1,2,3].map(i=>`<line x1="20" y1="${28+i*14}" x2="${120-i*12}" y2="${28+i*14}" stroke="#999"/>`).join('')}<path d="M75 10 L110 10 L100 80 L75 80 Z" fill="#1f140d" opacity=".35"/></g>
+  <g transform="translate(760,40)"><rect x="0" y="0" width="90" height="110" fill="#2b2118"/><rect x="8" y="8" width="74" height="94" fill="#0b1020"/><circle cx="45" cy="55" r="18" fill="#f6d88a" opacity=".8"/></g></svg>`,
+ '704': ()=>`<svg viewBox="0 0 1000 170"><g transform="translate(500,0)"><line x1="0" y1="0" x2="0" y2="30" stroke="#d9ad4f" stroke-width="2"/>${[-60,-30,0,30,60].map(x=>`<line x1="0" y1="30" x2="${x}" y2="58" stroke="#d9ad4f"/><g transform="translate(${x},58)"><path d="M-8 0 L8 0 L4 -14 L-4 -14 Z" fill="#f6d88a" opacity=".9"/><circle cy="-16" r="3" fill="#fff"/></g>`).join('')}</g>
+  <ellipse cx="500" cy="150" rx="330" ry="34" fill="#f4ecd2"/><ellipse cx="500" cy="146" rx="330" ry="34" fill="#fff8e6"/>
+  ${[-260,-180,-100,-20,60,140,220].map(x=>`<g transform="translate(${500+x},132)"><path d="M-5 0 L5 0 L3 -14 L-3 -14 Z" fill="#cfe3ff" opacity=".9"/><rect x="-7" y="-2" width="14" height="3" fill="#bbb"/><ellipse cx="0" cy="8" rx="16" ry="4" fill="#e6dcc2"/></g>`).join('')}
+  <g transform="translate(100,60)"><rect width="60" height="90" fill="#3a1420" stroke="#7a2c3a"/></g><g transform="translate(840,60)"><rect width="60" height="90" fill="#3a1420" stroke="#7a2c3a"/></g></svg>`,
+ '705': ()=>`<svg viewBox="0 0 1000 170"><rect x="300" y="0" width="400" height="170" fill="#0f1220" stroke="#4a5270" stroke-width="3"/><rect x="330" y="20" width="340" height="150" fill="#5a4a2e" stroke="#d9ad4f"/><rect x="345" y="35" width="310" height="80" fill="#f6d88a" opacity=".75"/>
+  <g transform="translate(720,20)"><rect width="60" height="130" fill="#2a2e3f" stroke="#6b7390"/>${[12,11,10,9,8,7].map((n,i)=>`<circle cx="30" cy="${18+i*20}" r="6" fill="${n===7?'#f6d88a':'#444'}"/><text x="46" y="${22+i*20}" font-family="Courier New" font-size="9" fill="#cfd3dc">${n}</text>`).join('')}</g>
+  <g transform="translate(200,40)"><rect width="70" height="20" fill="#1a1512"/><text x="35" y="14" text-anchor="middle" font-family="Courier New" font-size="10" fill="#d9ad4f">▲ 7 ▼</text></g></svg>`,
+ '710': ()=>{ const bottle=(x,base,h,w,c,cap,label)=>{ const n=w*0.27, sh=base-h+h*0.36; return `<path d="M${x-w/2} ${base} L${x-w/2} ${sh+8} Q${x-w/2} ${sh} ${x-n} ${sh-6} L${x-n} ${base-h+4} Q${x-n} ${base-h} ${x-n+2} ${base-h} L${x+n-2} ${base-h} Q${x+n} ${base-h} ${x+n} ${base-h+4} L${x+n} ${sh-6} Q${x+w/2} ${sh} ${x+w/2} ${sh+8} L${x+w/2} ${base} Z" fill="${c}"/><rect x="${x-n-1}" y="${base-h-3}" width="${2*n+2}" height="6" rx="1.5" fill="${cap}"/><rect x="${x-w/2+3}" y="${sh+10}" width="3" height="${base-sh-16}" rx="1.5" fill="#fff" opacity=".28"/>${label?`<rect x="${x-w/2+3}" y="${base-h*0.42}" width="${w-6}" height="${h*0.2}" fill="#f1e8d0" opacity=".9"/><rect x="${x-w/2+6}" y="${base-h*0.36}" width="${w-12}" height="2" fill="#5a3a22" opacity=".6"/>`:''}`; };
+  const glass=(x,base)=>`<path d="M${x-9} ${base-30} L${x+9} ${base-30} L${x+6} ${base-14} L${x} ${base-8} L${x} ${base-2} L${x-6} ${base-2} L${x+6} ${base-2} L${x} ${base-2} L${x} ${base-8} L${x-6} ${base-14} Z" fill="none" stroke="#e6dcc2" stroke-width="1.6" opacity=".8"/>`;
+  const B=[['#2f5a3a','#c9a43c',1],['#b8892e','#3a2a14',0],['#6b1f2a','#e6dcc2',1],['#1f3d66','#c9a43c',0],['#d8c9a0','#3a2a14',1],['#7a4a1e','#c9a43c',1],['#3a5c2c','#e6dcc2',0],['#8a2c2c','#3a2a14',1],['#c99a3a','#e6dcc2',1],['#2c2c44','#c9a43c',0]];
+  let s='<svg viewBox="0 0 1000 170"><rect x="0" y="0" width="1000" height="170" fill="#1c120a"/><rect x="40" y="0" width="920" height="96" fill="#2b1c10"/><rect x="60" y="0" width="880" height="94" fill="url(#mir)" opacity=".5"/><defs><linearGradient id="mir" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a4a3a"/><stop offset=".5" stop-color="#2b1c10"/><stop offset="1" stop-color="#4a3a2a"/></linearGradient></defs>';
+  [0,1,2,3,4,5,6,7,8].forEach(i=>{ const [c,cap,lb]=B[i%B.length]; s+=bottle(120+i*96, 100, 72+((i*11)%18), 22, c, cap, lb); });
+  s+='<rect x="40" y="100" width="920" height="8" fill="#8a6a3d"/><rect x="40" y="108" width="920" height="3" fill="#3a2a14"/>';
+  [0,1,2,3,4,5].forEach(i=>{ const [c,cap,lb]=B[(i*3+1)%B.length]; s+=bottle(300+i*100, 158, 42+((i*7)%10), 16, c, cap, lb); });
+  [0,1,2,3,4,5].forEach(i=>s+=glass(100+i*22, 158));
+  [0,1,2,3].forEach(i=>s+=glass(820+i*22, 158));
+  s+='<rect x="40" y="158" width="920" height="8" fill="#8a6a3d"/></svg>'; return s; },
+ '706': ()=>`<svg viewBox="0 0 1000 170"><rect x="0" y="0" width="1000" height="170" fill="url(#tiles)"/><defs><pattern id="tiles" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="#233a25"/><rect width="38" height="38" fill="#2c4a2f"/></pattern></defs>
+  <rect x="0" y="30" width="1000" height="6" fill="#8a8f9b"/>${[200,330,460,590,720].map((x,i)=>`<g transform="translate(${x},36)"><line x1="0" y1="0" x2="0" y2="18" stroke="#999"/><ellipse cx="0" cy="${34+i*2}" rx="${22+i*3}" ry="${14+i}" fill="#666" stroke="#999"/><ellipse cx="0" cy="${30+i*2}" rx="${22+i*3}" ry="6" fill="#aaa"/></g>`).join('')}
+  <g transform="translate(120,110)"><rect width="120" height="60" fill="#1a2a1c" stroke="#8a8f9b"/><rect x="10" y="10" width="100" height="40" fill="#0b1020"/></g>
+  <g transform="translate(760,100)"><rect width="140" height="70" fill="#f1e6c8"/><rect x="10" y="10" width="120" height="10" fill="#d9ad4f"/><text x="70" y="50" text-anchor="middle" font-family="Courier New" font-size="10" fill="#333">BEWIJS</text></g></svg>`,
+ '707': ()=>`<svg viewBox="0 0 1000 170"><rect width="1000" height="170" fill="#2a0808"/><circle cx="500" cy="12" r="14" fill="#ff3b3b"/><circle cx="500" cy="12" r="60" fill="#ff3b3b" opacity=".12"/>
+  <line x1="60" y1="40" x2="940" y2="40" stroke="#bbb" stroke-width="2"/>
+  ${[200,400,600,800].map((x,i)=>`<g transform="translate(${x},40) rotate(${(i%2?3:-3)})"><rect x="-3" y="-6" width="6" height="16" fill="#8a6a3d"/><rect x="-40" y="8" width="80" height="100" fill="#f1e6c8"/><rect x="-32" y="16" width="64" height="70" fill="#3a3a3a"/><circle cx="0" cy="45" r="14" fill="#666"/><rect x="-12" y="60" width="24" height="24" fill="#666"/></g>`).join('')}</svg>`,
+ '708': ()=>`<svg viewBox="0 0 1000 170"><g transform="translate(500,0)"><line x1="0" y1="0" x2="0" y2="26" stroke="#d9ad4f" stroke-width="3"/><ellipse cy="40" rx="90" ry="14" fill="none" stroke="#d9ad4f" stroke-width="3"/>${[-80,-50,-20,10,40,70].map(x=>`<line x1="${x}" y1="${40-Math.abs(x)/10}" x2="${x}" y2="64" stroke="#f6d88a"/><circle cx="${x}" cy="66" r="3" fill="#fff"/>`).join('')}<circle cy="46" r="60" fill="#f6d88a" opacity=".12"/></g>
+  <g transform="translate(120,70)"><rect width="200" height="100" fill="#3a1420" rx="8"/><rect x="0" y="0" width="200" height="30" fill="#5a2436" rx="8"/></g>
+  <g transform="translate(700,60)"><rect width="180" height="110" fill="#2b2118"/><rect x="10" y="10" width="160" height="90" fill="#1a1512"/><text x="90" y="65" text-anchor="middle" font-family="Georgia" font-size="12" fill="#8a6a3d">portret</text></g></svg>`,
+ '709': ()=>`<svg viewBox="0 0 1000 170"><rect x="360" y="0" width="280" height="170" fill="#3d444d" stroke="#1c2126" stroke-width="6"/>${[...Array(6).keys()].map(i=>`<circle cx="${380+i*52}" cy="14" r="4" fill="#1c2126"/><circle cx="${380+i*52}" cy="158" r="4" fill="#1c2126"/>`).join('')}
+  <g transform="translate(500,85)"><circle r="36" fill="#cfd3dc" stroke="#1c2126" stroke-width="4"/>${[...Array(20).keys()].map(i=>`<line x1="0" y1="-30" x2="0" y2="-24" stroke="#1c2126" transform="rotate(${i*18})"/>`).join('')}<line x1="0" y1="0" x2="0" y2="-28" stroke="#c9302c" stroke-width="3"/><circle r="5" fill="#1c2126"/></g>
+  <text x="500" y="150" text-anchor="middle" font-family="Courier New" font-size="11" letter-spacing="3" fill="#d9ad4f">13 ?</text>
+  <g stroke="#6b7390" opacity=".7">${[...Array(8).keys()].map(i=>`<line x1="${40+i*40}" y1="${170-i*16}" x2="${80+i*40}" y2="${154-i*16}"/>`).join('')}${[...Array(8).keys()].map(i=>`<line x1="${960-i*40}" y1="${170-i*16}" x2="${920-i*40}" y2="${154-i*16}"/>`).join('')}</g></svg>`,
+};
+
+// ---------- gevel
+function facadeSvg(){
+  const W=1100, H=420; const solvedN=ORDER.filter(r=>state.solved[r]).length;
+  let s=`<svg id="facade" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg"><defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2e3f"/><stop offset="1" stop-color="#1b1f2e"/></linearGradient><linearGradient id="floor" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3a2f22"/><stop offset="1" stop-color="#4a3b2a"/></linearGradient></defs>`;
+  s+=`<rect width="${W}" height="${H}" fill="url(#wall)"/>`;
+  // verdieping 13 band (geheim)
+  s+=`<g id="secretband"><rect x="0" y="0" width="${W}" height="46" fill="${state.secret?'#1d1a10':'#0e0f16'}"/><text x="${W/2}" y="29" text-anchor="middle" font-family="Courier New" font-size="12" letter-spacing="4" fill="${state.secret?'#d9ad4f':'#2b3047'}">${state.secret?(t().secret_title.toUpperCase()+' · '+(lang==='nl'?'KLIK':'CLICK')):'· · · · · · · · · · · ·'}</text></g>`;
+  // verdiepingen 8-12 (dicht)
+  for(let i=0;i<5;i++){ const y=52+i*22; s+=`<rect x="120" y="${y}" width="${W-240}" height="18" fill="#161a29" stroke="#222840"/>`; for(let k=0;k<11;k++){ s+=`<rect x="${150+k*78}" y="${y+4}" width="14" height="10" fill="#0d1020"/>`; } s+=`<text x="${W-100}" y="${y+13}" font-family="Courier New" font-size="9" fill="#3a4160">${12-i}</text>`; }
+  // liftschacht links
+  s+=`<rect x="40" y="0" width="60" height="${H}" fill="#0f1220" stroke="#2a3350"/>`;
+  for(let i=0;i<14;i++){ s+=`<line x1="40" y1="${i*30}" x2="100" y2="${i*30}" stroke="#1c2238"/>`; }
+  const liftY = state.secret ? 6 : (H-60) - (solvedN/ORDER.length)*(H-60-170);
+  s+=`<g id="lift" transform="translate(0,${liftY})"><rect x="46" y="0" width="48" height="40" fill="#5a4a2e" stroke="#d9ad4f"/><rect x="52" y="6" width="36" height="20" fill="#f6d88a" opacity=".85"/><text x="70" y="36" text-anchor="middle" font-family="Courier New" font-size="8" fill="#d9ad4f">LIFT</text></g>`;
+  // verdieping 7: gang
+  const fy=170; s+=`<rect x="120" y="${fy}" width="${W-240}" height="${H-fy-40}" fill="url(#floor)" stroke="#6b5636"/><rect x="120" y="${fy+120}" width="${W-240}" height="14" fill="#2a2119"/>`;
+  s+=`<text x="${W/2}" y="${fy+20}" text-anchor="middle" font-family="Courier New" font-size="12" letter-spacing="5" fill="#d9ad4f">${t().floor}</text>`;
+  // deuren: 5 boven, 5 onder, bar apart
+  const top=['701','703','705','707','709'], bottom=['700','702','704','706','708'];
+  const door=(rid,x,y)=>{ const cls=state.solved[rid]?'solved':(unlocked(rid)?'avail':'locked'); return `<g class="door ${cls}" data-rid="${rid}"><rect class="body" x="${x}" y="${y}" width="70" height="86" rx="3"/><rect class="win" x="${x+18}" y="${y+10}" width="34" height="22" fill="#1a1f33"/><rect class="light" x="${x+4}" y="${y+82}" width="62" height="3"/><text x="${x+35}" y="${y+48}" text-anchor="middle">${rid}</text><text class="nm" x="${x+35}" y="${y+62}" text-anchor="middle">${t().rooms[rid].name}</text><text class="lock" x="${x+35}" y="${y+78}" text-anchor="middle" font-size="12">🔒</text></g>`; };
+  top.forEach((rid,i)=>{ s+=door(rid,160+i*180,fy+28); });
+  bottom.forEach((rid,i)=>{ s+=door(rid,160+i*180,fy+150); });
+  // bar (open) rechts van de lift, bij de gang
+  s+=`<g class="door ${state.solved['710']?'solved':'avail'}" data-rid="710"><rect class="body" x="${W-112}" y="${fy+80}" width="70" height="86" rx="3"/><rect class="win" x="${W-94}" y="${fy+90}" width="34" height="22" fill="#1a1f33"/><rect class="light" x="${W-108}" y="${fy+162}" width="62" height="3"/><text x="${W-77}" y="${fy+128}" text-anchor="middle">710</text><text class="nm" x="${W-77}" y="${fy+142}" text-anchor="middle">${t().rooms['710'].name}</text></g>`;
+  // trappenhuis
+  s+=`<rect x="${W-40}" y="0" width="40" height="${H}" fill="#0f1220" stroke="#2a3350"/>`; for(let i=0;i<20;i++) s+=`<line x1="${W-40}" y1="${i*21}" x2="${W}" y2="${i*21+8}" stroke="#1c2238"/>`;
+  return s+'</svg>';
+}
+function renderMap(){
+  document.getElementById('ttl').textContent = t().title; document.getElementById('sub').textContent = t().sub.toUpperCase();
+  document.getElementById('story').textContent = t().intro_story;
+  roomChips();
+  document.getElementById('langbtn').textContent = lang==='nl'?'EN':'NL';
+  document.getElementById('foot').innerHTML = BOOK_TXT[lang].foot + `<a href="${BOOK_URL[lang]}" target="_blank" rel="noopener">${BOOK_TXT[lang].link}</a>`; document.getElementById('resetbtn').textContent = lang==='nl'?'Opnieuw':'Reset';
+  document.getElementById('sndbtn').textContent = state.sound?'🔔':'🔕';
+  const fb=document.getElementById('freebtn'); fb.textContent = state.free?'🔓':'🔒'; fb.title = state.free?(lang==='nl'?'Vrije toegang aan: alle kamers open, sleutels worden getoond':'Free access on: all rooms open, keys shown'):(lang==='nl'?'Vrije toegang: alle kamers openen zonder sleutels':'Free access: open all rooms without keys'); fb.style.borderColor = state.free?'#ff8a86':'';
+  const n=ORDER.filter(r=>state.solved[r]).length; document.getElementById('prog').textContent=(lang==='nl'?'KAMERS ':'ROOMS ')+n+'/'+ORDER.length; document.getElementById('progbar').style.width=(100*n/ORDER.length)+'%';
+  const map=document.getElementById('map'); map.innerHTML=facadeSvg();
+  map.querySelectorAll('.door').forEach(g=>{ g.onclick=()=>{ const rid=g.dataset.rid; if(!unlocked(rid)){ toast(lockLabel(rid)); click(); return; } g.classList.add('opening'); creak(); setTimeout(()=>openRoom(rid),420); }; });
+  map.querySelector('#secretband').onclick=()=>{ if(state.secret) showSecret(); else toast(t().secret_lock); };
+  const ks=document.getElementById('keys'); ks.innerHTML='';
+  ORDER.forEach(rid=>{ const k=document.createElement('div'); const v=state.keys[rid]; k.className='key'+(v?'':' empty'); k.innerHTML=`<span>${t().key} ${rid}</span>${v||'—'}`; ks.appendChild(k); });
+}
+function creak(){ if(!state.sound) return; try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); const now=actx.currentTime; const o=actx.createOscillator(), g=actx.createGain(); o.type='sawtooth'; o.frequency.setValueAtTime(140,now); o.frequency.exponentialRampToValueAtTime(90,now+.5); g.gain.setValueAtTime(0.0001,now); g.gain.exponentialRampToValueAtTime(0.04,now+.05); g.gain.exponentialRampToValueAtTime(0.0001,now+.55); o.connect(g).connect(actx.destination); o.start(now); o.stop(now+.6);}catch(e){} }
+function openRoom(rid){
+  const r=F[rid], p=r.puzzle, tr=t().rooms[rid];
+  const panel=document.getElementById('panel'); panel.className='open'; panel.dataset.rid=rid; panel.style.setProperty('--accent', ACCENT[r.type]);
+  const needsList=(r.needs_any||r.needs||[]); const missing=needsList.filter(n=>!state.solved[n]);
+  const freeBox=(state.free&&missing.length)?`<div class="rules" style="border-left-color:#ff8a86">${lang==='nl'?'🔓 Vrije toegang – je mist de sleutel van kamer':'🔓 Free access – you are missing the key of room'} ${missing.map(n=>`<b>${n}</b> <button class="small rk" data-k="${n}">${lang==='nl'?'laat zien':'reveal'}</button><span class="rv" data-k="${n}"></span>`).join(' · ')}</div>`:'';
+  const plateCls = state.solved[rid]?'':(unlocked(rid)?'':'red');
+  let html=`<div class="room3d ${r.type}"><div class="floor3d"></div><div class="props">${(PROPS[rid]||(()=>''))()}</div><div class="pin">
+  <span class="plate">${t().room} ${rid}${r.shortcut?' · '+t().shortcut.toUpperCase():''}</span> <span class="plate ${(r.needs||r.needs_any)?'red':'grey'}">${lockLabel(rid)}</span>
+  <h2>${tr.name}</h2><p class="intro">${tr.intro}</p><div class="rules">${tr.rules}</div>${freeBox}<div class="stage">`;
+  const body={gongoku:uiGongoku,alibi:uiAlibi,footprints:uiFootprints,seating:uiSeating,evidence:uiEvidence,final:uiFinal,timeline:uiTimeline,zebra:uiZebra,liars:uiLiars}[r.type](rid,r);
+  html+=body.html+'</div></div>';
+  html+=`<div class="answer">${body.answer}<button class="primary" id="chk">${lang==='nl'?'Controleer':'Check'}</button><button class="small" id="wis" title="${lang==='nl'?'Alles in deze kamer wissen en blanco beginnen':'Clear everything in this room and start blank'}">${lang==='nl'?'⟲ Wis':'⟲ Clear'}</button><span class="msg" id="msg"></span></div><p class="keytext">${tr.keytext}</p>`;
+  if(state.solved[rid] && NOTES[lang][rid]) html+=noteHtml(rid);
+  html+='</div>';
+  panel.innerHTML=html; if(body.after) body.after();
+  document.querySelectorAll('button.rk').forEach(b=>{ b.onclick=()=>{ const n=b.dataset.k; document.querySelector('span.rv[data-k="'+n+'"]').innerHTML='<b>= '+keyString(n)+'</b>'; b.remove(); click(); }; });
+  const wisBtn=document.getElementById('wis'); let armed=false;
+  wisBtn.onclick=()=>{ if(!armed){ armed=true; wisBtn.textContent=lang==='nl'?'Zeker? Klik nog eens':'Sure? Click again'; wisBtn.style.borderColor='#ff8a86'; setTimeout(()=>{ armed=false; if(document.body.contains(wisBtn)){ wisBtn.textContent=lang==='nl'?'⟲ Wis':'⟲ Clear'; wisBtn.style.borderColor=''; } },3000); return; }
+    ['g','a','f','s','e','t','z','l'].forEach(pf=>{ delete state.scratch[pf+rid]; }); save(); click(); openRoom(rid); toast(lang==='nl'?'Kamer '+rid+' is blanco.':'Room '+rid+' cleared.'); };
+  document.getElementById('chk').onclick=()=>{ const res=body.check(); const m=document.getElementById('msg');
+    if(res){ const first=!state.solved[rid]; state.solved[rid]=true; state.keys[rid]=res; save(); m.className='msg ok'; m.textContent=(lang==='nl'?'Sleutel '+rid+' = ':'Key '+rid+' = ')+res; if(first){ gong(); toast((lang==='nl'?'🔑 Sleutel '+rid+' = ':'🔑 Key '+rid+' = ')+res); if(NOTES[lang][rid]&&!document.querySelector('.note')) panel.querySelector('.room3d').insertAdjacentHTML('beforeend', noteHtml(rid)); } renderMap(); if(rid==='709'){ state.secret=true; save(); renderMap(); setTimeout(showSecret,1200); } }
+    else { m.className='msg no'; m.textContent=lang==='nl'?'Dat klopt niet. Kijk nog eens naar de verklaringen.':'Not right. Look at the statements again.'; click(); } };
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function noteHtml(rid){ const best=ROOMS[F['706'].key.room][lang==='nl'?1:3]; return `<div class="note"><b>${t().note_label} · ${t().room} ${rid}</b>${NOTES[lang][rid].replace('{best}',best)}</div>`; }
+function castHtml(letters){ return '<div class="cast">'+letters.slice().sort().map(l=>`<div><b>${l}</b>${nm(l)} <i>– ${(DATA.roles[l]||(DATA.staff_roles||{})[l]||["de verpleegster","the nurse"])[L()]}</i></div>`).join('')+'</div>'; }
+function selLetters(id, letters){ return `<select id="${id}"><option value="">${lang==='nl'?'— dader —':'— killer —'}</option>`+letters.slice().sort().map(l=>`<option value="${l}">${nm(l)}</option>`).join('')+'</select>'; }
+
+// ---------------- GONGOKU
+function uiGongoku(rid,r){
+  const p=r.puzzle, N=p.N; const given={}; p.clues.forEach(c=>{ if(c[0]==='at' && !Object.values(p.param).some(v=>v.join()===c.join())) given[c[3]+','+c[2]]=p.initials[c[1]]; });
+  const key='g'+rid; state.scratch[key]=state.scratch[key]||{};
+  let g='<table class="grid"><tr><th></th>'+[...Array(N).keys()].map(i=>`<th>${roomName(p.rooms[i])}</th>`).join('')+'</tr>';
+  for(let ti=0;ti<N;ti++){ g+=`<tr><td class="hour">${hour(ti)}</td>`; for(let ri=0;ri<N;ri++){ const gv=given[ti+','+ri]; const sk=(ti===p.t_m&&ri===p.room_m); const v=gv||state.scratch[key][ti+','+ri]||''; g+=`<td data-c="${ti},${ri}" class="${gv?'given':''}${sk?' skull':''}">${v}${sk&&!v?'☠':''}</td>`; } g+='</tr>'; }
+  g+='</table>';
+  const clues='<div class="clues"><ol>'+r.clues[lang].map(c=>`<li class="${c.key?'k':''}"><span>${c.text}</span></li>`).join('')+'</ol></div>';
+  const html=castHtml(p.initials)+`<div class="puz"><div>${planSvg(p)}<div class="hint">${lang==='nl'?'Klik in een vakje om letters te wisselen.':'Click a cell to cycle letters.'}</div>${g}</div>${clues}</div>`;
+  const answer=`<label>${lang==='nl'?'DADER':'KILLER'}</label>${selLetters('ans',p.initials)}`;
+  const after=()=>{ const letters=p.initials.slice().sort(); document.querySelectorAll('table.grid td[data-c]').forEach(td=>{ if(td.classList.contains('given')) return; td.onclick=()=>{ const c=td.dataset.c; const cur=state.scratch[key][c]||''; const i=letters.indexOf(cur); const nx=i<0?letters[0]:(i+1<letters.length?letters[i+1]:''); state.scratch[key][c]=nx; td.textContent=nx||((c===p.t_m+','+p.room_m)?'☠':''); save(); }; }); };
+  const check=()=>{ const v=document.getElementById('ans').value; return v===r.key.letter ? (r.key.hour?`${v} · ${String(r.key.hour%24).padStart(2,'0')}.00`:(r.key.room!==undefined?`${v} · ${roomName(r.key.room)}`:v)) : null; };
+  return {html,answer,after,check};
+}
+
+// meubel per kamertype (zelfde volgorde als ROOMS in het boek): één symbool per kamer, dun grijs
+function furn(idx, x, y, s){
+  const st=`fill="none" stroke="#6f6f78" stroke-width="1.1" stroke-linejoin="round"`, fl=`fill="#6f6f78"`;
+  const h=s/2;
+  const f=[
+    ()=>`<rect x="${x-h}" y="${y-h}" width="${s}" height="${s}" ${st}/>`+[1,2,3,4].map(i=>`<line x1="${x-h}" y1="${y-h+i*s/5}" x2="${x+h}" y2="${y-h+i*s/5}" ${st}/>`).join(''), // trap
+    ()=>`<rect x="${x-h}" y="${y-s/3}" width="${s}" height="${s*2/3}" ${st}/><circle cx="${x-s/4}" cy="${y}" r="${s/7}" ${st}/><circle cx="${x+s/4}" cy="${y}" r="${s/7}" ${st}/>`, // fornuis
+    ()=>`<rect x="${x-h}" y="${y-s/4}" width="${s}" height="${s/2}" rx="${s/8}" ${st}/><line x1="${x-h}" y1="${y+s/8}" x2="${x+h}" y2="${y+s/8}" ${st}/><line x1="${x-h+s/6}" y1="${y-s/4}" x2="${x-h+s/6}" y2="${y+s/8}" ${st}/><line x1="${x+h-s/6}" y1="${y-s/4}" x2="${x+h-s/6}" y2="${y+s/8}" ${st}/>`, // bank
+    ()=>`<rect x="${x-s/5}" y="${y+s/4}" width="${s*2/5}" height="${s/4}" ${st}/>`+[-60,-20,20,60].map(a=>`<line x1="${x}" y1="${y+s/4}" x2="${x+h*Math.sin(a*Math.PI/180)}" y2="${y+s/4-h*Math.cos(a*Math.PI/180)}" ${st}/>`).join(''), // plant
+    ()=>`<circle cx="${x-s/4}" cy="${y}" r="${s/4.5}" ${st}/><circle cx="${x+s/4}" cy="${y}" r="${s/4.5}" ${st}/><circle cx="${x-s/4}" cy="${y}" r="${s/12}" ${st}/><circle cx="${x+s/4}" cy="${y}" r="${s/12}" ${st}/>`, // vaten
+    ()=>`<rect x="${x-h}" y="${y-s/3}" width="${s}" height="${s*2/3}" ${st}/><line x1="${x-h}" y1="${y}" x2="${x+h}" y2="${y}" ${st}/><rect x="${x-s/12}" y="${y-s/8}" width="${s/6}" height="${s/4}" ${st}/>`, // kist
+    ()=>`<rect x="${x-h}" y="${y-s/5}" width="${s}" height="${s*2/5}" ${st}/>`+[-s/3,0,s/3].map(dx=>`<rect x="${x+dx-s/12}" y="${y-s/5-s/16-s/8}" width="${s/6}" height="${s/8}" ${st}/><rect x="${x+dx-s/12}" y="${y+s/5+s/16}" width="${s/6}" height="${s/8}" ${st}/>`).join(''), // eettafel
+    ()=>`<rect x="${x-h}" y="${y-s/6}" width="${s}" height="${s/3}" ${st}/>`+[1,2,3,4,5,6].map(i=>`<line x1="${x-h+i*s/7}" y1="${y-s/6}" x2="${x-h+i*s/7}" y2="${y+s/6}" ${st}/>`).join(''), // boekenkast
+    ()=>`<rect x="${x-h}" y="${y-s/8-s/3}" width="${s}" height="${s/3}" ${st}/><circle cx="${x}" cy="${y+s/8}" r="${s/9}" ${st}/>`, // bureau
+    ()=>`<line x1="${x}" y1="${y-h}" x2="${x}" y2="${y-s/8}" ${st}/><line x1="${x-s/8}" y1="${y-s/3}" x2="${x+s/8}" y2="${y-s/3}" ${st}/>`+[0,1,2].map(i=>`<line x1="${x-h}" y1="${y+s/8+i*s/6}" x2="${x+h}" y2="${y+s/8+i*s/6}" ${st}/>`).join(''), // kapel
+    ()=>`<path d="M${x-h} ${y+s/3} L${x-h} ${y-s/3} L${x+s/6} ${y-s/3} C${x+h} ${y-s/3} ${x+h} ${y+s/3} ${x+s/6} ${y+s/3} Z" ${st}/>`, // piano
+    ()=>`<circle cx="${x}" cy="${y}" r="${s/2.2}" ${st}/>`+[0,1,2,3,4,5,6,7].map(i=>`<line x1="${x}" y1="${y}" x2="${x+s/2.2*Math.cos(i*Math.PI/4)}" y2="${y+s/2.2*Math.sin(i*Math.PI/4)}" ${st}/>`).join(''), // wenteltrap
+    ()=>`<rect x="${x-h}" y="${y-s/4}" width="${s}" height="${s/2}" ${st}/>`+[-s/5,0,s/5].map(dx=>`<circle cx="${x+dx}" cy="${y}" r="${s/16}" ${fl}/>`).join(''), // biljart
+    ()=>`<rect x="${x-h}" y="${y-s/4}" width="${s}" height="${s/2}" rx="${s/4}" ${st}/><rect x="${x-h+s/10}" y="${y-s/4+s/10}" width="${s-s/5}" height="${s/2-s/5}" rx="${s/6}" ${st}/>`, // bad
+    ()=>`<line x1="${x-s/3}" y1="${y+h}" x2="${x}" y2="${y-h}" ${st}/><line x1="${x+s/3}" y1="${y+h}" x2="${x}" y2="${y-h}" ${st}/><rect x="${x-s/3}" y="${y-s/3}" width="${s*2/3}" height="${s/2.2}" ${st}/>`, // ezel
+    ()=>`<line x1="${x-h}" y1="${y-h}" x2="${x+h}" y2="${y+h}" ${st}/><line x1="${x-h}" y1="${y+h}" x2="${x+h}" y2="${y-h}" ${st}/>`, // zwaarden
+    ()=>`<rect x="${x-h}" y="${y-s/4}" width="${s}" height="${s/2}" ${st}/><circle cx="${x-s/5}" cy="${y}" r="${s/8}" ${st}/><circle cx="${x+s/5}" cy="${y}" r="${s/8}" ${st}/>`, // spoelbak
+    ()=>[-s/4,s/4].map(dx=>`<rect x="${x+dx-s/6}" y="${y-s/5}" width="${s/3}" height="${s*2/5}" ${st}/><rect x="${x+dx-s/9}" y="${y-s/8}" width="${s*2/9}" height="${s/4}" ${st}/>`).join(''), // lijsten
+  ];
+  return (f[idx]||f[0])();
+}
+
+function planSvg(p){
+  const W=p.W,H=p.H,cs=(W>=5?52:64);
+  const owner={}; Object.entries(p.owner).forEach(([k,v])=>{ const [x,y]=k.split(',').map(Number); owner[x+','+y]=v; });
+  const tints=['#f3efe2','#e4dcc6','#ece6d4','#d9d0b8','#efe9d8','#e0d8c2']; const col={};
+  for(let r=0;r<p.N;r++){ const used=new Set(); Object.entries(owner).forEach(([k,v])=>{ if(v!==r) return; const [x,y]=k.split(',').map(Number); [[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>{ const o=owner[(x+dx)+','+(y+dy)]; if(o!==undefined&&o!==r&&col[o]!==undefined) used.add(col[o]); }); }); let cc=0; while(used.has(cc)) cc++; col[r]=cc; }
+  let s=`<svg width="${W*cs+12}" height="${H*cs+12}" viewBox="-6 -6 ${W*cs+12} ${H*cs+12}"><defs><filter id="ps" x="-10%" y="-10%" width="130%" height="130%"><feDropShadow dx="3" dy="4" stdDeviation="2" flood-color="#000" flood-opacity=".35"/></filter></defs>`;
+  s+=`<g filter="url(#ps)"><rect x="0" y="0" width="${W*cs}" height="${H*cs}" fill="#f3efe2"/></g>`;
+  Object.entries(owner).forEach(([k,v])=>{ const [x,y]=k.split(',').map(Number); s+=`<rect x="${x*cs}" y="${y*cs}" width="${cs}" height="${cs}" fill="${tints[col[v]]}"/>`; });
+  // vloerlijnen (parket) subtiel
+  for(let i=1;i<W;i++) s+=`<line x1="${i*cs}" y1="0" x2="${i*cs}" y2="${H*cs}" stroke="#000" stroke-opacity=".04"/>`;
+  for(let j=1;j<H;j++) s+=`<line x1="0" y1="${j*cs}" x2="${W*cs}" y2="${j*cs}" stroke="#000" stroke-opacity=".04"/>`;
+  // meubels
+  for(let r=0;r<p.N;r++){ const cells=Object.entries(owner).filter(([k,v])=>v===r).map(([k])=>k.split(',').map(Number)); const mx=cells.reduce((a,c)=>a+c[0],0)/cells.length, my=cells.reduce((a,c)=>a+c[1],0)/cells.length; const lab=cells.reduce((b,c)=>((c[0]-mx)**2+(c[1]-my)**2<(b[0]-mx)**2+(b[1]-my)**2?c:b));
+    const free=cells.filter(c=>c[1]!==lab[1]); const idx=p.rooms[r];
+    if(free.length){ const k=free.reduce((b,c)=>((c[0]-lab[0])**2+(c[1]-lab[1])**2>(b[0]-lab[0])**2+(b[1]-lab[1])**2?c:b)); if(!(r===p.room_m&&free.length===1)) s+=furn(idx, k[0]*cs+cs/2, k[1]*cs+cs/2, cs*0.5); }
+    else if(r!==p.room_m){ s+=furn(idx, lab[0]*cs+cs/2, lab[1]*cs+cs*0.22, cs*0.34); } }
+  const doors=new Set(p.doors.map(d=>d[2].join()+'|'+d[3].join()));
+  const WALL='#23232b', T=4.5;
+  const seg=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${WALL}" stroke-width="${T}" stroke-linecap="square"/>`;
+  const leaf=(x,y,dx,dy,len)=>`<line x1="${x}" y1="${y}" x2="${x+dx*len}" y2="${y+dy*len}" stroke="#6b6b75" stroke-width="1.2"/><path d="M${x+dx*len} ${y+dy*len} A${len} ${len} 0 0 ${dx*dy>=0?1:0} ${x+(dy?dy:0)*len*(dx?0:1)+(dx?0:len)*(dx?1:0)*0} ${y}" fill="none" stroke="#6b6b75" stroke-width=".8" stroke-dasharray="2 2"/>`;
+  Object.entries(owner).forEach(([k,v])=>{ const [x,y]=k.split(',').map(Number); [[1,0],[0,1]].forEach(([dx,dy])=>{ const o=owner[(x+dx)+','+(y+dy)]; if(o===undefined||o===v) return; const isd=doors.has(k+'|'+(x+dx)+','+(y+dy));
+    if(dx){ const X=(x+1)*cs, y0=y*cs, y1=(y+1)*cs, m=(y0+y1)/2, g=cs*0.19; if(isd){ s+=seg(X,y0,X,m-g)+seg(X,m+g,X,y1); s+=`<line x1="${X}" y1="${m-g}" x2="${X+2*g*0.9}" y2="${m-g}" stroke="#6b6b75" stroke-width="1.2"/><path d="M${X+2*g*0.9} ${m-g} A${2*g*0.9} ${2*g*0.9} 0 0 1 ${X} ${m+g*0.8}" fill="none" stroke="#6b6b75" stroke-width=".8" stroke-dasharray="2 2"/>`; } else s+=seg(X,y0,X,y1); }
+    else { const Y=(y+1)*cs, x0=x*cs, x1=(x+1)*cs, m=(x0+x1)/2, g=cs*0.19; if(isd){ s+=seg(x0,Y,m-g,Y)+seg(m+g,Y,x1,Y); s+=`<line x1="${m-g}" y1="${Y}" x2="${m-g}" y2="${Y+2*g*0.9}" stroke="#6b6b75" stroke-width="1.2"/><path d="M${m-g} ${Y+2*g*0.9} A${2*g*0.9} ${2*g*0.9} 0 0 0 ${m+g*0.8} ${Y}" fill="none" stroke="#6b6b75" stroke-width=".8" stroke-dasharray="2 2"/>`; } else s+=seg(x0,Y,x1,Y); } }); });
+  s+=`<rect x="0" y="0" width="${W*cs}" height="${H*cs}" fill="none" stroke="${WALL}" stroke-width="${T+2.5}"/>`;
+  // labels + krijtomtrek
+  for(let r=0;r<p.N;r++){ const cells=Object.entries(owner).filter(([k,v])=>v===r).map(([k])=>k.split(',').map(Number)); const mx=cells.reduce((a,c)=>a+c[0],0)/cells.length, my=cells.reduce((a,c)=>a+c[1],0)/cells.length; const best=cells.reduce((b,c)=>((c[0]-mx)**2+(c[1]-my)**2<(b[0]-mx)**2+(b[1]-my)**2?c:b));
+    let run=[best]; let xx=best[0]-1; while(owner[xx+','+best[1]]===r){ run.unshift([xx,best[1]]); xx--; } xx=best[0]+1; while(owner[xx+','+best[1]]===r){ run.push([xx,best[1]]); xx++; }
+    const lx=(run[0][0]+run[run.length-1][0]+1)/2*cs, ly=best[1]*cs+cs/2+(r===p.room_m?-cs*0.22:0);
+    const nm=roomName(p.rooms[r]).toUpperCase(); const fs=Math.min(10, (run.length*cs-10)/(nm.length*0.62));
+    s+=`<text x="${lx}" y="${ly+3}" font-size="${fs}" font-weight="bold" text-anchor="middle" font-family="Georgia" fill="#222" stroke="#f3efe2" stroke-width="3" paint-order="stroke">${nm}</text>`;
+    if(r===p.room_m){ const far=cells.filter(c=>c[1]!==best[1]); const c0=far.length?far[far.length-1]:best; const cx=c0[0]*cs+cs/2, cy=c0[1]*cs+cs*(far.length?0.5:0.72); s+=`<g transform="translate(${cx},${cy}) rotate(-20) scale(${cs/110})" fill="none" stroke="#8a2a2a" stroke-width="2.2" stroke-dasharray="3 2"><circle cx="0" cy="-26" r="7"/><path d="M-6 -18 L-30 -8 L-32 -2 L-8 -8 L-8 4 L-22 30 L-16 34 L0 10 L16 34 L22 30 L8 4 L8 -8 L32 -2 L30 -8 L6 -18 Z"/></g>`; } }
+  return s+'</svg>';
+}
+// ---------------- ALIBI
+function uiAlibi(rid,r){
+  const p=r.puzzle, o=p.order; const key='a'+rid; state.scratch[key]=state.scratch[key]||{};
+  let tb=`<table class="alibi"><tr><th>${t().alibi_hdr}</th>`+t().alibi_hours.map(h=>`<th>${h}</th>`).join('')+'</tr>';
+  for(let g=0;g<8;g++){ tb+=`<tr><td><b>${nm(o[g],true)}</b></td>`; for(let h=0;h<3;h++){ const c=p.claims[g][h]; const txt=c[0]==='with'?(t().alibi_with+' '+nm(o[c[1]],true)):t().alibi_alone; const st=state.scratch[key][g+','+h]||''; tb+=`<td class="c ${st}" data-c="${g},${h}">${txt}</td>`; } tb+='</tr>'; }
+  tb+='</table>';
+  const html=castHtml(o)+`<div class="puz"><div>${tb}<div class="hint">${lang==='nl'?'Klik op een verklaring: ✓ bevestigd, ✕ verdacht.':'Click a statement: ✓ confirmed, ✕ suspect.'}</div></div></div>`;
+  const answer=`<label>${lang==='nl'?'DADER':'KILLER'}</label>${selLetters('ans',o)}`;
+  const after=()=>{ document.querySelectorAll('table.alibi td.c').forEach(td=>{ td.onclick=()=>{ const c=td.dataset.c; const cur=state.scratch[key][c]||''; const nx=cur===''?'v':(cur==='v'?'x':''); state.scratch[key][c]=nx; td.className='c '+nx; save(); }; }); };
+  const check=()=>{ const v=document.getElementById('ans').value; return v===r.key.letter?v:null; };
+  return {html,answer,after,check};
+}
+// ---------------- VOETSPOREN
+function uiFootprints(rid,r){
+  const p=r.puzzle, W=p.W,H=p.H; const key='f'+rid; state.scratch[key]=state.scratch[key]||{};
+  const blocked=new Set(p.blocked.map(b=>b.join())), given=new Set(p.given.map(g=>g.join()));
+  let s=`<div class="fpwrap"><div class="doors">`+[...Array(W).keys()].map(x=>{ const k=p.doors.indexOf(x); return `<div>${k>=0?`<b>${'ABC'[k]} · ${r.door_numbers[k]}</b>`:''}</div>`; }).join('')+`</div><div class="fpcols">`+p.cols.map(c=>`<div>${c}</div>`).join('')+'</div>';
+  for(let y=0;y<H;y++){ s+=`<div class="fprow"><div class="fpnum">${p.rows[y]}</div><div class="fp" style="grid-template-columns:repeat(${W},46px)">`; for(let x=0;x<W;x++){ const k=x+','+y; const cls=blocked.has(k)?'tree':(given.has(k)?'given':'')+(state.scratch[key][k]?' on':''); s+=`<div data-c="${k}" class="${cls}">${blocked.has(k)?'🌲':(given.has(k)?'👣':'')}</div>`; } s+='</div></div>'; }
+  s+=`<div class="gates">`+[...Array(W).keys()].map(i=>`<div>▢ ${i+1}</div>`).join('')+'</div></div>';
+  const html=`<div class="puz"><div class="fpscene">${s}</div><div class="clues"><p>${t().fp_gates}: 1–${W}. ${t().fp_doors}: A, B, C.</p><p class="hint">${lang==='nl'?'Klik vakjes aan om het spoor te tekenen.':'Click squares to draw the trail.'}</p></div></div>`;
+  const answer=`<label>${lang==='nl'?'DEUR':'DOOR'}</label><select id="ans"><option value="">—</option><option>A</option><option>B</option><option>C</option></select>`;
+  const after=()=>{ document.querySelectorAll('.fp div[data-c]').forEach(d=>{ if(d.classList.contains('tree')) return; d.onclick=()=>{ const k=d.dataset.c; state.scratch[key][k]=!state.scratch[key][k]; d.classList.toggle('on',!!state.scratch[key][k]); save(); }; }); };
+  const check=()=>{ const v=document.getElementById('ans').value; return v===r.key.door?`${v} · ${r.key.number}`:null; };
+  return {html,answer,after,check};
+}
+// ---------------- SLOT
+function uiLock(rid,r){
+  const p=r.puzzle;
+  let s='<div class="tries">'+p.guesses.map(([g,fb])=>`<div>${g.map(d=>`<span class="d">${d}</span>`).join('')}<span style="margin-left:10px">${'<span class="pip full"></span>'.repeat(fb[0])}${'<span class="pip"></span>'.repeat(fb[1])}</span><span class="hint">${fb[0]} ●, ${fb[1]} ○</span></div>`).join('')+'</div>';
+  const html=`<div class="puz"><div>${s}</div><div class="clues"><p>● ${lang==='nl'?'goed cijfer, goede plek':'right digit, right place'}<br>○ ${lang==='nl'?'goed cijfer, verkeerde plek':'right digit, wrong place'}</p></div></div>`;
+  const answer=`<label>CODE</label><input class="code" id="ans" maxlength="3" inputmode="numeric">`;
+  const check=()=>{ const v=document.getElementById('ans').value.trim(); return v===r.key.code?v:null; };
+  return {html,answer,check};
+}
+// ---------------- TAFEL
+function uiSeating(rid,r){
+  const p=r.puzzle, o=p.order, N=8; const key='s'+rid; state.scratch[key]=state.scratch[key]||{0:o[0]};
+  let s='<div class="table"><div class="disc"></div>';
+  for(let i=0;i<N;i++){ const a=Math.PI/2-i*2*Math.PI/N; const x=130+100*Math.cos(a)-20, y=130-100*Math.sin(a)-16; s+=`<div class="chair${i===p.poison_chair?' poison':''}" data-i="${i}" style="left:${x}px;top:${y}px"><small>${i+1}</small>${state.scratch[key][i]||''}</div>`; }
+  s+='</div>';
+  const gn=i=>nm(o[i],true);
+  const cl=[[true,(lang==='nl'?`De dader uit sleutel 701 zat tegenover ${gn(0)}.`:`The killer from key 701 sat opposite ${gn(0)}.`)]].concat(p.clues.map(c=>{ const k=c[0]; let x; if(k==='opp') x=lang==='nl'?`${gn(c[1])} zat tegenover ${gn(c[2])}.`:`${gn(c[1])} sat opposite ${gn(c[2])}.`; else if(k==='left') x=lang==='nl'?`${gn(c[2])} zat direct links van ${gn(c[1])}.`:`${gn(c[2])} sat directly left of ${gn(c[1])}.`; else if(k==='next') x=lang==='nl'?`${gn(c[1])} zat naast ${gn(c[2])}.`:`${gn(c[1])} sat next to ${gn(c[2])}.`; else if(k==='notnext') x=lang==='nl'?`${gn(c[1])} zat niet naast ${gn(c[2])}.`:`${gn(c[1])} did not sit next to ${gn(c[2])}.`; else if(k==='chair') x=lang==='nl'?`${gn(c[1])} zat op stoel ${c[2]+1}.`:`${gn(c[1])} sat in chair ${c[2]+1}.`; else if(k==='notchair') x=lang==='nl'?`${gn(c[1])} zat niet op stoel ${c[2]+1}.`:`${gn(c[1])} did not sit in chair ${c[2]+1}.`; else if(k==='even') x=lang==='nl'?`${gn(c[1])} zat op een even stoelnummer.`:`${gn(c[1])} sat in an even-numbered chair.`; return [false,x]; }));
+  const html=castHtml(o)+`<div class="puz"><div>${s}<div class="pick" id="pick">${o.map(l=>`<button class="small" data-l="${l}">${l}</button>`).join('')}<button class="small" data-l="">✕</button></div><div class="hint">${lang==='nl'?'Klik een stoel, dan een letter. Stoel 1 = gastvrouw. Rode stip = gif.':'Click a chair, then a letter. Chair 1 = hostess. Red dot = poison.'}</div></div><div class="clues"><ol>${cl.map(([k,x])=>`<li class="${k?'k':''}"><span>${x}</span></li>`).join('')}</ol></div></div>`;
+  const answer=`<label>${lang==='nl'?'STOEL 6':'CHAIR 6'}</label>${selLetters('ans',o)}`;
+  let sel=null;
+  const after=()=>{ document.querySelectorAll('.chair').forEach(c=>{ c.onclick=()=>{ document.querySelectorAll('.chair').forEach(x=>x.classList.remove('sel')); sel=+c.dataset.i; c.classList.add('sel'); }; }); document.querySelectorAll('#pick button').forEach(b=>{ b.onclick=()=>{ if(sel===null) return; state.scratch[key][sel]=b.dataset.l; const ch=document.querySelector(`.chair[data-i="${sel}"]`); ch.innerHTML=`<small>${sel+1}</small>${b.dataset.l}`; save(); }; }); };
+  const check=()=>{ const v=document.getElementById('ans').value; return v===r.key.letter?`${v} · ${lang==='nl'?'stoel':'chair'} ${r.key.chair}`:null; };
+  return {html,answer,after,check};
+}
+// ---------------- KEUKEN
+function uiEvidence(rid,r){
+  const p=r.puzzle, W=p.W,H=p.H; const key='e'+rid; state.scratch[key]=state.scratch[key]||{};
+  const zones=p.zones; const hatch=p.keycell.join();
+  let s=`<div class="ev">`; for(let y=0;y<H;y++)for(let x=0;x<W;x++){ const k=x+','+y; const n=p.numbers[k]; const st=state.scratch[key][k]||''; const z=zones[k];
+    const bR=zones[(x+1)+','+y]!==undefined&&zones[(x+1)+','+y]!==z, bB=zones[x+','+(y+1)]!==undefined&&zones[x+','+(y+1)]!==z;
+    s+=`<div data-c="${k}" class="${n!==undefined?'n':st} z${z}${bR?' br':''}${bB?' bb':''}">${n!==undefined?n:''}${k===hatch?`<small>⌸ ${roomName(p.hatch_room)}</small>`:''}</div>`; }
+  s+='</div>';
+  const zl=p.zone_rooms.map((ri,z)=>`<span class="zl z${z}">${roomName(ri)}</span>`).join(' ');
+  const html=`<div class="puz"><div>${s}<div class="zones">${zl}</div><div class="hint">${lang==='nl'?'Klik: ✕ bewijs, · veilig. Het vak met het luik (⌸) is leeg.':'Click: ✕ evidence, · safe. The hatch square (⌸) is empty.'}</div></div><div class="clues"><p style="font-size:40px;margin:0;font-weight:bold">${p.total}</p><p>${lang==='nl'?'bewijsstukken in totaal. Markeer ze alle zeven, tel per werkplek, en noem de drukste.':'pieces in total. Mark all seven, count per station, and name the busiest.'}</p></div></div>`;
+  const answer=`<label>${lang==='nl'?'DRUKSTE WERKPLEK':'BUSIEST STATION'}</label><select id="ans"><option value="">—</option>${p.zone_rooms.map(ri=>`<option value="${ri}">${roomName(ri)}</option>`).join('')}</select><label>${lang==='nl'?'AANTAL':'COUNT'}</label><input id="ans2" class="code" style="width:60px" maxlength="1" inputmode="numeric">`;
+  const after=()=>{ document.querySelectorAll('.ev div[data-c]').forEach(d=>{ if(d.classList.contains('n')) return; d.onclick=()=>{ const k=d.dataset.c; const cur=state.scratch[key][k]||''; const nx=cur===''?'x':(cur==='x'?'s':''); state.scratch[key][k]=nx; d.classList.remove('x','s'); if(nx) d.classList.add(nx); save(); }; }); };
+  const check=()=>{ const marked=Object.entries(state.scratch[key]).filter(([k,v])=>v==='x').map(([k])=>k).sort().join('|'); const sol=p.evidence.map(e=>e.join()).sort().join('|'); const v=+document.getElementById('ans').value, n=+document.getElementById('ans2').value; return (marked===sol&&v===r.key.room&&n===r.key.count)?`${roomName(r.key.room)} · ${r.key.count}`:null; };
+  return {html,answer,after,check};
+}
+// ---------------- CIJFER
+function uiCipher(rid,r){
+  const p=r.puzzle;
+  const html=`<div class="cipher">${p.cipher[lang]}</div><div class="shift"><label>${lang==='nl'?'Verschuiving (sleutel 706):':'Shift (key 706):'}</label><input id="shift" type="number" min="0" max="25" value="0" style="width:60px"><span class="hint">${lang==='nl'?'Het alfabet schuift live mee.':'The alphabet shifts live.'}</span></div><div class="decoded" id="dec"></div>`;
+  const answer=`<label>${lang==='nl'?'WACHTWOORD':'PASSWORD'}</label><input id="ans" style="width:180px;text-transform:uppercase">`;
+  const after=()=>{ const inp=document.getElementById('shift'), dec=document.getElementById('dec'); const upd=()=>{ const sh=+inp.value||0; dec.textContent=p.cipher[lang].replace(/[A-Z]/g,ch=>String.fromCharCode((ch.charCodeAt(0)-65-sh+2600)%26+65)); }; inp.oninput=upd; upd(); };
+  const check=()=>{ const v=document.getElementById('ans').value.trim().toUpperCase(); return v===r.key.word[lang]?v:null; };
+  return {html,answer,after,check};
+}
+
+// ---------------- NACHTWACHT
+function tlText(c, ev){ const e=i=>ev[i][L()]; const cap=s=>s[0].toUpperCase()+s.slice(1); const k=c[0];
+  if(lang==='nl'){ if(k==='first') return `${cap(e(c[1]))} was het eerste wat er gebeurde.`; if(k==='last') return `${cap(e(c[1]))} was het laatste.`; if(k==='before') return `${cap(e(c[1]))} kwam vóór ${e(c[2])}.`; if(k==='right_after') return `${cap(e(c[2]))} kwam direct na ${e(c[1])}.`; if(k==='between') return `${cap(e(c[2]))} zat tussen ${e(c[1])} en ${e(c[3])} in.`; if(k==='gap') return `Tussen ${e(c[1])} en ${e(c[2])} zat${c[3]>1?'en':''} precies ${c[3]===1?'één':c[3]} gebeurtenis${c[3]>1?'sen':''}.`; }
+  else { if(k==='first') return `${cap(e(c[1]))} was the first thing that happened.`; if(k==='last') return `${cap(e(c[1]))} was the last.`; if(k==='before') return `${cap(e(c[1]))} came before ${e(c[2])}.`; if(k==='right_after') return `${cap(e(c[2]))} came right after ${e(c[1])}.`; if(k==='between') return `${cap(e(c[2]))} came between ${e(c[1])} and ${e(c[3])}.`; if(k==='gap') return `Exactly ${c[3]===1?'one event':c[3]+' events'} came between ${e(c[1])} and ${e(c[2])}.`; } }
+function uiTimeline(rid,r){
+  const p=r.puzzle, ev=r.events; const key='t'+rid; state.scratch[key]=state.scratch[key]||{};
+  const cap=s=>s[0].toUpperCase()+s.slice(1);
+  let s=`<ul class="tl">`+ev.map((e,i)=>`<li data-i="${i}" class="${state.scratch[key][i]?'done':''}"><b>${state.scratch[key][i]||''}</b>${cap(e[L()])}</li>`).join('')+'</ul>';
+  const lines=[[true,(lang==='nl'?'Het geluid van de deur uit sleutel 702 klonk direct na de gong van elf uur.':"The sound of the door from key 702 came right after the eleven o'clock gong.")]].concat(p.clues.map(c=>[false,tlText(c,ev)]));
+  const html=`<div class="puz"><div>${s}<div class="hint">${lang==='nl'?'Klik op een gebeurtenis om het volgende nummer te geven; nog eens klikken wist het.':'Click an event to give it the next number; click again to clear.'}</div></div><div class="clues"><ol>${lines.map(([k,x])=>`<li class="${k?'k':''}"><span>${x}</span></li>`).join('')}</ol></div></div>`;
+  const answer=`<label>${lang==='nl'?'POSITIE VAN DE GIL':'POSITION OF THE SCREAM'}</label><input id="ans" class="code" style="width:60px" maxlength="1" inputmode="numeric">`;
+  const after=()=>{ document.querySelectorAll('.tl li').forEach(li=>{ li.onclick=()=>{ const i=li.dataset.i; if(state.scratch[key][i]){ delete state.scratch[key][i]; } else { const used=Object.values(state.scratch[key]).map(Number); let n=1; while(used.includes(n)) n++; if(n<=8) state.scratch[key][i]=n; } save(); li.className=state.scratch[key][i]?'done':''; li.querySelector('b').textContent=state.scratch[key][i]||''; click(); }; }); };
+  const check=()=>{ return +document.getElementById('ans').value===r.key.position?String(r.key.position):null; };
+  return {html,answer,after,check};
+}
+// ---------------- DONKERE KAMER
+function uiZebra(rid,r){
+  const p=r.puzzle; const key='z'+rid; state.scratch[key]=state.scratch[key]||{};
+  const plab=p.persons.map(l=>l==='N'?(lang==='nl'?'verpleegster':'nurse'):nm(l,true)); const rlab=p.rooms.map(roomName); const hlab=[0,1,2,3].map(hour);
+  const grid=(id,rows,cols)=>{ let g=`<table class="zg"><tr><th></th>${cols.map(c=>`<th class="rot"><span>${c}</span></th>`).join('')}</tr>`; rows.forEach((rl,i)=>{ g+=`<tr><th>${rl}</th>`; cols.forEach((c,j)=>{ const k=id+i+','+j; g+=`<td class="cell ${state.scratch[key][k]||''}" data-k="${k}">${state.scratch[key][k]==='X'?'X':(state.scratch[key][k]==='o'?'·':'')}</td>`; }); g+='</tr>'; }); return g+'</table>'; };
+  const s=`<div class="zb">${grid('pr',plab,rlab)}${grid('ph',plab,hlab)}${grid('rh',rlab,hlab)}<div></div></div>`;
+  const kc=p.keyclue; const lab=(kind,v)=>kind==='p'?plab[v]:(kind==='r'?ROOMS[p.rooms[v]][lang==='nl'?1:3]:hour(v));
+  const zt=c=>{ const k=c[0]; if(k==='is'||k==='not'){ const a=lab(c[1],c[2]), b=lab(c[3],c[4]); const kk=c[1]+c[3]; const neg=k==='not';
+      if(lang==='nl'){ if(kk==='pr') return `${a} staat ${neg?'niet ':''}op de foto in ${b}.`; if(kk==='hp') return `De foto van ${hour(c[2])} toont ${neg?'niet ':''}${b}.`; if(kk==='hr') return `De foto van ${hour(c[2])} is ${neg?'niet ':''}in ${b} genomen.`; }
+      else { if(kk==='pr') return `${a} is ${neg?'not ':''}on the photograph in ${b}.`; if(kk==='hp') return `The ${hour(c[2])} photograph ${neg?'does not show':'shows'} ${b}.`; if(kk==='hr') return `The ${hour(c[2])} photograph was ${neg?'not ':''}taken in ${b}.`; } }
+    if(k==='earlier'){ const a=lab(c[1],c[2]), b=lab(c[3],c[4]); if(c[1]==='p') return lang==='nl'?`De foto van ${a} is eerder genomen dan die van ${b}.`:`${a}'s photograph was taken earlier than ${b}'s.`; return lang==='nl'?`De foto in ${a} is eerder genomen dan die in ${b}.`:`The photograph in ${a} was taken earlier than the one in ${b}.`; } };
+  const cap=x=>x[0].toUpperCase()+x.slice(1);
+  const lines=[[true,(lang==='nl'?`De foto in de zaal uit sleutel 706 is genomen om ${hour(kc[4])}.`:`The photograph in the room from key 706 was taken at ${hour(kc[4])}.`)]].concat(p.clues.map(c=>[false,cap(zt(c))]));
+  const html=`<div class="puz"><div>${s}<div class="hint">${lang==='nl'?'Klik: X = hoort bij elkaar, · = niet.':'Click: X = belongs together, · = not.'}</div></div><div class="clues"><ol>${lines.map(([k,x])=>`<li class="${k?'k':''}"><span>${x}</span></li>`).join('')}</ol></div></div>`;
+  const answer=`<label>${lang==='nl'?'OP DE FOTO VAN 00.00':'ON THE MIDNIGHT PHOTOGRAPH'}</label><select id="ans"><option value="">—</option>${p.persons.map((l,i)=>`<option value="${l}">${plab[i]}</option>`).join('')}</select>`;
+  const after=()=>{ document.querySelectorAll('.zg td.cell').forEach(td=>{ td.onclick=()=>{ const k=td.dataset.k; const cur=state.scratch[key][k]||''; const nx=cur===''?'X':(cur==='X'?'o':''); state.scratch[key][k]=nx; td.className='cell '+nx; td.textContent=nx==='X'?'X':(nx==='o'?'·':''); save(); click(); }; }); };
+  const check=()=>document.getElementById('ans').value===r.key.letter?r.key.letter:null;
+  return {html,answer,after,check};
+}
+// ---------------- DE BAR
+function uiLiars(rid,r){
+  const p=r.puzzle, st=p.order; const key='l'+rid; state.scratch[key]=state.scratch[key]||{};
+  let s='<ul class="st">'+p.statements.map(([kind,j,room],i)=>`<li><b>${st[i]}</b><i><strong>${nm(st[i],true)}:</strong> „${nm(st[j],true)} ${lang==='nl'?(kind==='lies'?'liegt':'spreekt de waarheid'):(kind==='lies'?'is lying':'is telling the truth')}. ${lang==='nl'?'De liftjongen lag in':'The lift boy lay in'} ${ROOMS[room][lang==='nl'?1:3]}.”</i><label><input type="checkbox" data-i="${i}" ${state.scratch[key][i]?'checked':''}> ${lang==='nl'?'liegt':'liar'}</label></li>`).join('')+'</ul>';
+  const html=castHtml(st)+`<div class="puz"><div style="flex:1">${s}</div></div>`;
+  const rooms=[...new Set(p.statements.map(x=>x[2]))];
+  const answer=`<label>${lang==='nl'?'WAAR LAG DE LIFTJONGEN?':'WHERE DID THE LIFT BOY LIE?'}</label><select id="ans"><option value="">—</option>${rooms.map(ri=>`<option value="${ri}">${roomName(ri)}</option>`).join('')}</select>`;
+  const after=()=>{ document.querySelectorAll('.st input').forEach(cb=>{ cb.onchange=()=>{ state.scratch[key][cb.dataset.i]=cb.checked; save(); click(); }; }); };
+  const check=()=>+document.getElementById('ans').value===r.key.room?roomName(r.key.room):null;
+  return {html,answer,after,check};
+}
+// ---------------- FINAL
+function uiFinal(rid,r){
+  const html=`<div class="puz"><div class="clues"><p><b>${lang==='nl'?'Cijferslot':'Combination lock'}</b>: ${t().final_boxes.join(' · ')}</p><p><b>${t().final_word}</b></p></div></div>`;
+  const answer=`<label>CODE</label><input class="code" id="ans" maxlength="4" inputmode="numeric" style="width:100px"><label>${lang==='nl'?'WOORD':'WORD'}</label><input id="ans2" style="width:100px;text-transform:uppercase" maxlength="4">`;
+  const check=()=>{ const v=document.getElementById('ans').value.trim(), w=document.getElementById('ans2').value.trim().toUpperCase(); return (v===r.key.code&&w===r.key.word)?`${v} · ${w}`:null; };
+  return {html,answer,check};
+}
+function showSecret(){ const s=document.getElementById('secret'); s.className='open'; s.innerHTML=`<h2>${t().secret_title}</h2>`+t().secret.split('\n\n').map(p=>`<p>${p}</p>`).join('')+`<p><button class="small" id="share">${lang==='nl'?'Deel je resultaat':'Share your result'}</button> <span class="msg" id="shmsg"></span></p>`
+  +`<div class="bookbox"><b>${BOOK_TXT[lang].box_t}</b><p>${BOOK_TXT[lang].box}</p><a class="primary" href="${BOOK_URL[lang]}" target="_blank" rel="noopener">${BOOK_TXT[lang].btn} →</a></div>`; s.scrollIntoView({behavior:'smooth'}); document.getElementById('share').onclick=()=>{ const txt=(lang==='nl'?'Ik heb verdieping 7 van Hotel Winterlicht opgelost. De daders spellen LIFT. 🔑☠️':'I solved floor 7 of Hotel Winterlight. The killers spell LIFT. 🔑☠️')+'\nwww.enigmamystery.com'; navigator.clipboard&&navigator.clipboard.writeText(txt); document.getElementById('shmsg').textContent=lang==='nl'?'Gekopieerd.':'Copied.'; }; }
+document.getElementById('langbtn').onclick=()=>{ lang=lang==='nl'?'en':'nl'; save(); try{history.replaceState(null,'','#'+lang);}catch(e){} renderMap(); document.getElementById('panel').className=''; document.getElementById('secret').className=''; };
+document.getElementById('freebtn').onclick=()=>{ state.free=!state.free; save(); renderMap(); toast(state.free?(lang==='nl'?'🔓 Vrije toegang aan – alle kamers open, sleutels staan in de kamer.':'🔓 Free access on – all rooms open, keys shown in the room.'):(lang==='nl'?'🔒 Vrije toegang uit.':'🔒 Free access off.')); const p=document.getElementById('panel'); if(p.className==='open'&&p.dataset.rid) openRoom(p.dataset.rid); };
+document.getElementById('sndbtn').onclick=()=>{ state.sound=!state.sound; save(); renderMap(); if(state.sound) gong(); };
+let resetArmed=false;
+document.getElementById('resetbtn').onclick=()=>{ const b=document.getElementById('resetbtn'); if(!resetArmed){ resetArmed=true; b.textContent=lang==='nl'?'Alles wissen? Klik nog eens':'Clear all? Click again'; b.style.borderColor='#ff8a86'; setTimeout(()=>{ resetArmed=false; b.textContent=lang==='nl'?'Opnieuw':'Reset'; b.style.borderColor=''; },3000); return; } resetArmed=false; state={solved:{},keys:{},secret:false,scratch:{},sound:state.sound,free:state.free}; save(); renderMap(); document.getElementById('panel').className=''; document.getElementById('secret').className=''; toast(lang==='nl'?'Alles gewist.':'Everything cleared.'); };
+renderMap();
+window.__hm = {state, F, openRoom, unlocked};
+</script>
+</body>
+</html>
