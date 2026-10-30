@@ -366,7 +366,7 @@ function init(){
 window.__KAST = { META, get K(){ return K; }, laadKast, bewaarKast, staatVan,
                   toegankelijk, renderKast, openDossier, terug, toonScherm, init };
 
-(async function(){ let c = ""; try { c = localStorage.getItem(PRO_KEY) || ""; } catch(e){}
+(async function(){ let c = ""; try { c = new URLSearchParams(location.search).get("code") || localStorage.getItem(PRO_KEY) || ""; } catch(e){}
   if (c && window.crypto && crypto.subtle && typeof DecompressionStream !== "undefined"){ try { await proOpen(c); } catch(e){} }
   init(); })();
 </script>

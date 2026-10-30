@@ -4,6 +4,11 @@
   function bewaar(k, v) { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (e) {} }
   function lees(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } }
   var PRO_KEY = "gf_pro_code";
+  /* code meegenomen van de oude sites (graveyardfiles.com / nachtdossier.nl) */
+  try {
+    var u = new URL(location.href), mee = u.searchParams.get("code");
+    if (mee) { bewaar(PRO_KEY, String(mee).toUpperCase().replace(/[^A-Z0-9]/g, "")); u.searchParams.delete("code"); history.replaceState(null, "", u.pathname + u.search + u.hash); }
+  } catch (e) {}
 
   /* taal: de pagina die je bekijkt is je keuze */
   var taal = document.body.getAttribute("data-lang");

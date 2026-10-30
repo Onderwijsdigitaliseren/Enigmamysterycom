@@ -129,7 +129,7 @@ function toonProSlot(){
 """ % (json.dumps(ui, ensure_ascii=False), PRO_PAGINA[lang])
     html = rep(html, "\nfunction init(){", js + "\nfunction init(){")
     html = rep(html, "init();\n</script>",
-               "(async function(){ let c = \"\"; try { c = localStorage.getItem(PRO_KEY) || \"\"; } catch(e){}\n"
+               "(async function(){ let c = \"\"; try { c = new URLSearchParams(location.search).get(\"code\") || localStorage.getItem(PRO_KEY) || \"\"; } catch(e){}\n"
                "  if (c && window.crypto && crypto.subtle && typeof DecompressionStream !== \"undefined\"){ try { await proOpen(c); } catch(e){} }\n"
                "  init(); })();\n</script>")
     path.write_text(html, encoding="utf-8")
