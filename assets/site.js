@@ -28,11 +28,11 @@
   if (knoppen.length) {
     var kies = function (f) {
       knoppen.forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-filter") === f)); });
-      document.querySelectorAll(".plank").forEach(function (plank) {
+      document.querySelectorAll("#archief-1 .plank").forEach(function (plank) {
         var zicht = 0;
         plank.querySelectorAll(".dossier").forEach(function (d) {
-          var pro = d.getAttribute("data-pro") === "1";
-          var aan = f === "alles" || (f === "pro" ? pro : !pro);
+          var st = d.getAttribute("data-status");
+          var aan = f === "alles" || (f === "pro" ? st !== "gratis" : st !== "pro");
           d.hidden = !aan; if (aan) zicht++;
         });
         plank.hidden = zicht === 0;

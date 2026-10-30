@@ -218,3 +218,26 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 @media (min-width:641px){.held.hoofd .beeld img{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)}}
 @media (max-aspect-ratio:5/4){.kies picture img{-webkit-mask-image:linear-gradient(0deg,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(0deg,transparent 0,#000 8%,#000 92%,transparent 100%);object-position:50% 50%}}
 @media (min-aspect-ratio:5/4){.kies picture img{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)}}
+
+/* ---------- archieven op de spellenpagina ---------- */
+.archief{display:grid;gap:22px;padding-bottom:56px}
+.archief + .archief{border-top:1px solid #2a2015;padding-top:56px}
+.archiefkop{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;justify-content:space-between}
+.etiket{display:flex;gap:18px;align-items:center;min-width:0;flex:1 1 420px}
+.etiket > div{display:grid;gap:6px;min-width:0}
+.etiket .nummer{flex:none;width:76px;height:76px;display:grid;place-items:center;font:700 2.2rem/1 var(--label);color:#1b130a;
+  background:linear-gradient(180deg,var(--goud-licht),var(--goud));border:1px solid var(--goud-donker);box-shadow:0 1px 0 #fff4 inset,0 8px 20px #0009}
+.archief.toekomst .etiket .nummer{background:transparent;color:var(--perkament-dim);border:1px dashed var(--perkament-dim);box-shadow:none}
+.legenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;background:var(--hout);border:1px solid var(--rand);padding:16px 18px}
+.legenda > div{display:flex;gap:12px;align-items:flex-start}
+.legenda .stempel{position:static;transform:rotate(-3deg);flex:none;background:#efe3c9}
+.legenda p{font-size:.92rem;color:var(--perkament-zacht);line-height:1.45}
+.plankkop{font-size:clamp(1.5rem,3vw,2rem)}
+.stempel.proef{color:#8d6a28}
+.proefregel{margin-top:2px;font:600 .66rem/1.5 var(--label)!important;letter-spacing:.12em;text-transform:uppercase;color:#8d6a28!important}
+.pro-actief .stempel.proef{display:none}
+.pro-actief .proefregel{display:none}
+.leegvakken{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:16px}
+.leegvak{border:1px dashed var(--rand);padding:22px 18px;min-height:120px;display:grid;align-content:center;gap:6px;color:var(--perkament-dim)}
+.leegvak .label{color:var(--perkament-dim)}
+.leegvak p{font-family:var(--kop);font-style:italic;font-size:1.1rem}

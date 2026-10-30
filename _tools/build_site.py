@@ -73,7 +73,7 @@ SPELLEN = [
  dict(plank="logica", art="krant", pro=False, added="2026-10-07",
       nl=("De Zwarte Kolom", "Drie nachten, drie doden, één rooster.", "the-black-column.html#nl"),
       en=("The Black Column", "Three nights, three deaths, one grid.", "the-black-column.html#en")),
- dict(plank="logica", art="plan", pro=True, added="2026-09-10",
+ dict(plank="logica", art="plan", pro=False, proef="dossier I", added="2026-09-10",
       nl=("Het Grondplan", "Wie waar stond bepaalt wie het deed.", "grondplan.html"),
       en=("The Floor Plan", "Where everyone stood decides who did it.", "the-floor-plan.html")),
  # Cozy & bouwen
@@ -101,6 +101,11 @@ PLANKEN = [
  ("cozy",    {"nl": ("Cozy & bouwen", "Rustig spelen zonder klok. Er zit wel een echte zaak onder."),
               "en": ("Cozy & building", "Play at your own pace, no clock. There is a real case underneath.")}),
 ]
+
+for _s in SPELLEN:
+    _s.setdefault("archief", 1)
+    _s["status"] = "proef" if _s.get("proef") else ("pro" if _s["pro"] else "gratis")
+PROEF_TEKST = {"dossier I": {"nl": "Dossier I gratis", "en": "File I free"}}
 
 NIEUW = sorted(range(len(SPELLEN)), key=lambda i: SPELLEN[i]["added"], reverse=True)[:3]
 
@@ -133,8 +138,8 @@ T = {
    nieuw="Nieuw", nieuwzin="Net binnengekomen op het bureau.",
    deuren="Het bewijsbord", deurenzin="Vier sporen, één naam.",
    deurenuitleg="Online op je scherm, buiten op de been, op papier met een potlood, of samen met de kleintjes. Trek aan een draad.",
-   gratis="Gratis", pro="Pro", nieuwstempel="Nieuw",
-   alles="Alles", alleengratis="Gratis", alleenpro="Pro",
+   gratis="Gratis", pro="Pro", proef="Proef", nieuwstempel="Nieuw",
+   alles="Alles", alleengratis="Gratis te spelen", alleenpro="Met de pas",
    footzin="Fictieve zaken. Echte puzzels. Elke zaak heeft precies één oplossing.",
    privacy="Privacy", notitie="Laat een notitie achter", overlink="Over Enigma Mystery",
  ),
@@ -144,8 +149,8 @@ T = {
    nieuw="New", nieuwzin="Just in on the desk.",
    deuren="The evidence board", deurenzin="Four leads, one name.",
    deurenuitleg="Online on your screen, outdoors on foot, on paper with a pencil, or together with the little ones. Pull a thread.",
-   gratis="Free", pro="Pro", nieuwstempel="New",
-   alles="All", alleengratis="Free", alleenpro="Pro",
+   gratis="Free", pro="Pro", proef="Trial", nieuwstempel="New",
+   alles="All", alleengratis="Free to play", alleenpro="With the pass",
    footzin="Fictional cases. Real puzzles. Every case has exactly one solution.",
    privacy="Privacy", notitie="Leave a note", overlink="About Enigma Mystery",
  ),
@@ -236,12 +241,16 @@ def kaart(i, lang, here, nieuw_stempel=True):
     titel, haak, _ = s[lang]
     t = T[lang]
     plaknaam = dict(PLANKEN)[s["plank"]][lang][0]
-    stempels = f'<span class="stempel {"pro" if s["pro"] else "gratis"}">{t["pro"] if s["pro"] else t["gratis"]}</span>'
+    st = s["status"]
+    stempels = f'<span class="stempel {st}">{t[st]}</span>'
     if nieuw_stempel and i in NIEUW:
         stempels += f'<span class="stempel nieuw">{t["nieuwstempel"]}</span>'
-    return (f'<a class="dossier" href="{spel_url(s, lang, here)}" data-pro="{1 if s["pro"] else 0}">'
+    regel = ""
+    if st == "proef":
+        regel = f'<p class="proefregel">{escape(PROEF_TEKST[s["proef"]][lang])} · {"de rest met de pas" if lang == "nl" else "the rest with the pass"}</p>'
+    return (f'<a class="dossier" href="{spel_url(s, lang, here)}" data-status="{st}">'
             f'<div class="foto"><img src="{rel(here, "assets/dossiers/" + s["art"] + ".jpg")}" alt="" loading="lazy" decoding="async"></div>'
-            f'<div class="tekst"><span class="soort">{escape(plaknaam)}</span><h3>{escape(titel)}</h3><p>{escape(haak)}</p></div>{stempels}</a>')
+            f'<div class="tekst"><span class="soort">{escape(plaknaam)}</span><h3>{escape(titel)}</h3><p>{escape(haak)}</p>{regel}</div>{stempels}</a>')
 
 def schrijf(path, html):
     p = ROOT / path
@@ -339,17 +348,40 @@ def spellenpagina(lang):
              "Every case plays in your browser, on phone and computer. No account needed; your progress stays on your own device.")
     kop = held(here, lang, f'<span class="label">{"Online" if lang == "nl" else "Online"}</span><h1>{"Mystery Spellen" if lang == "nl" else "Mystery Games"}</h1><p class="zin">{intro}</p>', klein=True,
                smal="assets/dossiers/telefoon.jpg")
+    nl = lang == "nl"
+    n = {k: sum(1 for x in SPELLEN if x["archief"] == 1 and x["status"] == k) for k in ("gratis", "proef", "pro")}
+    legenda = (f'<div class="legenda">'
+        f'<div><span class="stempel gratis">{t["gratis"]}</span><p>{"Helemaal te spelen, zonder pas." if nl else "Play it all, no pass needed."}</p></div>'
+        f'<div><span class="stempel proef">{t["proef"]}</span><p>{"Eerste hoofdstuk gratis. De rest gaat open met de pas." if nl else "First chapter free. The rest opens with the pass."}</p></div>'
+        f'<div><span class="stempel pro">{t["pro"]}</span><p>{(f"Met de pas van {PRO_ARCHIEF[lang]}: eenmalig {PRO_PRIJS}, opent alles in dit archief.") if nl else (f"With the {PRO_ARCHIEF[lang]} pass: {PRO_PRIJS.replace(',', '.')} once, opens everything in this archive.")}</p></div>'
+        f'</div>')
     filt = (f'<div class="filters" role="group" aria-label="Filter"><button type="button" data-filter="alles" aria-pressed="true">{t["alles"]}</button>'
             f'<button type="button" data-filter="gratis" aria-pressed="false">{t["alleengratis"]}</button>'
             f'<button type="button" data-filter="pro" aria-pressed="false">{t["alleenpro"]}</button></div>')
     planken = ""
+    volg = {"gratis": 0, "proef": 1, "pro": 2}
     for key, namen in PLANKEN:
-        idx = [i for i, s in enumerate(SPELLEN) if s["plank"] == key]
-        idx.sort(key=lambda i: (SPELLEN[i]["pro"], -int(SPELLEN[i]["added"].replace("-", ""))))
+        idx = [i for i, x in enumerate(SPELLEN) if x["plank"] == key and x["archief"] == 1]
+        idx.sort(key=lambda i: (volg[SPELLEN[i]["status"]], -int(SPELLEN[i]["added"].replace("-", ""))))
         naam, zin = namen[lang]
-        planken += (f'<section class="plank" id="{key}"><div class="sectiekop"><span class="label">{len(idx)} {"zaken" if lang == "nl" else "cases"}</span><h2>{escape(naam)}</h2><p class="zacht">{escape(zin)}</p></div>'
+        planken += (f'<section class="plank" id="{key}"><div class="sectiekop"><span class="label">{len(idx)} {"zaken" if nl else "cases"}</span><h3 class="plankkop">{escape(naam)}</h3><p class="zacht">{escape(zin)}</p></div>'
                     f'<div class="rij">{"".join(kaart(i, lang, here) for i in idx)}</div></section>')
-    body = kop + f'<section class="sectie"><div class="binnen">{filt}{planken}</div></section>\n'
+    totaal = sum(1 for x in SPELLEN if x["archief"] == 1)
+    ng, npf, npr = n["gratis"], n["proef"], n["pro"]
+    prijs_en = PRO_PRIJS.replace(",", ".")
+    archief1 = (f'<section class="archief" id="archief-1"><div class="archiefkop">'
+        f'<div class="etiket"><span class="nummer">I</span><div><span class="label">{"Archief" if nl else "Archive"} I</span>'
+        f'<h2>{"De eerste dossierkast" if nl else "The first file cabinet"}</h2>'
+        f'<p class="zacht">{(f"{totaal} zaken in vier soorten · {ng} gratis · {npf} met proefhoofdstuk · {npr} met de pas") if nl else (f"{totaal} cases in four kinds · {ng} free · {npf} with a free first chapter · {npr} with the pass")}</p></div></div>'
+        f'<a class="knop lak" href="{rel(here, pad("pro", lang))}">{(f"Pas {PRO_ARCHIEF[lang]} · {PRO_PRIJS}") if nl else (f"{PRO_ARCHIEF[lang]} pass · {prijs_en}")}</a></div>'
+        f'{legenda}{filt}{planken}</section>')
+    slots = "".join(f'<div class="leegvak"><span class="label">{escape(nm[lang][0])}</span><p>{"Nieuwe zaken" if nl else "New cases"}</p></div>' for _, nm in PLANKEN)
+    archief2 = (f'<section class="archief toekomst" id="archief-2"><div class="archiefkop"><div class="etiket"><span class="nummer">II</span><div>'
+        f'<span class="label">{"Archief" if nl else "Archive"} II · {"in voorbereiding" if nl else "in preparation"}</span>'
+        f'<h2>{"De tweede dossierkast" if nl else "The second file cabinet"}</h2>'
+        f'<p class="zacht">{"Dezelfde vier soorten, nieuwe zaken, met een eigen pas. Je pas voor Archief I blijft altijd geldig voor Archief I." if nl else "The same four kinds, new cases, with a pass of its own. Your Archive I pass stays valid for Archive I for good."}</p></div></div></div>'
+        f'<div class="leegvakken">{slots}</div></section>')
+    body = kop + f'<section class="sectie"><div class="binnen">{archief1}{archief2}</div></section>\n'
     schrijf(here + "index.html", head(lang, "spellen", title, desc, here) + kopbalk(lang, "spellen", here) + body + voet(lang, here))
 
 def wandelpagina(lang):
@@ -435,8 +467,8 @@ def propagina(lang):
     title = "Pro-pas · Enigma Mystery" if nl else "Pro pass · Enigma Mystery"
     desc = ("Eén Pro-pas opent alle verzegelde dossiers van Enigma Mystery op je apparaat." if nl
             else "One Pro pass opens every sealed Enigma Mystery file on your device.")
-    pro_lijst = "".join(f'<li><a href="{spel_url(s, lang, here)}">{escape(s[lang][0])}</a></li>' for s in SPELLEN if s["pro"])
-    n_pro = sum(1 for s in SPELLEN if s["pro"])
+    pro_lijst = "".join(f'<li><a href="{spel_url(s, lang, here)}">{escape(s[lang][0])}</a>{(" · " + ("alles na " if lang == "nl" else "everything after ") + s["proef"]) if s["status"] == "proef" else ""}</li>' for s in SPELLEN if s["status"] in ("pro", "proef"))
+    n_pro = sum(1 for s in SPELLEN if s["status"] in ("pro", "proef"))
     kop = held(here, lang, f'<span class="label" style="color:var(--lak-licht)">Pro · {PRO_ARCHIEF[lang]}</span><h1>{"De Pro-pas" if nl else "The Pro pass"}</h1><p class="zin">{(f"Eén pas opent alle {n_pro} verzegelde dossiers van {PRO_ARCHIEF['nl']}. Eenmalig {PRO_PRIJS}, geen abonnement." if nl else f"One pass opens all {n_pro} sealed files in {PRO_ARCHIEF['en']}. {PRO_PRIJS.replace(',', '.')} once, no subscription.")}</p><div class="knoppen"><a class="knop lak" href="{KOFI_PRO}" rel="noopener">{(f"Haal de Pro-pas · {PRO_PRIJS}") if nl else (f"Get the Pro pass · {PRO_PRIJS.replace(',', '.')}")}</a></div>', klein=True)
     stappen = ([("Koop de pas", "Via Ko-fi. Je krijgt direct een pascode."), ("Vul de code in", "Hieronder, of in een verzegeld dossier zelf."), ("Speel alles", "De code wordt op dit apparaat onthouden. Op een ander apparaat vul je hem één keer opnieuw in.")]
                if nl else [("Buy the pass", "Through Ko-fi. You get a pass code right away."), ("Enter the code", "Below, or inside any sealed file."), ("Play everything", "The code is remembered on this device. On another device you enter it once more.")])
