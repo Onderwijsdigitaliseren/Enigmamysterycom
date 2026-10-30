@@ -276,3 +276,45 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   .labinnen{padding:18px 12px 24px}
 }
 @media (prefers-reduced-motion:reduce){.labinnen{animation:none}}
+
+/* ---------- mystery wandelingen ---------- */
+.wandelheld .beeld img{object-position:50% 60%}
+.wandelheld::after{background:linear-gradient(90deg,#0d0a07f2 0%,#0d0a07c4 40%,#0d0a0722 75%),linear-gradient(0deg,#0d0a07 0%,#0d0a0700 35%)}
+.wandelheld .binnen{padding-block:clamp(60px,10vw,130px) clamp(40px,6vw,70px)}
+.wandelfeiten{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:12px}
+.wandelfeiten li{display:grid;gap:2px;padding:10px 16px;border:1px solid #cf9f4566;background:#0d0a07b3;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.wandelfeiten b{font:700 1.15rem/1 var(--label);color:var(--goud-licht);letter-spacing:.04em}
+.wandelfeiten span{font-size:.85rem;color:var(--perkament-zacht)}
+.wandelzaken{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:34px 22px}
+.wandelzaak{position:relative;display:grid;justify-items:center;text-align:center;gap:8px;text-decoration:none;color:var(--perkament);padding:6px 6px 10px;animation:opkomst .6s ease both;animation-delay:var(--d)}
+.medaille{width:min(190px,100%);aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px #8d6a28,0 0 0 6px #0d0a07,0 0 0 7px #8d6a2866,0 18px 34px #000c;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
+.medaille img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.wandelzaak:hover .medaille{transform:translateY(-6px) rotate(-3deg);box-shadow:0 0 0 3px var(--goud-licht),0 0 0 6px #0d0a07,0 0 0 7px var(--goud),0 26px 40px #000d,0 0 40px #cf9f4533}
+.wandelzaak:hover .medaille img{transform:scale(1.08)}
+.wandelzaak h3{font-size:1.35rem;margin-top:8px}
+.wandelzaak p{color:var(--perkament-zacht);font-size:.95rem;max-width:26ch}
+.wandelzaak .pijl{font:600 .7rem var(--label);letter-spacing:.16em;text-transform:uppercase;color:var(--goud)}
+.wandelzaak:hover{color:var(--perkament)}
+.zaaklabel{position:absolute;top:2px;right:12%;z-index:2;font:700 .62rem var(--label);letter-spacing:.14em;text-transform:uppercase;color:#1b130a;background:#e0853a;padding:4px 8px;transform:rotate(8deg);box-shadow:0 3px 8px #0009}
+@keyframes opkomst{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.route{position:relative}
+.routelijn{position:absolute;left:0;right:0;top:86px;width:100%;height:60px;z-index:0;pointer-events:none}
+.wandelstappen{position:relative;z-index:1}
+.wandelstappen li.stap{border-top:0;padding-top:0;gap:12px}
+.wandelstappen li.stap::before{display:none}
+.polaroid{position:relative;display:block;background:#efe4cc;padding:10px 10px 34px;box-shadow:0 16px 30px #000b;transform:rotate(var(--h));max-width:300px;transition:transform .4s}
+.polaroid:hover{transform:rotate(0) translateY(-4px)}
+.polaroid img{width:100%;aspect-ratio:4/3;object-fit:cover;filter:sepia(.15) contrast(1.05)}
+.polaroid .nr{position:absolute;left:12px;bottom:6px;font:700 1.1rem var(--label);color:#8e2b20}
+.onderweg{background:linear-gradient(180deg,#0d0a07,#140f0a 50%,#0d0a07)}
+.galerij{display:grid;grid-auto-flow:column;grid-auto-columns:min(260px,72%);gap:16px;overflow-x:auto;padding:6px 2px 18px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.galerij figure{margin:0;scroll-snap-align:start;display:grid;gap:8px}
+.galerij img{width:100%;aspect-ratio:4/5;object-fit:cover;border:1px solid #2a2015;filter:saturate(.9);transition:filter .4s}
+.galerij figure:hover img{filter:saturate(1.1) brightness(1.08)}
+.galerij figcaption{font:italic 1.05rem var(--kop);color:var(--perkament-zacht)}
+.wandelcta{position:relative;isolation:isolate;overflow:hidden;border-top:1px solid #2a2015}
+.wandelcta > img{position:absolute;right:0;top:0;height:100%;width:auto;max-width:60%;object-fit:cover;object-position:50% 20%;z-index:-2;-webkit-mask-image:linear-gradient(90deg,transparent,#000 35%);mask-image:linear-gradient(90deg,transparent,#000 35%)}
+.wandelcta::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#0d0a07 0%,#0d0a07d9 45%,#0d0a0766 100%)}
+.wandelcta .binnen{padding-block:clamp(56px,9vw,110px);display:grid;gap:16px;justify-items:start}
+@media (max-width:760px){.routelijn{display:none}}
+@media (prefers-reduced-motion:reduce){.wandelzaak{animation:none}}

@@ -15,7 +15,7 @@ MINI = "https://www.minimystery.nl"  # kinderserie, eigen site
 PRO_ARCHIEF = {"nl": "Archief II", "en": "Archive II"}
 PRO_PRIJS = "€3,99"
 KOFI_PRO = "https://ko-fi.com/s/67649bac70"
-WANDEL = {"nl": "https://www.moordwandeling.nl", "en": "https://www.moordwandeling.nl"}  # één site met keuze NL/EN; murderwalk.com verdwijnt
+WANDEL = {"nl": "https://moordwandeling.nl/nl/", "en": "https://moordwandeling.nl/"}  # één site met keuze NL/EN; murderwalk.com verdwijnt
 NOTITIE_ADRES = "kellievandekerkhof@gmail.com"
 
 # --------------------------------------------------------------------------
@@ -289,9 +289,9 @@ def voorpagina(lang):
         [("Where", "On your phone or computer"), ("Time", "20 minutes to a few evenings"), ("Price", "One case of every kind free, the rest with Pro (€3.99 once)")], "To the games")),
       ("wandel", pad("wandel", lang), "buiten", "voet", "assets/deur-wandelingen.jpg", 1.6,
        ("Buiten", "Mystery Wandelingen", "Loop de zaak zelf", "Een moordzaak die je buiten oplost. De stad om je heen wordt de plaats delict.",
-        [("Waar", "Overal, met je telefoon in de hand"), ("Duur", "Ongeveer anderhalf uur"), ("Prijs", "Proefwandeling gratis; verhalen en groepspas los te koop")], "Naar de wandelingen"),
+        [("Waar", "Overal, met je telefoon in de hand"), ("Duur", "Ongeveer anderhalf uur"), ("Prijs", "Proefronde gratis; daarna € 9,95 per team")], "Naar de wandelingen"),
        ("Outdoors", "Mystery Walks", "Walk the case yourself", "A murder case you solve outside. The town around you becomes the crime scene.",
-        [("Where", "Anywhere, phone in hand"), ("Time", "About ninety minutes"), ("Price", "Trial walk free; stories and group pass sold separately")], "To the walks")),
+        [("Where", "Anywhere, phone in hand"), ("Time", "About ninety minutes"), ("Price", "Free trial round; then € 9.95 per team")], "To the walks")),
       ("boeken", pad("boeken", lang), "papier", "boek", "assets/deur-puzzels.jpg", -1.4,
        ("Op papier", "Mystery Puzzels", "Puzzelen met potlood", "Gedrukte puzzelboeken vol moordzaken, van makkelijk naar moeilijk.",
         [("Waar", "Aan tafel, in de trein, op vakantie"), ("Duur", "100 puzzels per boek"), ("Nu", "Gratis proefverdieping online; boeken volgen")], "Naar de puzzels"),
@@ -393,38 +393,88 @@ def spellenpagina(lang):
     body = kop + f'<section class="sectie"><div class="binnen"><div class="kastkop"><span class="label">{"De dossierkast" if nl else "The file cabinet"}</span><h2>{"Trek een lade open." if nl else "Pull open a drawer."}</h2><p class="zacht">{"Lade I is gratis. Lade II gaat open met één pas. Lade III komt eraan." if nl else "Drawer I is free. Drawer II opens with one pass. Drawer III is on its way."}</p></div><div class="kast">{la1}{la2}{la3}</div></div></section>\n'
     schrijf(here + "index.html", head(lang, "spellen", title, desc, here) + kopbalk(lang, "spellen", here) + body + voet(lang, here))
 
+WANDELZAKEN = [  # (cover, nl-pagina, en-pagina, nl-titel, en-titel, nl-haak, en-haak, label)
+ ("cover-mw", "moordwandeling.html", "murder-walk.html", "Moordwandeling", "Murder Walk",
+  "Acht sporen, vijf getuigen, één leugenaar.", "Eight leads, five witnesses, one liar.", None),
+ ("cover-vz", "de-verdwijning.html", "the-vanishing.html", "De Verdwijning", "The Vanishing",
+  "Iemand is weg. Ontvoerd, gevlucht, of iets anders?", "Someone is gone. Abducted, fled, or something else?", None),
+ ("cover-lb", "de-laatste-bus.html", "the-last-bus.html", "De Laatste Bus", "The Last Bus",
+  "Telefoon zegt: aangekomen. Thuis zegt: nee.", "Phone says: arrived. Home says: no.", None),
+ ("cover-cc", "onopgelost.html", "unsolved.html", "Onopgelost", "Unsolved",
+  "Een vermissing van twintig jaar geleden, nooit opgelost.", "A disappearance twenty years ago, never solved.", None),
+ ("cover-og", "ooggetuige.html", "eyewitness.html", "Ooggetuige", "Eyewitness",
+  "Jij zag iets wat je niet had mogen zien. En iemand loopt achter je.", "You saw something you were never meant to see. Someone is walking behind you.", None),
+ ("cover-td", "tot-de-dood-ons-scheidt.html", "till-death-do-us-part.html", "Tot de Dood Ons Scheidt", "Till Death Do Us Part",
+  "Ze zou vandaag trouwen. De bruid kwam nooit aan.", "She was to be married today. The bride never arrived.", None),
+ ("cover-ng", "de-nacht-van-de-geesten.html", "night-of-the-ghosts.html", "De Nacht van de Geesten", "Night of the Ghosts",
+  "Geen moordenaar, wel een geest. Durf jij na het donker?", "No murderer, but a ghost. Do you dare after dark?", "Halloween"),
+]
+
 def wandelpagina(lang):
-    here = pad("wandel", lang); r = lambda p: rel(here, p)
-    nl = lang == "nl"
-    title = "Moordwandelingen · Enigma Mystery" if nl else "Murder walks · Enigma Mystery"
-    desc = ("Een moordmysterie dat je buiten oplost: loop door je eigen stad, verzamel bewijs, verhoor schaduwfiguren en wijs de dader aan. Ongeveer anderhalf uur, alleen of met een groep."
+    here = pad("wandel", lang); r = lambda p: rel(here, p); nl = lang == "nl"
+    title = "Mystery Wandelingen · Enigma Mystery" if nl else "Mystery Walks · Enigma Mystery"
+    desc = ("Detectivespellen die je loopt, in je eigen straten. De kaart legt acht sporen op echte plekken om je heen. Zeven zaken, proefronde gratis, één ticket per team."
             if nl else
-            "A murder mystery you solve outdoors: walk through your own town, collect evidence, question shadow figures and name the killer. About ninety minutes, alone or with a group.")
-    app = WANDEL[lang]
-    kop = held(here, lang, f"""<span class="label">{"Buiten" if nl else "Outdoors"}</span><h1>{"Mystery Wandelingen" if nl else "Mystery Walks"}</h1>
-<p class="zin">{"Een moordzaak die je met je voeten oplost. De stad om je heen wordt de plaats delict." if nl else "A murder case you solve on foot. The town around you becomes the crime scene."}</p>
-<div class="knoppen"><a class="knop" href="{app}" rel="noopener">{"Start de wandeling" if nl else "Start the walk"}</a></div>""", klein=True)
-    stappen = ([("Kies een verhaal", "Begin met de gratis proefwandeling of kies een Pro-verhaal. De app gebruikt gewone plekken om je heen: een kerk, een bank, een hotel."),
-                ("Loop en verzamel", "Op de kaart verschijnen schaduwfiguren met informatie. Loop ernaartoe, vind het bewijs, los de minipuzzels op en verhoor de verdachten."),
-                ("Wijs de dader aan", "Na ongeveer anderhalf uur heb je genoeg. Eén verdachte liegt. Klopt je aanklacht?")]
+            "Detective games you walk in your own streets. The map places eight leads at real places around you. Seven cases, free trial round, one ticket per team.")
+    basis = "https://moordwandeling.nl/nl/" if nl else "https://moordwandeling.nl/"
+    W = lambda f: r("assets/wandel/" + f)
+    kop = f"""<section class="held wandelheld">
+<picture class="beeld"><source media="(max-width:640px)" srcset="{W('hero.webp')}"><img src="{W('hero-breed.webp')}" alt="" fetchpriority="high"></picture>
+<div class="binnen"><span class="label">{"Buiten" if nl else "Outdoors"}</span><h1>{"Mystery Wandelingen" if nl else "Mystery Walks"}</h1>
+<p class="zin">{"Een detectivespel dat je loopt, in je eigen straten. De buurt om je heen wordt de plaats delict." if nl else "A detective game you walk, in your own streets. The neighbourhood around you becomes the crime scene."}</p>
+<div class="knoppen"><a class="knop" href="#zaken">{"Kies een zaak" if nl else "Pick a case"}</a><a class="knop lijn" href="#hoe">{"Zo werkt het" if nl else "How it works"}</a></div>
+<ul class="wandelfeiten">
+<li><b>{"Overal" if nl else "Anywhere"}</b><span>{"gps legt de route om je heen" if nl else "GPS lays the route around you"}</span></li>
+<li><b>{"Gratis" if nl else "Free"}</b><span>{"proefronde bij elke zaak" if nl else "trial round for every case"}</span></li>
+<li><b>€ 9,95</b><span>{"één ticket per team" if nl else "one ticket per team"}</span></li>
+</ul></div></section>
+"""
+    zaken = ""
+    for n, (cov, pnl, pen, tnl, ten, hnl, hen, lab) in enumerate(WANDELZAKEN):
+        href = basis + (pnl if nl else pen)
+        tag = f'<span class="zaaklabel">{lab}</span>' if lab else ""
+        zaken += (f'<a class="wandelzaak" href="{href}" rel="noopener" style="--d:{n * 70}ms">{tag}'
+                  f'<span class="medaille"><img src="{W(cov + ".webp")}" alt="" loading="lazy" width="320" height="320"></span>'
+                  f'<h3>{escape(tnl if nl else ten)}</h3><p>{escape(hnl if nl else hen)}</p>'
+                  f'<span class="pijl">{"Bekijk de zaak" if nl else "View the case"} &rarr;</span></a>')
+    stappen = ([("mw-lantern", "Kies een zaak", "Start waar je staat. De kaart legt acht sporen op echte plekken op loopafstand: de kerk, de bushalte, het café."),
+                ("mw-evidence", "Loop en verzamel", "Binnen 35 meter gaat een spoor open: een schim die iets zag, een bewijsstuk, een camerabeeld, een bericht."),
+                ("mw-suspect", "Wijs de dader aan", "Sluit samen verdachten uit in het notitieboek, ontmasker de leugenaar en wijs de dader aan.")]
                if nl else
-               [("Pick a story", "Start with the free trial walk or choose a Pro story. The app uses ordinary places around you: a church, a bank, a hotel."),
-                ("Walk and collect", "Shadow figures with information appear on the map. Walk up to them, find the evidence, solve the mini-puzzles and question the suspects."),
-                ("Name the killer", "After about ninety minutes you have enough. One suspect is lying. Does your charge hold?")])
-    stap_html = "".join(f"<li><h3>{a}</h3><p>{b}</p></li>" for a, b in stappen)
-    blokken = ([("Gratis proefwandeling", ["Speel overal, ook bij jou om de hoek", "Proefroute door de binnenstad van Eindhoven", "Geen account nodig"]),
-                ("Pro-verhalen", ["Meerdere complete zaken", "Verhoren en gebeurtenissen onderweg op tijd", "Eenmalig kopen, blijft open op je telefoon"]),
-                ("Samen of tegen elkaar", ["Groepsspel: Samen of Teams tegen elkaar", "Misleid de andere groep", "Groepspas voor maximaal 10 spelers, 48 uur geldig"])]
+               [("mw-lantern", "Pick a case", "Start where you stand. The map places eight leads at real places within walking distance: the church, the bus stop, the café."),
+                ("mw-evidence", "Walk and collect", "Within 35 metres a lead opens: a shade who saw something, a piece of evidence, a camera still, a message."),
+                ("mw-suspect", "Name the killer", "Rule out suspects together in the notebook, unmask the liar and name the killer.")])
+    stap_html = "".join(f'<li class="stap"><span class="polaroid" style="--h:{h}deg"><img src="{W(img + ".webp")}" alt="" loading="lazy"><span class="nr">{n}</span></span><h3>{escape(a)}</h3><p>{escape(b)}</p></li>'
+                        for (img, a, b), n, h in zip(stappen, ("I", "II", "III"), (-3, 2, -1.5)))
+    galerij = ([("mw-shade", "Een schim in de mist"), ("mw-schoen", "Voetsporen in de regen"), ("mw-victim", "De omtrek op de stoep"),
+                ("mw-vezel", "Een draad aan het hek"), ("mw-hand", "Een handschoen in de goot"), ("mw-witness", "De getuige in de deuropening"),
+                ("mw-flee", "Iemand rent weg"), ("mw-bril", "Een bril op tafel")]
                if nl else
-               [("Free trial walk", ["Play anywhere, even around the corner", "Trial route through Eindhoven city centre", "No account needed"]),
-                ("Pro stories", ["Several complete cases", "Interrogations and timed events along the route", "Buy once, stays open on your phone"]),
-                ("Together or against each other", ["Group play: Together or Teams against each other", "Mislead the other group", "Group pass for up to 10 players, valid for 48 hours"])])
+               [("mw-shade", "A shade in the fog"), ("mw-schoen", "Footprints in the rain"), ("mw-victim", "The outline on the pavement"),
+                ("mw-vezel", "A thread on the railing"), ("mw-hand", "A glove in the gutter"), ("mw-witness", "The witness in the doorway"),
+                ("mw-flee", "Someone runs"), ("mw-bril", "Glasses on the table")])
+    gal_html = "".join(f'<figure><img src="{W(f + ".webp")}" alt="{escape(c)}" loading="lazy"><figcaption>{escape(c)}</figcaption></figure>' for f, c in galerij)
+    blokken = ([("Samen op pad", ["Eén ticket per team, iedereen vult dezelfde code in", "Samen op één telefoon of ieder op een eigen", "De code blijft twee maanden geldig"]),
+                ("Een wandeling op maat", ["Voor een uitje, vrijgezellenfeest, verjaardag of klas", "Jullie stad, jullie namen, jullie verhaal", "Van een stel tot honderd man, in teams tegen elkaar"])]
+               if nl else
+               [("Out together", ["One ticket per team, everyone enters the same code", "Together on one phone or each on their own", "The code stays valid for two months"]),
+                ("A walk made to measure", ["For an outing, hen party, birthday or class", "Your town, your names, your story", "From two people to a hundred, in teams against each other"])])
     blok_html = "".join(f'<div class="blok"><h3>{a}</h3><ul>{"".join(f"<li>{x}</li>" for x in b)}</ul></div>' for a, b in blokken)
-    body = kop + f"""<section class="sectie"><div class="binnen">
+    body = kop + f"""<section class="sectie" id="zaken"><div class="binnen">
+<div class="sectiekop"><span class="label">{"Zeven zaken op straat" if nl else "Seven cases on the street"}</span><h2>{"Kies je zaak, trek je jas aan." if nl else "Pick your case, grab your coat."}</h2>
+<p class="zacht">{"Elke zaak speel je in je eigen buurt, in het Nederlands of het Engels. Elke wandeling begint met een gratis proefronde." if nl else "Every case plays in your own neighbourhood, in English or Dutch. Every walk starts with a free trial round."}</p></div>
+<div class="wandelzaken">{zaken}</div></div></section>
+<section class="sectie" id="hoe"><div class="binnen">
 <div class="sectiekop"><span class="label">{"Zo werkt het" if nl else "How it works"}</span><h2>{"Drie stappen, één dader" if nl else "Three steps, one killer"}</h2></div>
-<ol class="stappen">{stap_html}</ol></div></section>
-<section class="sectie"><div class="binnen"><div class="twee">{blok_html}</div>
-<p style="margin-top:28px"><a class="knop" href="{app}" rel="noopener">{"Open de wandel-app" if nl else "Open the walk app"}</a></p></div></section>
+<div class="route"><svg class="routelijn" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden="true"><path d="M60 30 C 250 -10, 350 70, 500 30 S 760 -10, 940 30" fill="none" stroke="var(--lak)" stroke-width="2.4" stroke-dasharray="2 10" stroke-linecap="round"/></svg>
+<ol class="stappen wandelstappen">{stap_html}</ol></div></div></section>
+<section class="sectie onderweg"><div class="binnen">
+<div class="sectiekop"><span class="label">{"Onderweg" if nl else "On the way"}</span><h2>{"Wat je onderweg tegenkomt" if nl else "What you will run into"}</h2></div>
+<div class="galerij">{gal_html}</div></div></section>
+<section class="sectie"><div class="binnen"><div class="twee">{blok_html}</div></div></section>
+<section class="wandelcta"><img src="{W('mw-shadow.webp')}" alt="" loading="lazy"><div class="binnen">
+<h2>{"Klaar om te gaan?" if nl else "Ready to go?"}</h2><p class="zin">{"De eerste ronde is gratis. Je hebt alleen je telefoon en je schoenen nodig." if nl else "The first round is free. All you need is your phone and your shoes."}</p>
+<div class="knoppen"><a class="knop" href="{basis}" rel="noopener">{"Naar moordwandeling.nl" if nl else "To the walks"} &rarr;</a><a class="knop lijn" href="{r(pad('contact', lang))}">{"Wandeling op maat aanvragen" if nl else "Ask for a custom walk"}</a></div></div></section>
 """
     schrijf(here + "index.html", head(lang, "wandel", title, desc, here) + kopbalk(lang, "wandel", here) + body + voet(lang, here))
 
