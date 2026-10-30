@@ -41,6 +41,12 @@ SPELLEN = [
  dict(plank="verhaal", art="zee", pro=True, added="2026-09-05",
       nl=("Zeezicht", "Een gesloten badhotel, storm, een lichaam in het zwembad.", "zeezicht.html"),
       en=("Sea View", "A closed hotel, a storm, a body in the pool.", "seaview.html")),
+ dict(plank="verhaal", art="knipsel", pro=True, added="2026-10-30",
+      nl=("Het Knipselarchief", "Een koude zaak uit 1974. Alleen het archief weet het nog.", "the-clippings-room.html#nl"),
+      en=("The Clippings Room", "A 1974 cold case. Only the archive still remembers.", "the-clippings-room.html#en")),
+ dict(plank="verhaal", art="texel", pro=True, added="2026-10-30",
+      nl=("Huisje Texel", "Zes vrienden, één huurhuis, een telefoon vol berichten. Wie vertrouw jij?", "texel-house.html#nl"),
+      en=("Texel House", "Six friends, one holiday house, a phone full of messages. Who do you trust?", "texel-house.html#en")),
  # Escape & 3D
  dict(plank="escape", art="klok", pro=False, added="2026-09-20",
       nl=("De Stilstaande Klok", "Opgesloten met het lichaam. In 3D.", "the-stopped-clock.html"),
