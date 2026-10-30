@@ -288,9 +288,9 @@ def voorpagina(lang):
         [("Where", "Anywhere, phone in hand"), ("Time", "About ninety minutes"), ("Price", "Trial walk free; stories and group pass sold separately")], "To the walks")),
       ("boeken", pad("boeken", lang), "papier", "boek", "assets/deur-puzzels.jpg", -1.4,
        ("Op papier", "Mystery Puzzels", "Puzzelen met potlood", "Gedrukte puzzelboeken vol moordzaken, van makkelijk naar moeilijk.",
-        [("Waar", "Aan tafel, in de trein, op vakantie"), ("Duur", "100 puzzels per boek"), ("Prijs", "Paperback via Amazon; één verdieping gratis online")], "Naar de puzzels"),
+        [("Waar", "Aan tafel, in de trein, op vakantie"), ("Duur", "100 puzzels per boek"), ("Nu", "Gratis proefverdieping online; boeken volgen")], "Naar de puzzels"),
        ("On paper", "Mystery Puzzles", "Puzzle with a pencil", "Printed puzzle books full of murder cases, from easy to hard.",
-        [("Where", "At the table, on the train, on holiday"), ("Time", "100 puzzles per book"), ("Price", "Paperback on Amazon; one floor free online")], "To the puzzles")),
+        [("Where", "At the table, on the train, on holiday"), ("Time", "100 puzzles per book"), ("Now", "Free trial floor online; books to follow")], "To the puzzles")),
       ("mini", MINI, "mini", "ster", "assets/deur-mini.jpg", 2.4,
        ("Voor de kleintjes", "Mini Mystery", "Speuren zonder moord", "Raadsels en speurtochten voor jonge detectives, op een eigen site.",
         [("Waar", "minimystery.nl"), ("Voor wie", "Kinderen, samen met een grote"), ("Prijs", "Zie de Mini-site")], "Naar Mini Mystery"),
@@ -423,13 +423,13 @@ def wandelpagina(lang):
     schrijf(here + "index.html", head(lang, "wandel", title, desc, here) + kopbalk(lang, "wandel", here) + body + voet(lang, here))
 
 BOEKEN = [
- dict(id={"nl": "moord-op-het-uur", "en": "murder-by-the-hour"}, status="uit",
+ dict(id={"nl": "moord-op-het-uur", "en": "murder-by-the-hour"}, status="binnenkort",
       nl=("Moord op het uur", "Gongoku · 100 moordpuzzels op de plattegrond",
           "Een landhuis, een gong die elk uur slaat, en een moord die op de plattegrond te reconstrueren is. Honderd puzzels in vijf huizen, oplopend van 4×4 tot 8×8. De beginletters van de daders vormen per hoofdstuk het gif.",
-          "Paperback bij Amazon", "https://www.amazon.nl/s?k=Moord+op+het+uur+Gongoku"),
+          None, None),
       en=("Murder by the Hour", "Gongoku · 100 murder puzzles on the floor plan",
           "A country house, a gong that strikes every hour, and a murder you can reconstruct on the floor plan. One hundred puzzles across five houses, from 4×4 up to 8×8. Each chapter's killers spell out the poison.",
-          "Paperback on Amazon", "https://www.amazon.com/s?k=Murder+by+the+Hour+Gongoku")),
+          None, None)),
  dict(id={"nl": "hotel-winterlicht", "en": "hotel-winterlight"}, status="binnenkort",
       nl=("Hotel Winterlicht", "Twaalf verdiepingen en een geheime dertiende",
           "Een hotel vol moordpuzzels van tien soorten. Elke kamer levert een sleutel die een andere kamer opent, en wie alle twaalf verdiepingen kraakt, vindt de lift naar de dertiende. 138 kamers, van makkelijk naar moeilijk.",
