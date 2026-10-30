@@ -1,4 +1,12 @@
 {"codes":[
+  {"h": "987f8888ed05fc11cb4719193df29e9c62a37a8d00c401dc1f9cc750d00c828f", "t": "team", "spel": "mw", "dagen": 61, "naam": "Teamticket Moordwandeling 2026-10b (Enigma)"},
+  {"h": "f694535aa42f1821b2f2a8eb0a6efa6bd80659222c874195c812aea18b6f4fd6", "t": "team", "spel": "vz", "dagen": 61, "naam": "Teamticket De Verdwijning 2026-10b (Enigma)"},
+  {"h": "715d33ea7b987a4bea4e142addc04bb94dfb9f2fd8becceb1a24665175932f34", "t": "team", "spel": "lb", "dagen": 61, "naam": "Teamticket De Laatste Bus 2026-10b (Enigma)"},
+  {"h": "8c6bdd1ce866d6013cabcc9ac530f4e75d0695f6272059a99cf6dced65a1a7be", "t": "team", "spel": "td", "dagen": 61, "naam": "Teamticket Tot de Dood Ons Scheidt 2026-10b (Enigma)"},
+  {"h": "f0d847f9ead47a7c5c6052dc144ea65bc87ab34915d9edf8e5c1e03ec155a9c8", "t": "team", "spel": "cc", "dagen": 61, "naam": "Teamticket Onopgelost 2026-10b (Enigma)"},
+  {"h": "edc0b43b1d1c1137840b628f427caa6dfcf4646a7aea6a33c9232889b859ea8e", "t": "team", "spel": "ng", "dagen": 61, "naam": "Teamticket De Nacht van de Geesten 2026-10b (Enigma)"},
+  {"h": "6cae972194d6930b97d9e8a4ce767a4e914b137773a6b3d98873df1d39e87434", "t": "team", "spel": "og", "dagen": 61, "naam": "Teamticket Ooggetuige 2026-10b (Enigma)"},
+  {"h": "4b90ebbb393354f003ea737b1911636ff2d17544bcf35cbb63a3ed0569abf25f", "t": "team", "spel": "alle", "dagen": 61, "naam": "Teamticket Alle wandelingen 2026-10b (Enigma)"},
   {"h": "42e0ea8d6628c02649b9e5b966ddba550f9934ba7122abce6285fbe9ec436fcc", "t": "team", "spel": "alle", "dagen": 61, "naam": "Teamticket algemeen (alle wandelingen) 2026-10"},
   {"h": "00284679c21a3fe614e29c83731f2997c2361ce7187e99fc3c19fa2f25ca29f9", "t": "team", "spel": "mw", "dagen": 61, "naam": "Teamticket Moordwandeling 2026-10"},
   {"h": "a95624b27a16fcebc3bee2a788092de5aace61e79b122eaf80d1fd96b29430bc", "t": "team", "spel": "vz", "dagen": 61, "naam": "Teamticket De Verdwijning 2026-10"},
