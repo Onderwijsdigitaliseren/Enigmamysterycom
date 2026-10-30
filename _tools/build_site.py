@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://www.enigmamystery.com"
 MINI = "https://www.minimystery.nl"  # kinderserie, eigen site
+PRO_ARCHIEF = {"nl": "Archief I", "en": "Archive I"}
+PRO_PRIJS = "€3,99"
 KOFI_PRO = "https://ko-fi.com/s/67649bac70"
 WANDEL = {"nl": "https://www.moordwandeling.nl", "en": "https://www.moordwandeling.nl"}  # één site met keuze NL/EN; murderwalk.com verdwijnt
 NOTITIE_ADRES = "kellievandekerkhof@gmail.com"
@@ -267,9 +269,9 @@ def voorpagina(lang):
     deuren = [
       ("spellen", pad("spellen", lang), "online", "scherm", "assets/deur-spellen.jpg", -2.2,
        ("Online", "Mystery Spellen", "Speel in je browser", f"{len(SPELLEN)} zaken: verhalen, escape rooms in 3D, logicapuzzels en rustige bouwspellen.",
-        [("Waar", "Op telefoon of computer"), ("Duur", "20 minuten tot een paar avonden"), ("Prijs", "Van elke soort één zaak gratis, de rest met Pro")], "Naar de spellen"),
+        [("Waar", "Op telefoon of computer"), ("Duur", "20 minuten tot een paar avonden"), ("Prijs", "Van elke soort één zaak gratis, de rest met Pro (eenmalig €3,99)")], "Naar de spellen"),
        ("Online", "Mystery Games", "Play in your browser", f"{len(SPELLEN)} cases: stories, 3D escape rooms, logic puzzles and calm building games.",
-        [("Where", "On your phone or computer"), ("Time", "20 minutes to a few evenings"), ("Price", "One case of every kind free, the rest with Pro")], "To the games")),
+        [("Where", "On your phone or computer"), ("Time", "20 minutes to a few evenings"), ("Price", "One case of every kind free, the rest with Pro (€3.99 once)")], "To the games")),
       ("wandel", pad("wandel", lang), "buiten", "voet", "assets/deur-wandelingen.jpg", 1.6,
        ("Buiten", "Mystery Wandelingen", "Loop de zaak zelf", "Een moordzaak die je buiten oplost. De stad om je heen wordt de plaats delict.",
         [("Waar", "Overal, met je telefoon in de hand"), ("Duur", "Ongeveer anderhalf uur"), ("Prijs", "Proefwandeling gratis; verhalen en groepspas los te koop")], "Naar de wandelingen"),
@@ -435,11 +437,11 @@ def propagina(lang):
             else "One Pro pass opens every sealed Enigma Mystery file on your device.")
     pro_lijst = "".join(f'<li><a href="{spel_url(s, lang, here)}">{escape(s[lang][0])}</a></li>' for s in SPELLEN if s["pro"])
     n_pro = sum(1 for s in SPELLEN if s["pro"])
-    kop = held(here, lang, f'<span class="label" style="color:var(--lak-licht)">Pro</span><h1>{"De Pro-pas" if nl else "The Pro pass"}</h1><p class="zin">{(f"Eén pas opent alle {n_pro} verzegelde dossiers." if nl else f"One pass opens all {n_pro} sealed files.")}</p><div class="knoppen"><a class="knop lak" href="{KOFI_PRO}" rel="noopener">{"Haal de Pro-pas" if nl else "Get the Pro pass"}</a></div>', klein=True)
+    kop = held(here, lang, f'<span class="label" style="color:var(--lak-licht)">Pro · {PRO_ARCHIEF[lang]}</span><h1>{"De Pro-pas" if nl else "The Pro pass"}</h1><p class="zin">{(f"Eén pas opent alle {n_pro} verzegelde dossiers van {PRO_ARCHIEF['nl']}. Eenmalig {PRO_PRIJS}, geen abonnement." if nl else f"One pass opens all {n_pro} sealed files in {PRO_ARCHIEF['en']}. {PRO_PRIJS.replace(',', '.')} once, no subscription.")}</p><div class="knoppen"><a class="knop lak" href="{KOFI_PRO}" rel="noopener">{(f"Haal de Pro-pas · {PRO_PRIJS}") if nl else (f"Get the Pro pass · {PRO_PRIJS.replace(',', '.')}")}</a></div>', klein=True)
     stappen = ([("Koop de pas", "Via Ko-fi. Je krijgt direct een pascode."), ("Vul de code in", "Hieronder, of in een verzegeld dossier zelf."), ("Speel alles", "De code wordt op dit apparaat onthouden. Op een ander apparaat vul je hem één keer opnieuw in.")]
                if nl else [("Buy the pass", "Through Ko-fi. You get a pass code right away."), ("Enter the code", "Below, or inside any sealed file."), ("Play everything", "The code is remembered on this device. On another device you enter it once more.")])
     body = kop + f"""<section class="sectie"><div class="binnen twee">
-<div class="blok"><h3>{"Wat Pro opent" if nl else "What Pro opens"}</h3><ul>{pro_lijst}</ul></div>
+<div class="blok"><h3>{(f"Wat {PRO_ARCHIEF['nl']} opent") if nl else (f"What {PRO_ARCHIEF['en']} opens")}</h3><ul>{pro_lijst}</ul></div>
 <form class="pas" id="proForm" autocomplete="off">
 <span class="label" style="color:#8e2b20">{"Pascode" if nl else "Pass code"}</span>
 <h2>{"Heb je al een code?" if nl else "Already have a code?"}</h2>
