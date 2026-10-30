@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://www.enigmamystery.com"
 MINI = "https://www.minimystery.nl"  # kinderserie, eigen site
 KOFI_PRO = "https://ko-fi.com/s/67649bac70"
-WANDEL = {"nl": "https://www.moordwandeling.nl", "en": "https://www.murderwalk.com"}
+WANDEL = {"nl": "https://www.moordwandeling.nl", "en": "https://www.moordwandeling.nl"}  # één site met keuze NL/EN; murderwalk.com verdwijnt
 NOTITIE_ADRES = "kellievandekerkhof@gmail.com"
 
 # --------------------------------------------------------------------------
