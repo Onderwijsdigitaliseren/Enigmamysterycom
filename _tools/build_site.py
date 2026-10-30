@@ -298,10 +298,10 @@ def voorpagina(lang):
        ("On paper", "Mystery Puzzles", "Puzzle with a pencil", "Printed puzzle books full of murder cases, from easy to hard.",
         [("Where", "At the table, on the train, on holiday"), ("Time", "100 puzzles per book"), ("Now", "Free trial floor online; books to follow")], "To the puzzles")),
       ("mini", MINI, "mini", "ster", "assets/deur-mini.jpg", 2.4,
-       ("Voor de kleintjes", "Mini Mystery", "Speuren zonder moord", "Raadsels en speurtochten voor jonge detectives, op een eigen site.",
-        [("Waar", "minimystery.nl"), ("Voor wie", "Kinderen, samen met een grote"), ("Prijs", "Zie de Mini-site")], "Naar Mini Mystery"),
-       ("For the little ones", "Mini Mystery", "Sleuthing without murder", "Riddles and treasure hunts for young detectives, on a site of its own.",
-        [("Where", "minimystery.nl"), ("For whom", "Children, together with a grown-up"), ("Price", "See the Mini site")], "To Mini Mystery")),
+       ("Voor de kleintjes", "Mini Mystery", "Speuren zonder moord", "Raadsels en speurtochten voor jonge detectives.",
+        [("Waar", "Online en op pad"), ("Voor wie", "Kinderen, samen met een grote")], "Naar Mini Mystery"),
+       ("For the little ones", "Mini Mystery", "Sleuthing without murder", "Riddles and treasure hunts for young detectives.",
+        [("Where", "Online and out and about"), ("For whom", "Children, together with a grown-up")], "To Mini Mystery")),
     ]
     IC = {
       "scherm": '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>',
@@ -474,7 +474,7 @@ def wandelpagina(lang):
 <section class="sectie"><div class="binnen"><div class="twee">{blok_html}</div></div></section>
 <section class="wandelcta"><img src="{W('mw-shadow.webp')}" alt="" loading="lazy"><div class="binnen">
 <h2>{"Klaar om te gaan?" if nl else "Ready to go?"}</h2><p class="zin">{"De eerste ronde is gratis. Je hebt alleen je telefoon en je schoenen nodig." if nl else "The first round is free. All you need is your phone and your shoes."}</p>
-<div class="knoppen"><a class="knop" href="{basis}" rel="noopener">{"Naar moordwandeling.nl" if nl else "To the walks"} &rarr;</a><a class="knop lijn" href="{r(pad('contact', lang))}">{"Wandeling op maat aanvragen" if nl else "Ask for a custom walk"}</a></div></div></section>
+<div class="knoppen"><a class="knop" href="{basis}" rel="noopener">{"Naar de wandelingen" if nl else "To the walks"} &rarr;</a><a class="knop lijn" href="{r(pad('contact', lang))}">{"Wandeling op maat aanvragen" if nl else "Ask for a custom walk"}</a></div></div></section>
 """
     schrijf(here + "index.html", head(lang, "wandel", title, desc, here) + kopbalk(lang, "wandel", here) + body + voet(lang, here))
 
