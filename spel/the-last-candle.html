@@ -857,7 +857,7 @@ const WORLD=(()=>{
 /* ===== GAME: toestand, UI, puzzels, geesten, schrikmomenten ===== */
 const $=id=>document.getElementById(id);
 let S=null,L='nl',scareTimer=0,lastTick=0,drag=null,playing=false,ovOpen=false,wipeArmed=false;
-const DEF=()=>({v:1,guide:false,found:{},candles:3,ev:{},ghosts:{},solved:{},seals:{},hints:{},intro:false,tries:0,time:0,sound:false,scare:'full',notes:'',done:false,best:null,clock:{h:3,m:20},books:BOOK_START.slice(),fuse:null,melody:[]});
+const DEF=()=>({v:1,guide:false,found:{},candles:3,ev:{},ghosts:{},solved:{},seals:{},hints:{},intro:false,tries:0,time:0,sound:false,scare:'full',notes:'',done:false,best:null,clock:{h:3,m:15},books:BOOK_START.slice(),fuse:null,melody:[]});
 function tx(){return T[L];}
 function fmt(s,o){return s.replace(/%n%/g,o);}
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));localStorage.setItem(LANG_KEY,L);}catch(e){}}
@@ -914,7 +914,7 @@ function howto(after){const h=tx().howto;openOv(card(h.t,h.l.map((s,i)=>'<p><b s
 function hintBtn(p){const lv=S.hints[p]||0;if(lv>=2)return '';return `<button class="cb ghost" id="pHint">${tx().hintBtn}</button>`;}
 function doHint(p,rerender){const lv=S.hints[p]||0;if(lv>=2)return;if(S.candles<=0){toast(tx().hintNo);return;}setCandles(S.candles-1);S.hints[p]=lv+1;save();SFX.flick();rerender();}
 function hintText(p){const lv=S.hints[p]||0,q=tx().puz[p];if(!lv)return '';return '<p style="color:#6e1522;font-style:italic">'+esc(lv>=1?q.h1:'')+(lv>=2?'<br>'+esc(q.h2):'')+'</p>';}
-function puzKlok(){const t=tx(),q=t.puz.klok;const c=S.clock;
+function puzKlok(){const t=tx(),q=t.puz.klok;const c=S.clock;if(c.m%15){c.m=(Math.round(c.m/15)*15)%60;}
  const html=card(q.t,'<p>'+esc(q.p)+'</p>'+hintText('klok')+`<div class="clock" id="clk">${[12,1,2,3,4,5,6,7,8,9,10,11].map((n,i)=>{const a=i/12*Math.PI*2-Math.PI/2;return `<div class="n" style="left:${100+Math.cos(a)*78}px;top:${100+Math.sin(a)*78}px">${n}</div>`;}).join('')}<div class="h" id="hh"></div><div class="m" id="mh"></div><div class="d"></div></div>
  <div class="crow"><button class="cb ghost" id="hm">−1 u</button><button class="cb ghost" id="hp">+1 u</button><button class="cb ghost" id="mm">−15 m</button><button class="cb ghost" id="mp">+15 m</button></div>`,`<button class="cb" id="pGo">${t.check}</button>${hintBtn('klok')}`);
  openOv(html);const draw=()=>{$('hh').style.transform=`rotate(${(c.h%12+c.m/60)*30}deg)`;$('mh').style.transform=`rotate(${c.m*6}deg)`;WORLD.setClockHands(c.h,c.m);};draw();
