@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /_tools/
+Disallow: /wandel/codes.html
 Sitemap: https://www.enigmamystery.com/sitemap.xml

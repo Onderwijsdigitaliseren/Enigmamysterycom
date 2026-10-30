@@ -15,7 +15,7 @@ MINI = "https://www.minimystery.nl"  # kinderserie, eigen site
 PRO_ARCHIEF = {"nl": "Archief II", "en": "Archive II"}
 PRO_PRIJS = "€3,99"
 KOFI_PRO = "https://ko-fi.com/s/67649bac70"
-WANDEL = {"nl": "https://moordwandeling.nl/nl/", "en": "https://moordwandeling.nl/"}  # één site met keuze NL/EN; murderwalk.com verdwijnt
+WANDEL = {"nl": "wandel/nl/", "en": "wandel/"}  # één site met keuze NL/EN; murderwalk.com verdwijnt
 NOTITIE_ADRES = "kellievandekerkhof@gmail.com"
 
 # --------------------------------------------------------------------------
@@ -416,7 +416,7 @@ def wandelpagina(lang):
     desc = ("Detectivespellen die je loopt, in je eigen straten. De kaart legt acht sporen op echte plekken om je heen. Zeven zaken, proefronde gratis, één ticket per team."
             if nl else
             "Detective games you walk in your own streets. The map places eight leads at real places around you. Seven cases, free trial round, one ticket per team.")
-    basis = "https://moordwandeling.nl/nl/" if nl else "https://moordwandeling.nl/"
+    basis = r("wandel/nl/" if nl else "wandel/")
     W = lambda f: r("assets/wandel/" + f)
     kop = f"""<section class="held wandelheld">
 <picture class="beeld"><source media="(max-width:640px)" srcset="{W('hero.webp')}"><img src="{W('hero-breed.webp')}" alt="" fetchpriority="high"></picture>
@@ -433,7 +433,7 @@ def wandelpagina(lang):
     for n, (cov, pnl, pen, tnl, ten, hnl, hen, lab) in enumerate(WANDELZAKEN):
         href = basis + (pnl if nl else pen)
         tag = f'<span class="zaaklabel">{lab}</span>' if lab else ""
-        zaken += (f'<a class="wandelzaak" href="{href}" rel="noopener" style="--d:{n * 70}ms">{tag}'
+        zaken += (f'<a class="wandelzaak" href="{href}" style="--d:{n * 70}ms">{tag}'
                   f'<span class="medaille"><img src="{W(cov + ".webp")}" alt="" loading="lazy" width="320" height="320"></span>'
                   f'<h3>{escape(tnl if nl else ten)}</h3><p>{escape(hnl if nl else hen)}</p>'
                   f'<span class="pijl">{"Bekijk de zaak" if nl else "View the case"} &rarr;</span></a>')
@@ -474,7 +474,7 @@ def wandelpagina(lang):
 <section class="sectie"><div class="binnen"><div class="twee">{blok_html}</div></div></section>
 <section class="wandelcta"><img src="{W('mw-shadow.webp')}" alt="" loading="lazy"><div class="binnen">
 <h2>{"Klaar om te gaan?" if nl else "Ready to go?"}</h2><p class="zin">{"De eerste ronde is gratis. Je hebt alleen je telefoon en je schoenen nodig." if nl else "The first round is free. All you need is your phone and your shoes."}</p>
-<div class="knoppen"><a class="knop" href="{basis}" rel="noopener">{"Naar de wandelingen" if nl else "To the walks"} &rarr;</a><a class="knop lijn" href="{r(pad('contact', lang))}">{"Wandeling op maat aanvragen" if nl else "Ask for a custom walk"}</a></div></div></section>
+<div class="knoppen"><a class="knop" href="{basis}">{"Naar de wandelingen" if nl else "To the walks"} &rarr;</a><a class="knop lijn" href="{r(pad('contact', lang))}">{"Wandeling op maat aanvragen" if nl else "Ask for a custom walk"}</a></div></div></section>
 """
     schrijf(here + "index.html", head(lang, "wandel", title, desc, here) + kopbalk(lang, "wandel", here) + body + voet(lang, here))
 
@@ -702,12 +702,16 @@ def extra():
                   {"src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png"}]}, indent=1), encoding="utf-8")
     if not (ROOT / "CNAME").exists():
         (ROOT / "CNAME").write_text("www.enigmamystery.com\n")
-    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /_tools/\nSitemap: {SITE}/sitemap.xml\n")
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /_tools/\nDisallow: /wandel/codes.html\nSitemap: {SITE}/sitemap.xml\n")
     urls = ["", *(pad(k, l) for k in PAD for l in ("nl", "en"))]
     spel = sorted({s[l][2].split("#")[0] for s in SPELLEN for l in ("nl", "en")})
     vandaag = date.today().isoformat()
     rows = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{vandaag}</lastmod></url>\n" for u in urls)
     rows += "".join(f"<url><loc>{SITE}/spel/{u}</loc><lastmod>{vandaag}</lastmod></url>\n" for u in spel)
+    wsm = ROOT / "wandel" / "sitemap-bron.xml"   # sitemap van de wandel-app, samengevoegd
+    if wsm.exists():
+        import re as _re
+        rows += "".join(m + "\n" for m in _re.findall(r"<url>.*?</url>", wsm.read_text(encoding="utf-8"), _re.S))
     (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + rows + "</urlset>\n")
 
 def main():
