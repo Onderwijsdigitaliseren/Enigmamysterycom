@@ -31,7 +31,7 @@ var CFG={
       alle:"https://ko-fi.com/s/dc0dfbafe5" // tijdelijk: algemeen teamticket (oude groepspas-product) tot de producten per wandeling er zijn
     }
   },
-  kofi:"https://ko-fi.com/s/aa277497a2", // Ko-fi-knop op de hub; zet hier je Ko-fi-pagina (bijv. https://ko-fi.com/<jouwnaam>) als je die liever toont
+  kofi:"https://ko-fi.com/s/dc0dfbafe5", // Ko-fi-knop op de hub; zet hier je Ko-fi-pagina (bijv. https://ko-fi.com/<jouwnaam>) als je die liever toont
   salt:"moordwandeling|",            // zout voor code-hashes; NIET wijzigen, anders werken bestaande codes niet meer
   codes:"codes.json"                 // één codes.json voor het hele platform (relatief aan de site-root)
 };
