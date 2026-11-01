@@ -318,3 +318,36 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .wandelcta .binnen{padding-block:clamp(56px,9vw,110px);display:grid;gap:16px;justify-items:start}
 @media (max-width:760px){.routelijn{display:none}}
 @media (prefers-reduced-motion:reduce){.wandelzaak{animation:none}}
+
+/* ---------- maatwerk / op maat ---------- */
+.menu a.maat{color:var(--goud-licht)}
+.maatband .maatkaart{position:relative;display:grid;grid-template-columns:1fr auto;gap:18px 32px;align-items:center;padding:clamp(20px,4vw,34px);background:linear-gradient(135deg,#21180e,#140f09);border:1px solid var(--goud-donker);box-shadow:0 0 0 4px #0d0a07,0 0 0 5px #3a2d1c,0 18px 40px #000a}
+.maatband .maatkaart::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--goud-licht),var(--lak))}
+.maatband .maattekst{display:grid;gap:8px;max-width:62ch}.maatband h2{margin:0}
+.maatband .knoppen{display:flex;flex-direction:column;gap:10px}
+@media (max-width:760px){.maatband .maatkaart{grid-template-columns:1fr}.maatband .knoppen{flex-direction:row;flex-wrap:wrap}}
+.maatraster{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px}
+.maatvak{background:var(--hout);border:1px solid var(--rand);border-top:2px solid var(--goud-donker);padding:18px 20px;display:grid;gap:6px;align-content:start}
+.maatvak h3{margin:0;font:600 1.15rem var(--kop);color:var(--goud-licht)}.maatvak p{margin:0;color:var(--perkament-zacht);line-height:1.55}
+.maatstappen{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px;counter-reset:none}
+.maatstappen li{background:var(--hout);border:1px solid var(--rand);padding:20px;display:grid;gap:8px;align-content:start}
+.maatstappen .nr{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--lak);color:var(--perkament);font:700 1rem var(--label);box-shadow:0 0 0 3px #0d0a07,0 0 0 4px var(--lak-licht)}
+.maatstappen h3{margin:4px 0 0;font:600 1.15rem var(--kop)}.maatstappen p{margin:0;color:var(--perkament-zacht);line-height:1.55}
+.maataanvraag{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+@media (max-width:860px){.maataanvraag{grid-template-columns:1fr}}
+.maatlinks{display:grid;gap:12px;align-content:start}.maatlinks h2{margin:0}
+.maatvragen{display:grid;gap:8px;margin-top:6px}
+.maatvraag{background:var(--hout);border:1px solid var(--rand);padding:12px 16px}.maatvraag summary{cursor:pointer;font:600 1.02rem var(--kop);color:var(--perkament)}.maatvraag p{margin:8px 0 0;color:var(--perkament-zacht);line-height:1.55}
+.maatmini{margin-top:0;border-left:3px solid #2f5f8a}.maatmini h3{margin:0}.maatmini .knop{justify-self:start}
+.maatform{max-width:none;background:var(--hout);border:1px solid var(--goud-donker);padding:clamp(18px,3vw,28px)}
+.maatform select{width:100%;font:400 1rem var(--tekst);color:var(--perkament);background:var(--nacht);border:1px solid var(--rand);padding:12px}
+.maatform input,.maatform textarea{background:var(--nacht)}
+.maatform .maat2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.maatform .maat2>div{display:grid;gap:12px}
+@media (max-width:480px){.maatform .maat2{grid-template-columns:1fr}}
+.maatform .knop{width:100%}
+.maatgroot{margin-top:16px;border-left:3px solid var(--lak)}.maatgroot h3{margin:0}
+.maattiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px}
+.maattier{background:linear-gradient(180deg,#21180e,#17120c);border:1px solid var(--goud-donker);padding:clamp(20px,3vw,28px);display:grid;gap:12px;align-content:start}
+.maattier.nieuw{background:var(--hout);border-color:var(--rand)}
+.maattier .prijs{font:700 clamp(1.7rem,4vw,2.2rem)/1 var(--kop);color:var(--goud-licht)}.maattier.nieuw .prijs{font-size:1.25rem;color:var(--perkament)}
+.maattier ul{margin:0;padding-left:1.1em;display:grid;gap:6px;color:var(--perkament-zacht)}.maattier p{margin:0}.maattier .knop{justify-self:start;margin-top:4px}

@@ -126,8 +126,9 @@ PAD = {  # sleutel -> (nl-pad, en-pad), relatief aan de root
  "pro":    ("nl/pro/", "en/pro/"),
  "over":   ("nl/over/", "en/about/"),
  "contact":("nl/contact/", "en/contact/"),
+ "maat":   ("nl/op-maat/", "en/made-to-measure/"),
 }
-MENU = [("spellen", "Spellen", "Games"), ("wandel", "Wandelingen", "Walks"), ("boeken", "Puzzels", "Puzzles"), ("mini", "Mini", "Mini"), ("pro", "Pro", "Pro"), ("contact", "Contact", "Contact")]
+MENU = [("spellen", "Spellen", "Games"), ("wandel", "Wandelingen", "Walks"), ("boeken", "Puzzels", "Puzzles"), ("mini", "Mini", "Mini"), ("pro", "Pro", "Pro"), ("maat", "Op maat", "Custom"), ("contact", "Contact", "Contact")]
 
 def pad(key, lang):
     return PAD[key][0 if lang == "nl" else 1]
@@ -203,7 +204,7 @@ def kopbalk(lang, key, here):
     items = []
     for k, nl, en in MENU:
         cur = ' aria-current="page"' if k == key else ""
-        cls = ' class="pro"' if k == "pro" else ""
+        cls = ' class="pro"' if k == "pro" else (' class="maat"' if k == "maat" else "")
         href, ext = (MINI, ' rel="noopener"') if k == "mini" else (r(pad(k, lang)), "")
         items.append(f'<a href="{href}"{ext}{cls}{cur}>{nl if lang == "nl" else en}</a>')
     other = "en" if lang == "nl" else "nl"
@@ -224,6 +225,7 @@ def voet(lang, here):
              (pad("boeken", lang), "Mystery Puzzels" if lang == "nl" else "Mystery Puzzles"),
              (MINI, "Mini Mystery"),
              (pad("pro", lang), "Pro"),
+             (pad("maat", lang), "Op maat" if lang == "nl" else "Made to measure"),
              (pad("over", lang), t["overlink"]),
              (pad("contact", lang), "Contact"),
              (pad("over", lang) + "#privacy", t["privacy"])]
@@ -337,7 +339,7 @@ def voorpagina(lang):
     body += f"""<section class="sectie"><div class="binnen">
 <div class="sectiekop"><span class="label">{t['deuren']}</span><h2>{t['deurenzin']}</h2><p class="zacht">{t['deurenuitleg']}</p></div>
 <div class="bord"><div class="deuren">{deur_html}</div>{draad}</div></div></section>
-<section class="sectie"><div class="binnen">
+{maatband(lang, here)}<section class="sectie"><div class="binnen">
 <div class="sectiekop"><span class="label">{t['nieuw']}</span><h2>{t['nieuwzin']}</h2></div>
 <div class="rij">{nieuw}</div></div></section>
 """
@@ -455,11 +457,13 @@ def wandelpagina(lang):
                 ("mw-flee", "Someone runs"), ("mw-bril", "Glasses on the table")])
     gal_html = "".join(f'<figure><img src="{W(f + ".webp")}" alt="{escape(c)}" loading="lazy"><figcaption>{escape(c)}</figcaption></figure>' for f, c in galerij)
     blokken = ([("Samen op pad", ["Eén ticket per team, iedereen vult dezelfde code in", "Samen op één telefoon of ieder op een eigen", "De code blijft twee maanden geldig"]),
-                ("Een wandeling op maat", ["Voor een uitje, vrijgezellenfeest, verjaardag of klas", "Jullie stad, jullie namen, jullie verhaal", "Van een stel tot honderd man, in teams tegen elkaar"])]
+                ("Op maat", ["Personaliseren met jullie foto's, namen en thema: € 29,95 inclusief ticket", "Voor een verjaardag, vrijgezellenfeest, uitje of klas", "Iets helemaal nieuws, zoals een eigen route? Dien een aanvraag in"])]
                if nl else
                [("Out together", ["One ticket per team, everyone enters the same code", "Together on one phone or each on their own", "The code stays valid for two months"]),
-                ("A walk made to measure", ["For an outing, hen party, birthday or class", "Your town, your names, your story", "From two people to a hundred, in teams against each other"])])
-    blok_html = "".join(f'<div class="blok"><h3>{a}</h3><ul>{"".join(f"<li>{x}</li>" for x in b)}</ul></div>' for a, b in blokken)
+                ("Made to measure", ["Personalise with your photos, names and theme: € 29.95 including the ticket", "For a birthday, hen or stag party, outing or class", "Something entirely new, like a route of your own? Send a request"])])
+    blok_html = "".join(f'<div class="blok"><h3>{a}</h3><ul>{"".join(f"<li>{x}</li>" for x in b)}</ul>'
+                        + (f'<a class="knop lijn" href="{r(pad("maat", lang))}">{"Alles over maatwerk" if nl else "All about made to measure"} &rarr;</a>' if i == 1 else "") + '</div>'
+                        for i, (a, b) in enumerate(blokken))
     body = kop + f"""<section class="sectie" id="zaken"><div class="binnen">
 <div class="sectiekop"><span class="label">{"Zeven zaken op straat" if nl else "Seven cases on the street"}</span><h2>{"Kies je zaak, trek je jas aan." if nl else "Pick your case, grab your coat."}</h2>
 <p class="zacht">{"Elke zaak speel je in je eigen buurt, in het Nederlands of het Engels. Elke wandeling begint met een gratis proefronde." if nl else "Every case plays in your own neighbourhood, in English or Dutch. Every walk starts with a free trial round."}</p></div>
@@ -471,10 +475,11 @@ def wandelpagina(lang):
 <section class="sectie onderweg"><div class="binnen">
 <div class="sectiekop"><span class="label">{"Onderweg" if nl else "On the way"}</span><h2>{"Wat je onderweg tegenkomt" if nl else "What you will run into"}</h2></div>
 <div class="galerij">{gal_html}</div></div></section>
+{maatband(lang, here)}
 <section class="sectie"><div class="binnen"><div class="twee">{blok_html}</div></div></section>
 <section class="wandelcta"><img src="{W('mw-shadow.webp')}" alt="" loading="lazy"><div class="binnen">
 <h2>{"Klaar om te gaan?" if nl else "Ready to go?"}</h2><p class="zin">{"De eerste ronde is gratis. Je hebt alleen je telefoon en je schoenen nodig." if nl else "The first round is free. All you need is your phone and your shoes."}</p>
-<div class="knoppen"><a class="knop" href="{basis}">{"Naar de wandelingen" if nl else "To the walks"} &rarr;</a><a class="knop lijn" href="{r(pad('contact', lang))}">{"Wandeling op maat aanvragen" if nl else "Ask for a custom walk"}</a></div></div></section>
+<div class="knoppen"><a class="knop" href="{basis}">{"Naar de wandelingen" if nl else "To the walks"} &rarr;</a><a class="knop lijn" href="{r(pad('maat', lang))}">{"Wandeling op maat" if nl else "Made to measure"}</a></div></div></section>
 """
     schrijf(here + "index.html", head(lang, "wandel", title, desc, here) + kopbalk(lang, "wandel", here) + body + voet(lang, here))
 
@@ -590,6 +595,157 @@ def overpagina(lang):
 """
     schrijf(here + "index.html", head(lang, "over", title, desc, here) + kopbalk(lang, "over", here) + body + voet(lang, here))
 
+MAAT_T = {
+ "nl": dict(
+   band_label="Op maat", band_h="Jullie eigen versie van een zaak",
+   band_p="Elke wandeling of elk spel kan gepersonaliseerd worden met jullie eigen foto's, namen en een thema, voor € 29,95 inclusief ticket. Iets helemaal nieuws, zoals een eigen route of verhaal? Dien een aanvraag in.",
+   band_knop="Bekijk de mogelijkheden", band_knop2="Direct aanvragen",
+   title="Op maat · Personaliseren of een eigen zaak · Enigma Mystery",
+   desc="Personaliseer een wandeling of spel met jullie eigen foto's, namen en thema voor € 29,95 inclusief ticket, voor een verjaardag, vrijgezellenfeest, bedrijfsuitje of familiedag. Iets helemaal nieuws? Dien een aanvraag in, prijs nader te bepalen.",
+   label="Op maat", h1="Jullie eigen versie",
+   zin="Maak een bestaande wandeling of een spel van jullie: met jullie eigen foto's, namen en een thema. Voor een vaste prijs van € 29,95 inclusief ticket. En wil je iets wat nog niet bestaat, dan kun je dat aanvragen.",
+   k1="Aanvragen", k2="Wat kan er?",
+   twee_label="Twee manieren", twee_h="Personaliseren of iets nieuws",
+   twee=[("Personaliseren","€ 29,95","Een bestaande wandeling of een spel, aangekleed met jullie eigen foto's, namen en een thema. Het verhaal, de puzzels en de route blijven zoals ze zijn.",
+          ["Inclusief het ticket voor jullie team","Jullie foto's bij de verdachten, getuigen en sporen","Jullie namen in het verhaal","Een thema: verjaardag, vrijgezellenfeest, bedrijfsuitje, kerst…","Eén keer iets laten aanpassen als je hem gezien hebt","Een eigen link om te spelen"],"Personaliseren aanvragen"),
+         ("Iets helemaal nieuws","Prijs nader te bepalen","Een eigen route met een vast start- en eindpunt, een eigen verhaal, nieuwe puzzels of een zaak voor een grote groep of een evenement.",
+          ["Een route langs jullie plekken, eindigen in jullie café","Een verhaal dat over jullie gaat","Teams tegen elkaar met een eindstand","Voor bedrijven, scholen, evenementen en toerisme"],"Aanvraag indienen")],
+   gel_label="Voor welke gelegenheid?", gel_h="Waar een eigen versie leuk voor is",
+   gel=[("Verjaardag of jubileum","De jarige als slachtoffer, verdachte of rechercheur, met foto's die alleen jullie herkennen."),
+        ("Vrijgezellenfeest","De bruid of bruidegom in de hoofdrol, met foto's van de vriendengroep."),
+        ("Bedrijfs- of teamuitje","Collega's als verdachten en de directeur in een verdachte rol (met een knipoog)."),
+        ("Familie- of vriendendag","Opa, tante en de kleinkinderen in het verhaal. Voor alle leeftijden."),
+        ("Cadeau","Een zaak met iemands eigen foto's en naam erin, om samen te spelen."),
+        ("School of klas","De klas en de docent in een moordzaak, als afsluiting of introductie.")],
+   hoe_label="Zo werkt personaliseren", hoe_h="In drie stappen",
+   hoe=[("Kies een wandeling of spel","Vul het formulier in: welke zaak, de gelegenheid en welk thema. Stuur daarna de foto's en namen mee in de mail."),
+        ("Ik maak jullie versie","Jullie foto's, namen en thema gaan erin. Het verhaal en de puzzels blijven hetzelfde."),
+        ("Bekijken en spelen","Je krijgt een eigen link. Je mag één keer iets laten aanpassen; daarna ligt hij vast.")],
+   mini_h="Voor kinderen", mini_p="Een speurtocht voor een kinderfeestje, schoolkamp of buurtfeest personaliseren, zonder moord en geschikt voor 6 tot 12 jaar, doe je via Mini Mystery.", mini_k="Op maat bij Mini Mystery",
+   faq_label="Vragen", faq=[("Wat kost personaliseren?","€ 29,95 inclusief ticket per wandeling of spel. Daarvoor krijg je jullie eigen versie met foto's, namen en een thema."),
+        ("Kan de route ook anders?","Nee, bij personaliseren blijft de zaak zoals hij is. Een eigen route, verhaal of nieuwe onderdelen is iets nieuws: dien daarvoor een aanvraag in, dan hoor je wat het kost."),
+        ("Kan ik daarna nog dingen veranderen?","Je mag één keer iets laten aanpassen als je jullie versie gezien hebt. Daarna ligt hij vast."),
+        ("Hoe ver van tevoren moet ik aanvragen?","Minimaal twee weken van tevoren. Voor iets helemaal nieuws liever langer.")],
+   form_label="Aanvragen", form_h="Vertel wat je wilt",
+   form_p="Het formulier opent je mailprogramma met alles al ingevuld. Foto's voeg je daarna als bijlage toe aan die mail.",
+   f=dict(naam="Je naam",mail="Je e-mailadres",soort="Wat wil je?",soortopt=["Personaliseren (€ 29,95)","Iets helemaal nieuws (aanvraag)"],
+          basis="Welke wandeling of welk spel?",basisopt=["Moordwandeling","De Verdwijning","De Laatste Bus","Tot de Dood Ons Scheidt","Ooggetuige","Onopgelost","De Nacht van de Geesten","Een online spel (zet in je wensen welk)","Weet ik nog niet"],
+          gel="Gelegenheid",n="Aantal deelnemers",teams="Thema",waar="Waar spelen jullie (stad of buurt)",wanneer="Wanneer (datum, of ongeveer)",wens="Jullie wensen",
+          wensp="Bijvoorbeeld: thema vrijgezellenfeest, de bruid heet Sanne, foto's van de vriendinnen als verdachten…",
+          knop="Open de mail en verstuur",kopie="Lukt mailen niet? Kopieer de tekst",nodig="Vul in elk geval je naam en jullie wensen in.",gekopieerd="Gekopieerd. Plak het in een mail aan ",
+          onderwerp="Op maat via Enigma Mystery",hoi="Hoi Kellie,",intro="Ik wil graag een zaak op maat.",groet="Groet,",
+          opties=["Verjaardag of jubileum","Vrijgezellenfeest","Bedrijfs- of teamuitje","Familie- of vriendendag","Cadeau","School of klas","Iets anders"]),
+   noot="Personaliseren: € 29,95 inclusief ticket, één keer aanpassen. Iets helemaal nieuws: prijs nader te bepalen."),
+ "en": dict(
+   band_label="Made to measure", band_h="Your own version of a case",
+   band_p="Every walk or game can be personalised with your own photos, names and a theme, for € 29.95 including the ticket. Something entirely new, like a route or story of your own? Send a request.",
+   band_knop="See what's possible", band_knop2="Ask straight away",
+   title="Made to measure · Personalise or a case of your own · Enigma Mystery",
+   desc="Personalise a walk or game with your own photos, names and theme for € 29.95 including the ticket, for a birthday, hen or stag party, company outing or family day. Something entirely new? Send a request, price to be agreed.",
+   label="Made to measure", h1="Your own version",
+   zin="Make an existing walk or game yours: with your own photos, names and a theme. For a fixed price of € 29.95 including the ticket. And if you want something that doesn't exist yet, you can ask for it.",
+   k1="Ask", k2="What's possible?",
+   twee_label="Two ways", twee_h="Personalise, or something new",
+   twee=[("Personalise","€ 29.95","An existing walk or game, dressed up with your own photos, names and a theme. The story, the puzzles and the route stay as they are.",
+          ["Including the ticket for your team","Your photos with the suspects, witnesses and leads","Your names in the story","A theme: birthday, hen or stag party, company outing, Christmas…","One round of changes once you've seen it","Your own link to play"],"Ask to personalise"),
+         ("Something entirely new","Price to be agreed","A route of your own with a fixed start and finish, a story of your own, new puzzles, or a case for a big group or an event.",
+          ["A route past your places, finishing at your pub","A story that's about you","Teams against each other with a leaderboard","For companies, schools, events and tourism"],"Send a request")],
+   gel_label="For which occasion?", gel_h="When your own version is fun",
+   gel=[("Birthday or anniversary","The birthday person as victim, suspect or detective, with photos only you will recognise."),
+        ("Hen or stag party","The bride or groom in the lead role, with photos of the group."),
+        ("Company or team outing","Colleagues as suspects and the boss in a suspicious role (tongue in cheek)."),
+        ("Family or friends' day","Grandad, auntie and the grandchildren in the story. For all ages."),
+        ("A gift","A case with someone's own photos and name in it, to play together."),
+        ("School or class","The class and the teacher in a murder case, to round off or kick off.")],
+   hoe_label="How personalising works", hoe_h="In three steps",
+   hoe=[("Pick a walk or game","Fill in the form: which case, the occasion and which theme. Then attach the photos and names to the email."),
+        ("I make your version","Your photos, names and theme go in. The story and puzzles stay the same."),
+        ("Check and play","You get your own link. You can ask for one round of changes; then it's final.")],
+   mini_h="For children", mini_p="Personalising a treasure hunt for a kids' party, school trip or street party, without murder and suited to ages 6 to 12, is done through Mini Mystery.", mini_k="Made to measure at Mini Mystery",
+   faq_label="Questions", faq=[("What does personalising cost?","€ 29.95 including the ticket per walk or game. For that you get your own version with photos, names and a theme."),
+        ("Can the route be different?","No, when personalising the case stays as it is. A route, story or new parts of your own count as something new: send a request and you'll hear what it costs."),
+        ("Can I still change things afterwards?","You can ask for one round of changes once you've seen your version. Then it's final."),
+        ("How far ahead should I ask?","At least two weeks ahead. For something entirely new, longer.")],
+   form_label="Ask", form_h="Tell me what you want",
+   form_p="The form opens your mail app with everything filled in. Attach the photos to that email afterwards.",
+   f=dict(naam="Your name",mail="Your email address",soort="What would you like?",soortopt=["Personalise (€ 29.95)","Something entirely new (request)"],
+          basis="Which walk or game?",basisopt=["Murder Walk","The Vanishing","The Last Bus","Till Death Do Us Part","Eyewitness","Unsolved","Night of the Ghosts","An online game (say which in your wishes)","Not sure yet"],
+          gel="Occasion",n="Number of players",teams="Theme",waar="Where will you play (town or neighbourhood)",wanneer="When (date, or roughly)",wens="Your wishes",
+          wensp="For example: hen party theme, the bride is called Sanne, photos of her friends as the suspects…",
+          knop="Open the email and send",kopie="Email not working? Copy the text",nodig="At least fill in your name and your wishes.",gekopieerd="Copied. Paste it into an email to ",
+          onderwerp="Made to measure via Enigma Mystery",hoi="Hi Kellie,",intro="I'd like a case made to measure.",groet="Kind regards,",
+          opties=["Birthday or anniversary","Hen or stag party","Company or team outing","Family or friends' day","A gift","School or class","Something else"]),
+   noot="Personalise: € 29.95 including the ticket, one round of changes. Something entirely new: price to be agreed."),
+}
+
+def maatband(lang, here):
+    r = lambda p: rel(here, p); m = MAAT_T[lang]
+    return f"""<section class="sectie maatband"><div class="binnen"><div class="maatkaart">
+<div class="maattekst"><span class="label">{m['band_label']}</span><h2>{escape(m['band_h'])}</h2><p class="zacht">{escape(m['band_p'])}</p></div>
+<div class="knoppen"><a class="knop" href="{r(pad('maat', lang))}">{escape(m['band_knop'])} &rarr;</a><a class="knop lijn" href="{r(pad('maat', lang))}#aanvragen">{escape(m['band_knop2'])}</a></div>
+</div></div></section>
+"""
+
+def maatpagina(lang):
+    here = pad("maat", lang); r = lambda p: rel(here, p); m = MAAT_T[lang]; f = m["f"]
+    W = lambda x: r("assets/wandel/" + x)
+    kop = f"""<section class="held wandelheld maatheld">
+<picture class="beeld"><source media="(max-width:640px)" srcset="{W('hero.webp')}"><img src="{W('hero-breed.webp')}" alt="" fetchpriority="high"></picture>
+<div class="binnen"><span class="label">{m['label']}</span><h1>{escape(m['h1'])}</h1><p class="zin">{escape(m['zin'])}</p>
+<div class="knoppen"><a class="knop" href="#aanvragen">{escape(m['k1'])}</a><a class="knop lijn" href="#hoe">{escape(m['k2'])}</a></div></div></section>
+"""
+    kaartjes = lambda lst: "".join(f'<div class="maatvak"><h3>{escape(a)}</h3><p>{escape(b)}</p></div>' for a, b in lst)
+    twee = "".join(f'<div class="maattier{" nieuw" if n else ""}"><span class="label">{escape(a)}</span><b class="prijs">{escape(pr)}</b><p class="zacht">{escape(z)}</p><ul>{"".join(f"<li>{escape(x)}</li>" for x in lst)}</ul><a class="knop{" lijn" if n else ""}" href="#aanvragen" data-soort="{n}">{escape(kn)} &rarr;</a></div>'
+                   for n, (a, pr, z, lst, kn) in enumerate(m["twee"]))
+    hoe = "".join(f'<li><span class="nr">{n}</span><h3>{escape(a)}</h3><p>{escape(b)}</p></li>' for n, (a, b) in zip(("I", "II", "III"), m["hoe"]))
+    faq = "".join(f'<details class="maatvraag"><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in m["faq"])
+    opt = "".join(f"<option>{escape(o)}</option>" for o in f["opties"])
+    veld = lambda i, lab, typ="text", extra="": f'<label for="{i}">{escape(lab)}</label><input id="{i}" type="{typ}"{extra}>'
+    body = kop + f"""<section class="sectie" id="wat"><div class="binnen">
+<div class="sectiekop"><span class="label">{m['twee_label']}</span><h2>{escape(m['twee_h'])}</h2></div>
+<div class="maattiers">{twee}</div></div></section>
+<section class="sectie"><div class="binnen">
+<div class="sectiekop"><span class="label">{m['gel_label']}</span><h2>{escape(m['gel_h'])}</h2></div>
+<div class="maatraster">{kaartjes(m['gel'])}</div></div></section>
+<section class="sectie" id="hoe"><div class="binnen">
+<div class="sectiekop"><span class="label">{m['hoe_label']}</span><h2>{escape(m['hoe_h'])}</h2></div>
+<ol class="maatstappen">{hoe}</ol></div></section>
+<section class="sectie" id="aanvragen"><div class="binnen maataanvraag">
+<div class="maatlinks"><span class="label">{m['form_label']}</span><h2>{escape(m['form_h'])}</h2><p class="zacht">{escape(m['form_p'])}</p>
+<p class="zacht">{escape(m['noot'])}</p></div>
+<form class="formulier maatform" id="maatForm" novalidate>
+{veld("mNaam", f['naam'], "text", ' autocomplete="name"')}
+{veld("mMail", f['mail'], "email", ' autocomplete="email"')}
+<label for="mSoort">{escape(f['soort'])}</label><select id="mSoort">{"".join(f"<option>{escape(o)}</option>" for o in f['soortopt'])}</select>
+<label for="mBasis">{escape(f['basis'])}</label><select id="mBasis">{"".join(f"<option>{escape(o)}</option>" for o in f['basisopt'])}</select>
+<label for="mGel">{escape(f['gel'])}</label><select id="mGel">{opt}</select>
+<div class="maat2"><div>{veld("mN", f['n'], "number", ' min="1"')}</div><div>{veld("mTeams", f['teams'])}</div></div>
+{veld("mWaar", f['waar'])}
+{veld("mWanneer", f['wanneer'])}
+<label for="mWens">{escape(f['wens'])}</label><textarea id="mWens" placeholder="{escape(f['wensp'])}"></textarea>
+<button class="knop" type="submit">&#9993; {escape(f['knop'])}</button>
+<button class="knop lijn" type="button" id="mKopie">{escape(f['kopie'])}</button>
+<p class="melding" id="mMelding" role="status" aria-live="polite"></p>
+</form></div></section>
+<section class="sectie"><div class="binnen maataanvraag">
+<div class="maatvragen"><span class="label">{m['faq_label']}</span>{faq}</div>
+<div class="blok maatmini"><h3>{escape(m['mini_h'])}</h3><p class="zacht">{escape(m['mini_p'])}</p><a class="knop lijn" href="{MINI}/{'' if lang == 'nl' else 'en/'}#custom" rel="noopener">{escape(m['mini_k'])} &rarr;</a></div>
+</div></section>
+<script>
+(function(){{var F={json.dumps(f, ensure_ascii=False)},ADR="{NOTITIE_ADRES}",$=function(i){{return document.getElementById(i)}};
+var ids=["mNaam","mMail","mSoort","mBasis","mGel","mN","mTeams","mWaar","mWanneer","mWens"];
+try{{var s=JSON.parse(localStorage.getItem("em_maat")||"{{}}");ids.forEach(function(i){{if(s[i])$(i).value=s[i]}})}}catch(e){{}}
+function lees(){{var o={{}};ids.forEach(function(i){{o[i]=($(i).value||"").trim()}});try{{localStorage.setItem("em_maat",JSON.stringify(o))}}catch(e){{}}return o}}
+function tekst(o){{return F.hoi+"\\n\\n"+F.intro+"\\n\\n"+F.soort+": "+o.mSoort+"\\n"+F.basis+": "+o.mBasis+"\\n"+F.gel+": "+o.mGel+"\\n"+F.n+": "+o.mN+"\\n"+F.teams+": "+o.mTeams+"\\n"+F.waar+": "+o.mWaar+"\\n"+F.wanneer+": "+o.mWanneer+"\\n\\n"+F.wens+":\\n"+o.mWens+"\\n\\n"+F.groet+"\\n"+o.mNaam+(o.mMail?"\\n"+o.mMail:"")+"\\n"}}
+function ok(o){{if(!o.mNaam||!o.mWens){{$("mMelding").textContent=F.nodig;$("mMelding").className="melding fout";return false}}$("mMelding").textContent="";return true}}
+[].forEach.call(document.querySelectorAll("[data-soort]"),function(a){{a.addEventListener("click",function(){{$("mSoort").selectedIndex=+a.getAttribute("data-soort")}})}});
+$("maatForm").onsubmit=function(e){{e.preventDefault();var o=lees();if(!ok(o))return;location.href="mailto:"+ADR+"?subject="+encodeURIComponent(F.onderwerp)+"&body="+encodeURIComponent(tekst(o))}};
+$("mKopie").onclick=function(){{var o=lees();if(!ok(o))return;var t=F.onderwerp+"\\n\\n"+tekst(o);try{{navigator.clipboard.writeText(t).then(function(){{$("mMelding").textContent=F.gekopieerd+ADR+".";$("mMelding").className="melding ok"}},function(){{prompt(ADR,t)}})}}catch(e){{prompt(ADR,t)}}}};
+}})();
+</script>
+"""
+    schrijf(here + "index.html", head(lang, "maat", m["title"], m["desc"], here) + kopbalk(lang, "maat", here) + body + voet(lang, here))
+
 def contactpagina(lang):
     here = pad("contact", lang); r = lambda p: rel(here, p); nl = lang == "nl"
     title = "Contact · Enigma Mystery"
@@ -604,7 +760,8 @@ def contactpagina(lang):
     body = f"""<section class="sectie"><div class="binnen twee">
 <div style="display:grid;gap:16px;align-content:start;max-width:52ch"><span class="label">Contact</span><h1>{"Laat een notitie achter" if nl else "Leave a note"}</h1>
 <p class="zacht">{"Een vraag, een aanwijzing die niet klopte, een typfout, een zaak die je graag zou zien: alles is welkom en wordt gelezen." if nl else "A question, a clue that didn't hold, a typo, a case you would like to see: anything is welcome and gets read."}</p>
-<p class="zacht">{"Liever mailen? " if nl else "Prefer e-mail? "}<a href="mailto:{NOTITIE_ADRES}">{NOTITIE_ADRES}</a></p></div>
+<p class="zacht">{"Liever mailen? " if nl else "Prefer e-mail? "}<a href="mailto:{NOTITIE_ADRES}">{NOTITIE_ADRES}</a></p>
+<p class="zacht">{"Een wandeling of speurtocht op maat aanvragen? " if nl else "Looking for a walk or treasure hunt made to measure? "}<a href="{r(pad('maat', lang))}">{"Daar is een eigen formulier voor" if nl else "There's a form for that"} &rarr;</a></p></div>
 <div><form class="formulier" id="notitieForm">
 <label for="nNaam">{form_t['naam']}</label><input id="nNaam" name="name" autocomplete="name">
 <label for="nMail">{form_t['mail']}</label><input id="nMail" name="email" type="email" autocomplete="email">
@@ -721,7 +878,7 @@ def main():
         assert (ROOT / "assets/dossiers" / (s["art"] + ".jpg")).exists(), s["art"]
     taalkeuze()
     for lang in ("nl", "en"):
-        voorpagina(lang); spellenpagina(lang); wandelpagina(lang); boekenpagina(lang); propagina(lang); overpagina(lang); contactpagina(lang)
+        voorpagina(lang); spellenpagina(lang); wandelpagina(lang); boekenpagina(lang); propagina(lang); overpagina(lang); contactpagina(lang); maatpagina(lang)
     extra()
     print("klaar:", len(SPELLEN), "spellen,", "nieuw:", [SPELLEN[i]["en"][0] for i in NIEUW])
 
