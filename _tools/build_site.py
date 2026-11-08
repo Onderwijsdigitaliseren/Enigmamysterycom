@@ -870,7 +870,7 @@ def extra():
     if wsm.exists():
         import re as _re
         rows += "".join(m + "\n" for m in _re.findall(r"<url>.*?</url>", wsm.read_text(encoding="utf-8"), _re.S))
-    (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + rows + "</urlset>\n")
+    (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + rows + "</urlset>\n")
 
 def main():
     for f in ["spel/" + s[l][2].split("#")[0] for s in SPELLEN for l in ("nl", "en")]:
