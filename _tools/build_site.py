@@ -127,6 +127,10 @@ PAD = {  # sleutel -> (nl-pad, en-pad), relatief aan de root
  "over":   ("nl/over/", "en/about/"),
  "contact":("nl/contact/", "en/contact/"),
  "maat":   ("nl/op-maat/", "en/made-to-measure/"),
+ "l_online":   ("nl/detectivespel-online/", "en/detective-game-online/"),
+ "l_thuis":    ("nl/moordmysterie-thuis/", "en/murder-mystery-game-at-home/"),
+ "l_vrijgezel":("nl/vrijgezellenfeest-moordmysterie/", "en/murder-mystery-hen-party/"),
+ "l_uitje":    ("nl/uitje-moordwandeling/", "en/murder-mystery-group-outing/"),
 }
 MENU = [("spellen", "Spellen", "Games"), ("wandel", "Wandelingen", "Walks"), ("boeken", "Puzzels", "Puzzles"), ("mini", "Mini", "Mini"), ("pro", "Pro", "Pro"), ("maat", "Op maat", "Custom"), ("contact", "Contact", "Contact")]
 
@@ -234,6 +238,7 @@ def voet(lang, here):
 <footer class="voet"><div class="binnen">
 <span class="woordmerk"><b>Enigma</b> Mystery</span>
 <nav aria-label="{'Onderaan' if lang == 'nl' else 'Footer'}">{nav}</nav>
+<nav class="klein" aria-label="{'Ideeën' if lang == 'nl' else 'Ideas'}">{''.join(f'<a href="{r(pad(k, lang))}">{escape(LANDING[k][lang]["h1"])}</a>' for k in LANDING)}</nav>
 <p class="klein">{t['footzin']} &middot; &copy; {date.today().year} Enigma Mystery</p>
 </div></footer>
 <script src="{r('assets/site.js')}" defer></script>
@@ -781,6 +786,147 @@ def contactpagina(lang):
 """
     schrijf(here + "index.html", head(lang, "contact", title, desc, here) + kopbalk(lang, "contact", here) + body + voet(lang, here))
 
+# --------------------------------------------------------------------------
+# Zoekwoordpagina's: één pagina per zoekvraag, verwijzen naar spellen of wandelingen.
+# Nieuwe toevoegen: een sleutel in PAD en LANDING, en opnieuw bouwen.
+# --------------------------------------------------------------------------
+LANDING = {
+ "l_online": dict(soort="spel", planken=None, nl=dict(
+   title="Detectivespel online spelen, gratis te beginnen · Enigma Mystery",
+   desc="Speel een detectivespel online in je browser: verhoor verdachten, zoek bewijs en wijs de dader aan. Zonder app of account. Van elke soort is een zaak gratis.",
+   label="Online", h1="Detectivespel online spelen", zin="Verhoor de verdachten, zoek het bewijs en wijs de dader aan. In je browser, op telefoon of computer.",
+   tekst=["Bij Enigma Mystery speel je een detectivespel gewoon in je browser. Je downloadt niets en maakt geen account aan. Open een zaak en je zit meteen aan het bureau.",
+          "Er zijn vier soorten zaken. In de verhaalzaken verhoor je verdachten en dien je een aanklacht in. In de escape rooms kijk je in 3D rond en kraak je sloten. De logicapuzzels zijn pen-en-papierpuzzels op het scherm, en de cozy spellen speel je rustig, zonder klok.",
+          "Elke zaak is fictief en heeft precies één oplossing. Van elke soort is minstens één zaak gratis. Wil je alles spelen, dan koop je eenmalig de Pro-pas voor €3,99."],
+   lijst_label="Gratis om mee te beginnen", lijst_h="Begin met deze zaken",
+   faq=[("Is het echt gratis?", "Ja, van elke soort zaak is er minstens één gratis te spelen. De andere zaken speel je met de Pro-pas, eenmalig €3,99."),
+        ("Heb ik een app nodig?", "Nee. Alles werkt in de browser van je telefoon, tablet of computer. Je hebt geen account nodig."),
+        ("Hoe lang duurt een zaak?", "Van twintig minuten tot een paar avonden, afhankelijk van de zaak. Je voortgang blijft bewaard op je apparaat."),
+        ("Kan ik het samen spelen?", "Ja. Veel mensen spelen samen op één scherm en overleggen wie het gedaan heeft.")]),
+  en=dict(
+   title="Play a detective game online, free to start · Enigma Mystery",
+   desc="Play a detective game online in your browser: question suspects, find evidence and name the killer. No app, no account. One case of every kind is free.",
+   label="Online", h1="Play a detective game online", zin="Question the suspects, find the evidence and name the killer. In your browser, on phone or computer.",
+   tekst=["At Enigma Mystery you play a detective game right in your browser. Nothing to download, no account to make. Open a case and you are at the desk.",
+          "There are four kinds of cases. In the story cases you question suspects and file a charge. In the escape rooms you look around in 3D and crack locks. The logic puzzles are pen-and-paper puzzles on screen, and the cozy games play at your own pace, with no clock.",
+          "Every case is fictional and has exactly one solution. At least one case of every kind is free. To play everything, buy the Pro pass once for €3.99."],
+   lijst_label="Free to start", lijst_h="Start with these cases",
+   faq=[("Is it really free?", "Yes, at least one case of every kind is free to play. The other cases are unlocked with the Pro pass, €3.99 once."),
+        ("Do I need an app?", "No. Everything runs in the browser of your phone, tablet or computer. No account needed."),
+        ("How long does a case take?", "From twenty minutes to a few evenings, depending on the case. Your progress is saved on your device."),
+        ("Can we play together?", "Yes. Many people play together on one screen and argue about who did it.")])),
+ "l_thuis": dict(soort="spel", planken=("verhaal", "escape"), nl=dict(
+   title="Moordmysterie spel voor thuis, voor een avond samen · Enigma Mystery",
+   desc="Een moordmysterie spelen voor thuis, met z'n tweeën of met vrienden: verhaalzaken en escape rooms in 3D, gewoon in de browser. Begin gratis.",
+   label="Thuis", h1="Moordmysterie spel voor thuis", zin="Een avond samen een moord oplossen, op de bank, op één scherm.",
+   tekst=["Zin in een avond speuren, zonder iets te hoeven organiseren? Kies een zaak, zet hem op de laptop of de tv en los hem samen op. Je hebt geen spelleider, geen kaartjes en geen voorbereiding nodig.",
+          "De verhaalzaken zijn het meest als een klassiek moordmysterie: verdachten met elk een eigen verhaal, bewijs dat niet klopt en één dader. In de escape rooms lopen jullie zelf rond in een 3D-ruimte en zoeken jullie samen naar de code.",
+          "Van elke soort is minstens één zaak gratis, zodat je eerst kunt proberen of het bevalt. Met de Pro-pas (eenmalig €3,99) speel je daarna alle zaken."],
+   lijst_label="Voor een avond samen", lijst_h="Verhaalzaken en escape rooms",
+   faq=[("Met hoeveel mensen kun je spelen?", "Alleen, met z'n tweeën of met een groepje. Speel op één groot scherm, dan kan iedereen meekijken en meedenken."),
+        ("Moet iemand de spelleider zijn?", "Nee. Het spel vertelt het verhaal en controleert je antwoord. Iedereen speelt mee."),
+        ("Is het eng?", "Het zijn moordzaken, dus het is spannend. De nadruk ligt op puzzelen en redeneren."),
+        ("Kunnen we stoppen en later verder?", "Ja. Je voortgang blijft bewaard op het apparaat waarop je speelt.")]),
+  en=dict(
+   title="Murder mystery game to play at home · Enigma Mystery",
+   desc="A murder mystery to play at home, as a couple or with friends: story cases and 3D escape rooms, right in your browser. Start for free.",
+   label="At home", h1="Murder mystery game for at home", zin="An evening of solving a murder together, on the sofa, on one screen.",
+   tekst=["Fancy an evening of sleuthing without organising anything? Pick a case, put it on the laptop or TV and solve it together. No game master, no cards, no preparation.",
+          "The story cases are closest to a classic murder mystery: suspects who each have their own story, evidence that doesn't add up, and one killer. In the escape rooms you walk around a 3D room yourselves and hunt for the code together.",
+          "At least one case of every kind is free, so you can try it first. With the Pro pass (€3.99 once) you can then play every case."],
+   lijst_label="For an evening together", lijst_h="Story cases and escape rooms",
+   faq=[("How many people can play?", "Alone, as a couple or with a group. Play on one big screen so everyone can watch and think along."),
+        ("Does someone have to be the host?", "No. The game tells the story and checks your answer. Everyone plays."),
+        ("Is it scary?", "They are murder cases, so it is tense. The focus is on puzzling and reasoning."),
+        ("Can we stop and continue later?", "Yes. Your progress is saved on the device you play on.")])),
+ "l_vrijgezel": dict(soort="wandel", nl=dict(
+   title="Moordmysterie voor een vrijgezellenfeest: moordwandeling · Enigma Mystery",
+   desc="Een moordmysterie voor het vrijgezellenfeest: een moordwandeling door je eigen stad, met de bruid of bruidegom in het verhaal. € 9,95 per team of op maat met foto's.",
+   label="Vrijgezellenfeest", h1="Moordmysterie voor een vrijgezellenfeest", zin="Los samen een moord op, buiten, in jullie eigen stad. Met de bruid of bruidegom als hoofdpersoon.",
+   tekst=["Een moordwandeling is een detectivespel dat je buiten loopt. Jullie starten waar je wilt, en de kaart op de telefoon legt acht sporen op echte plekken in de buurt. Bij elk spoor gaat een stukje van de zaak open: een getuige, een bewijsstuk, een camerabeeld.",
+          "Perfect voor een vrijgezellenfeest is Tot de Dood Ons Scheidt: een bruid die vandaag zou trouwen, maar nooit aankwam. Of laat een zaak op maat maken, met foto's van de groep, jullie namen in het verhaal en de vrijgezel als hoofdpersoon.",
+          "Eén ticket van € 9,95 geldt voor het hele team. Iedereen vult dezelfde code in, op één telefoon of ieder op een eigen. Een zaak duurt ongeveer anderhalf uur, dus er blijft genoeg tijd over voor de rest van het feest."],
+   lijst_label="Zeven zaken op straat", lijst_h="Kies jullie zaak",
+   faq=[("Wat kost het?", "Eén ticket van € 9,95 per team. Een gepersonaliseerde versie met foto's, namen en thema kost € 29,95 inclusief ticket."),
+        ("In welke stad kan het?", "Overal. De kaart legt de sporen rondom de plek waar jullie starten, in een stad of een dorp."),
+        ("Hoe ver van tevoren moet ik een versie op maat aanvragen?", "Vraag een gepersonaliseerde zaak minimaal twee weken van tevoren aan, zodat er tijd is om hem klaar te maken."),
+        ("Kunnen we met twee groepen tegen elkaar?", "Ja, bij de Moordwandeling. Kies in de groepszaak 'Teams tegen elkaar': elk team krijgt eigen sporen, en jullie moeten spoorcodes ruilen, eerlijk of niet.")]),
+  en=dict(
+   title="Murder mystery for a hen or stag party: murder walk · Enigma Mystery",
+   desc="A murder mystery for a hen or stag party: a murder walk through your own town, with the bride or groom in the story. € 9.95 per team, or made to measure with photos.",
+   label="Hen & stag", h1="Murder mystery for a hen or stag party", zin="Solve a murder together, outside, in your own town. With the bride or groom as the lead.",
+   tekst=["A murder walk is a detective game you play on foot. You start wherever you like, and the map on your phone places eight leads at real places nearby. At every lead part of the case opens: a witness, a piece of evidence, a camera still.",
+          "A perfect fit for a hen party is Till Death Do Us Part: a bride who was due to marry today but never arrived. Or have a case made to measure, with photos of the group, your names in the story and the bride or groom as the lead.",
+          "One € 9.95 ticket covers the whole team. Everyone enters the same code, on one phone or each on their own. A case takes about ninety minutes, leaving plenty of time for the rest of the party."],
+   lijst_label="Seven cases on the street", lijst_h="Pick your case",
+   faq=[("What does it cost?", "One ticket of € 9.95 per team. A personalised version with photos, names and a theme costs € 29.95 including the ticket."),
+        ("Which towns does it work in?", "Anywhere. The map places the leads around the spot where you start, in a city or a village."),
+        ("How far ahead should I order a custom version?", "Request a personalised case at least two weeks ahead, so there is time to prepare it."),
+        ("Can two groups compete?", "Yes, in the Murder Walk. Choose 'teams against each other' in the group case: every team gets its own leads, and you have to trade lead codes, honestly or not.")])),
+ "l_uitje": dict(soort="wandel", nl=dict(
+   title="Uitje met vrienden of collega's: een moordwandeling · Enigma Mystery",
+   desc="Een origineel uitje met vrienden, familie of collega's: een moordwandeling door je eigen stad, wanneer jullie willen. Proefronde gratis, daarna € 9,95 per team.",
+   label="Uitje", h1="Een uitje met een moord erin", zin="Met vrienden, familie of collega's de stad in, op zoek naar een dader. Wanneer jullie willen, zonder reserveren.",
+   tekst=["Zoek je een uitje dat niet hetzelfde is als altijd? Met een moordwandeling wordt jullie eigen stad de plaats delict. Jullie lopen samen langs acht sporen, horen getuigen en sluiten verdachten uit tot er één dader overblijft.",
+          "Je hoeft niets te reserveren en er komt geen gids mee. Jullie starten wanneer het uitkomt, waar het uitkomt. Elke zaak heeft een gratis proefronde, zodat iedereen eerst ziet hoe het werkt.",
+          "Met een grote groep? Kies bij de Moordwandeling de stand teams tegen elkaar: elk team krijgt eigen sporen, en jullie moeten ruilen om de dader te vinden. Voor een bedrijfsuitje of feest kun je ook een zaak op maat laten maken, met jullie namen en foto's."],
+   lijst_label="Zeven zaken op straat", lijst_h="Kies jullie zaak",
+   faq=[("Wat kost het?", "De proefronde is gratis. Daarna kost een ticket € 9,95 per team, en de code blijft twee maanden geldig."),
+        ("Hoe lang duurt het?", "Ongeveer anderhalf uur. Jullie bepalen zelf het tempo en kunnen onderweg pauzeren."),
+        ("Kan het in het Engels?", "Ja. Elke zaak is in het Nederlands en het Engels te spelen, handig voor internationale collega's."),
+        ("Kan het ook met een hele afdeling?", "Ja. Speel in teams van een paar personen, ieder met een telefoon. Voor een uitje op maat kun je een aanvraag doen.")]),
+  en=dict(
+   title="Group outing with friends or colleagues: a murder walk · Enigma Mystery",
+   desc="An original outing with friends, family or colleagues: a murder walk through your own town, whenever you like. Free trial round, then € 9.95 per team.",
+   label="Group outing", h1="An outing with a murder in it", zin="Out into town with friends, family or colleagues, hunting for a killer. Whenever you like, no booking.",
+   tekst=["Looking for an outing that isn't the usual? With a murder walk your own town becomes the crime scene. Together you walk past eight leads, hear witnesses and rule out suspects until one killer is left.",
+          "Nothing to book and no guide comes along. You start when it suits you, where it suits you. Every case has a free trial round, so everyone sees how it works first.",
+          "A big group? In the Murder Walk, choose teams against each other: every team gets its own leads, and you have to trade to find the killer. For a company outing or party you can also have a case made to measure, with your names and photos."],
+   lijst_label="Seven cases on the street", lijst_h="Pick your case",
+   faq=[("What does it cost?", "The trial round is free. After that a ticket costs € 9.95 per team, and the code stays valid for two months."),
+        ("How long does it take?", "About ninety minutes. You set the pace and can take breaks along the way."),
+        ("Is it available in English?", "Yes. Every case can be played in English and Dutch, handy for international colleagues."),
+        ("Can a whole department play?", "Yes. Split into teams of a few people, each with a phone. For a custom outing you can send a request.")])),
+}
+
+def landingpagina(key, lang):
+    here = pad(key, lang); r = lambda p: rel(here, p); nl = lang == "nl"
+    L = LANDING[key]; d = L[lang]
+    if L["soort"] == "wandel":
+        W = lambda f: r("assets/wandel/" + f)
+        kop = f"""<section class="held wandelheld">
+<picture class="beeld"><source media="(max-width:640px)" srcset="{W('hero.webp')}"><img src="{W('hero-breed.webp')}" alt="" fetchpriority="high"></picture>
+<div class="binnen"><span class="label">{escape(d['label'])}</span><h1>{escape(d['h1'])}</h1><p class="zin">{escape(d['zin'])}</p>
+<div class="knoppen"><a class="knop" href="#zaken">{"Kies een zaak" if nl else "Pick a case"}</a><a class="knop lijn" href="{r(pad('maat', lang))}">{"Op maat" if nl else "Made to measure"}</a></div></div></section>
+"""
+        basis = r("wandel/nl/" if nl else "wandel/")
+        lijst = '<div class="wandelzaken">' + "".join(
+            f'<a class="wandelzaak" href="{basis + (pnl if nl else pen)}">' + (f'<span class="zaaklabel">{lab}</span>' if lab else "")
+            + f'<span class="medaille"><img src="{W(cov + ".webp")}" alt="" loading="lazy" width="320" height="320"></span>'
+            f'<h3>{escape(tnl if nl else ten)}</h3><p>{escape(hnl if nl else hen)}</p><span class="pijl">{"Bekijk de zaak" if nl else "View the case"} &rarr;</span></a>'
+            for cov, pnl, pen, tnl, ten, hnl, hen, lab in WANDELZAKEN) + '</div>'
+    else:
+        kop = held(here, lang, f'<span class="label">{escape(d["label"])}</span><h1>{escape(d["h1"])}</h1><p class="zin">{escape(d["zin"])}</p>'
+                   f'<div class="knoppen"><a class="knop" href="#zaken">{"Kies een zaak" if nl else "Pick a case"}</a><a class="knop lijn" href="{r(pad("spellen", lang))}">{"Alle spellen" if nl else "All games"}</a></div>', klein=True)
+        idx = [i for i, s in enumerate(SPELLEN) if (L["planken"] is None or s["plank"] in L["planken"])]
+        idx.sort(key=lambda i: (SPELLEN[i]["status"] != "gratis", SPELLEN[i]["added"]))
+        lijst = '<div class="rij">' + "".join(kaart(i, lang, here) for i in idx[:8]) + '</div>'
+    tekst = "".join(f'<p class="zacht">{escape(x)}</p>' for x in d["tekst"])
+    faq = "".join(f'<details class="maatvraag"><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in d["faq"])
+    ander = "".join(f'<a class="knop lijn" href="{r(pad(k, lang))}">{escape(LANDING[k][lang]["h1"])}</a>' for k in LANDING if k != key)
+    ld = json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in d["faq"]]}, ensure_ascii=False)
+    body = kop + f"""<section class="sectie"><div class="binnen">
+<div class="sectiekop"><span class="label">{escape(d['label'])}</span><h2>{"Zo werkt het" if nl else "How it works"}</h2>{tekst}</div></div></section>
+<section class="sectie" id="zaken"><div class="binnen">
+<div class="sectiekop"><span class="label">{escape(d['lijst_label'])}</span><h2>{escape(d['lijst_h'])}</h2></div>
+{lijst}</div></section>
+<section class="sectie"><div class="binnen"><div class="maatvragen"><span class="label">{"Veelgestelde vragen" if nl else "Questions"}</span>{faq}</div></div></section>
+{maatband(lang, here)}<section class="sectie"><div class="binnen"><div class="sectiekop"><span class="label">{"Meer ideeën" if nl else "More ideas"}</span></div><div class="knoppen">{ander}</div></div></section>
+<script type="application/ld+json">{ld}</script>
+"""
+    schrijf(here + "index.html", head(lang, key, d["title"], d["desc"], here) + kopbalk(lang, key, here) + body + voet(lang, here))
+
 def taalkeuze():
     html = f"""<!DOCTYPE html>
 <html lang="nl">
@@ -880,6 +1026,7 @@ def main():
     taalkeuze()
     for lang in ("nl", "en"):
         voorpagina(lang); spellenpagina(lang); wandelpagina(lang); boekenpagina(lang); propagina(lang); overpagina(lang); contactpagina(lang); maatpagina(lang)
+        for k in LANDING: landingpagina(k, lang)
     extra()
     print("klaar:", len(SPELLEN), "spellen,", "nieuw:", [SPELLEN[i]["en"][0] for i in NIEUW])
 
