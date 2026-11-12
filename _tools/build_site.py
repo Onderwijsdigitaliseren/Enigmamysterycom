@@ -340,7 +340,7 @@ def voorpagina(lang):
 <p class="zin typ" data-tekst="{escape(t['zin'])}">{t['zin']}</p>
 <div class="knoppen"><a class="knop" href="{r(pad('spellen', lang))}">{t['naarspellen']}</a><a class="knop lijn" href="{r(pad('wandel', lang))}">{t['naarwandel']}</a></div>
 </div></section>
-"""
+""" + nieuwband(lang, here)
     body += f"""<section class="sectie"><div class="binnen">
 <div class="sectiekop"><span class="label">{t['deuren']}</span><h2>{t['deurenzin']}</h2><p class="zacht">{t['deurenuitleg']}</p></div>
 <div class="bord"><div class="deuren">{deur_html}</div>{draad}</div></div></section>
@@ -401,6 +401,8 @@ def spellenpagina(lang):
     schrijf(here + "index.html", head(lang, "spellen", title, desc, here) + kopbalk(lang, "spellen", here) + body + voet(lang, here))
 
 WANDELZAKEN = [  # (cover, nl-pagina, en-pagina, nl-titel, en-titel, nl-haak, en-haak, label)
+ ("cover-sm", "de-erfenis-van-de-spellenmaker.html", "the-gamemakers-legacy.html", "De Erfenis van de Spellenmaker", "The Gamemaker's Legacy",
+  "Tien kisten, tien spellen, vijf erfgenamen. Een speurtocht van twee uur.", "Ten chests, ten games, five heirs. A two-hour trail.", "Nieuw|New"),
  ("cover-mw", "moordwandeling.html", "murder-walk.html", "Moordwandeling", "Murder Walk",
   "Acht sporen, vijf getuigen, één leugenaar.", "Eight leads, five witnesses, one liar.", None),
  ("cover-vz", "de-verdwijning.html", "the-vanishing.html", "De Verdwijning", "The Vanishing",
@@ -414,7 +416,7 @@ WANDELZAKEN = [  # (cover, nl-pagina, en-pagina, nl-titel, en-titel, nl-haak, en
  ("cover-td", "tot-de-dood-ons-scheidt.html", "till-death-do-us-part.html", "Tot de Dood Ons Scheidt", "Till Death Do Us Part",
   "Ze zou vandaag trouwen. De bruid kwam nooit aan.", "She was to be married today. The bride never arrived.", None),
  ("cover-ng", "de-nacht-van-de-geesten.html", "night-of-the-ghosts.html", "De Nacht van de Geesten", "Night of the Ghosts",
-  "Geen moordenaar, wel een geest. Durf jij na het donker?", "No murderer, but a ghost. Do you dare after dark?", "Halloween"),
+  "Geen moordenaar, wel een geest. Durf jij na het donker?", "No murderer, but a ghost. Do you dare after dark?", None),
 ]
 
 def wandelpagina(lang):
@@ -439,6 +441,7 @@ def wandelpagina(lang):
     zaken = ""
     for n, (cov, pnl, pen, tnl, ten, hnl, hen, lab) in enumerate(WANDELZAKEN):
         href = basis + (pnl if nl else pen)
+        lab = lab and (lab.split("|")[0 if nl else -1])
         tag = f'<span class="zaaklabel">{lab}</span>' if lab else ""
         zaken += (f'<a class="wandelzaak" href="{href}" style="--d:{n * 70}ms">{tag}'
                   f'<span class="medaille"><img src="{W(cov + ".webp")}" alt="" loading="lazy" width="320" height="320"></span>'
@@ -469,7 +472,7 @@ def wandelpagina(lang):
     blok_html = "".join(f'<div class="blok"><h3>{a}</h3><ul>{"".join(f"<li>{x}</li>" for x in b)}</ul>'
                         + (f'<a class="knop lijn" href="{r(pad("maat", lang))}">{"Alles over maatwerk" if nl else "All about made to measure"} &rarr;</a>' if i == 1 else "") + '</div>'
                         for i, (a, b) in enumerate(blokken))
-    body = kop + f"""<section class="sectie" id="zaken"><div class="binnen">
+    body = kop + nieuwband(lang, here) + f"""<section class="sectie" id="zaken"><div class="binnen">
 <div class="sectiekop"><span class="label">{"Zeven zaken op straat" if nl else "Seven cases on the street"}</span><h2>{"Kies je zaak, trek je jas aan." if nl else "Pick your case, grab your coat."}</h2>
 <p class="zacht">{"Elke zaak speel je in je eigen buurt, in het Nederlands of het Engels. Elke wandeling begint met een gratis proefronde." if nl else "Every case plays in your own neighbourhood, in English or Dutch. Every walk starts with a free trial round."}</p></div>
 <div class="wandelzaken">{zaken}</div></div></section>
@@ -682,6 +685,29 @@ MAAT_T = {
           opties=["Birthday or anniversary","Hen or stag party","Company or team outing","Family or friends' day","A gift","School or class","Something else"]),
    noot="Personalise: € 29.95 including the ticket, one round of changes. Something entirely new: price to be agreed."),
 }
+
+# UITGELICHT: nieuwkomer bovenaan de voorpagina en de wandelpagina. Tot `tot` (Nederlandse tijd) met de gratis-tekst,
+# daarna schakelt een klein script vanzelf naar de gewone tekst. Op None zetten om de band weg te halen.
+UITGELICHT = {"tot": "2026-11-16T23:59:59+01:00", "beeld": "wandel/assets/feature-sm.webp",
+  "nl": {"href": "wandel/nl/de-erfenis-van-de-spellenmaker.html", "label": "Nieuw · gratis t/m maandag 16 november", "label2": "Nieuw",
+         "h": "De Erfenis van de Spellenmaker",
+         "p": "Een speurtocht van twee uur door je eigen buurt. Open tien kisten in 3D, win het spel dat erin ligt en vang met je camera de schimmen van de laatste avond van de spellenmaker. Buiten, binnen of op de bank.",
+         "knop": "Speel gratis", "knop2": "Bekijk de speurtocht"},
+  "en": {"href": "wandel/the-gamemakers-legacy.html", "label": "New · free until Monday 16 November", "label2": "New",
+         "h": "The Gamemaker's Legacy",
+         "p": "A two-hour trail around your own neighbourhood. Open ten puzzle chests in 3D, win the game inside each one and catch the shades of the gamemaker's last evening with your camera. Outdoors, indoors or on the sofa.",
+         "knop": "Play for free", "knop2": "View the trail"}}
+
+def nieuwband(lang, here):
+    u = UITGELICHT
+    if not u: return ""
+    r = lambda p: rel(here, p); m = u[lang]
+    return f"""<section class="sectie nieuwband"><div class="binnen"><a class="nieuwkaart" href="{r(m['href'])}" data-tot="{u['tot']}" style="--beeld:url('{r(u['beeld'])}')">
+<div class="nieuwtekst"><span class="label" data-na="{escape(m['label2'])}">{escape(m['label'])}</span><h2>{escape(m['h'])}</h2><p>{escape(m['p'])}</p>
+<span class="knop" data-na="{escape(m['knop2'])} &rarr;">{escape(m['knop'])} &rarr;</span></div></a>
+<script>(function(){{var k=document.currentScript.previousElementSibling;if(Date.now()>Date.parse(k.dataset.tot))k.querySelectorAll("[data-na]").forEach(function(e){{e.innerHTML=e.dataset.na}})}})()</script>
+</div></section>
+"""
 
 def maatband(lang, here):
     r = lambda p: rel(here, p); m = MAAT_T[lang]
@@ -901,7 +927,7 @@ def landingpagina(key, lang):
 """
         basis = r("wandel/nl/" if nl else "wandel/")
         lijst = '<div class="wandelzaken">' + "".join(
-            f'<a class="wandelzaak" href="{basis + (pnl if nl else pen)}">' + (f'<span class="zaaklabel">{lab}</span>' if lab else "")
+            f'<a class="wandelzaak" href="{basis + (pnl if nl else pen)}">' + (f'<span class="zaaklabel">{lab.split("|")[0 if nl else -1]}</span>' if lab else "")
             + f'<span class="medaille"><img src="{W(cov + ".webp")}" alt="" loading="lazy" width="320" height="320"></span>'
             f'<h3>{escape(tnl if nl else ten)}</h3><p>{escape(hnl if nl else hen)}</p><span class="pijl">{"Bekijk de zaak" if nl else "View the case"} &rarr;</span></a>'
             for cov, pnl, pen, tnl, ten, hnl, hen, lab in WANDELZAKEN) + '</div>'
