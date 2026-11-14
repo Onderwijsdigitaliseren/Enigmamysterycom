@@ -13,7 +13,7 @@ if(/^#z=LB/i.test(h)){location.replace((nl?"nl/de-laatste-bus.html":"the-last-bu
 if(/^#z=VZ/i.test(h)){location.replace((nl?"nl/de-verdwijning.html":"the-vanishing.html")+h);return}
 if(/^#(z|g)=/.test(h)){location.replace((nl?"nl/moordwandeling.html":"murder-walk.html")+h);return}
 if(h==="#nl"||h==="#en"){try{localStorage.setItem("ss_lang",nl?"nl":"en")}catch(e){}}
-if(nl)location.replace("nl/");})();</script>
+location.replace(nl?"../nl/wandelingen/":"../en/walks/"); /* oude wandelhub: doorsturen naar de wandelingenpagina */})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Walks – Enigma Mystery · Detective games you walk in your own streets</title>
 <meta name="description" content="Walking detective games played on real places around you via GPS: a murder mystery, a missing-person case and more. One ticket per team (€ 9.95), start whenever you like. Free practice round, in English or Dutch.">
